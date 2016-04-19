@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<!--[if IE 7]>
+<html class="ie ie7" lang="zh-CN">
+<![endif]-->
+<!--[if IE 8]>
+<html class="ie ie8" lang="zh-CN">
+<![endif]-->
+<!--[if !(IE 7) & !(IE 8)]><!-->
+<html lang="zh-CN">
+<!--<![endif]-->
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="profile" href="http://gmpg.org/xfn/11" />
+<title>嵌入式 &#8211; 叁公子的博客</title>
+<link rel="alternate" type="application/rss+xml" title="叁公子的博客 &raquo; Feed" href="http://blog.kalen25115.cn/static/index.php/feed/" />
+
+<link rel="alternate" type="application/rss+xml" title="叁公子的博客 &raquo; 嵌入式分类目录Feed" href="http://blog.kalen25115.cn/static/index.php/category/embedded-system/feed/" />
+		<script type="text/javascript">
+			window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/72x72\/","ext":".png","source":{"concatemoji":"http:\/\/blog.kalen25115.cn\/wp-includes\/js\/wp-emoji-release.min.js?ver=4.4.2"}};
+			!function(a,b,c){function d(a){var c,d=b.createElement("canvas"),e=d.getContext&&d.getContext("2d"),f=String.fromCharCode;return e&&e.fillText?(e.textBaseline="top",e.font="600 32px Arial","flag"===a?(e.fillText(f(55356,56806,55356,56826),0,0),d.toDataURL().length>3e3):"diversity"===a?(e.fillText(f(55356,57221),0,0),c=e.getImageData(16,16,1,1).data.toString(),e.fillText(f(55356,57221,55356,57343),0,0),c!==e.getImageData(16,16,1,1).data.toString()):("simple"===a?e.fillText(f(55357,56835),0,0):e.fillText(f(55356,57135),0,0),0!==e.getImageData(16,16,1,1).data[0])):!1}function e(a){var c=b.createElement("script");c.src=a,c.type="text/javascript",b.getElementsByTagName("head")[0].appendChild(c)}var f,g;c.supports={simple:d("simple"),flag:d("flag"),unicode8:d("unicode8"),diversity:d("diversity")},c.DOMReady=!1,c.readyCallback=function(){c.DOMReady=!0},c.supports.simple&&c.supports.flag&&c.supports.unicode8&&c.supports.diversity||(g=function(){c.readyCallback()},b.addEventListener?(b.addEventListener("DOMContentLoaded",g,!1),a.addEventListener("load",g,!1)):(a.attachEvent("onload",g),b.attachEvent("onreadystatechange",function(){"complete"===b.readyState&&c.readyCallback()})),f=c.source||{},f.concatemoji?e(f.concatemoji):f.wpemoji&&f.twemoji&&(e(f.twemoji),e(f.wpemoji)))}(window,document,window._wpemojiSettings);
+		</script>
+		<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 .07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+<link rel='stylesheet' id='crayon-css'  href='http://blog.kalen25115.cn/wp-content/plugins/crayon-syntax-highlighter/css/min/crayon.min.css?ver=_2.7.2_beta' type='text/css' media='all' />
+<link rel='stylesheet' id='crayon-theme-sublime-text-css'  href='http://blog.kalen25115.cn/wp-content/plugins/crayon-syntax-highlighter/themes/sublime-text/sublime-text.css?ver=_2.7.2_beta' type='text/css' media='all' />
+<link rel='stylesheet' id='crayon-font-monaco-css'  href='http://blog.kalen25115.cn/wp-content/plugins/crayon-syntax-highlighter/fonts/monaco.css?ver=_2.7.2_beta' type='text/css' media='all' />
+<link rel='stylesheet' id='spacious_style-css'  href='http://blog.kalen25115.cn/wp-content/themes/spacious/style.css?ver=4.4.2' type='text/css' media='all' />
+<link rel='stylesheet' id='spacious-genericons-css'  href='http://blog.kalen25115.cn/wp-content/themes/spacious/genericons/genericons.css?ver=3.3.1' type='text/css' media='all' />
+<link rel='stylesheet' id='google_fonts-css'  href='//fonts.googleapis.com/css?family=Lato&#038;ver=4.4.2' type='text/css' media='all' />
+<script type='text/javascript' src='http://blog.kalen25115.cn/wp-includes/js/jquery/jquery.js?ver=1.11.3'></script>
+<script type='text/javascript' src='http://blog.kalen25115.cn/wp-includes/js/jquery/jquery-migrate.min.js?ver=1.2.1'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var CrayonSyntaxSettings = {"version":"_2.7.2_beta","is_admin":"0","ajaxurl":"http:\/\/blog.kalen25115.cn\/wp-admin\/admin-ajax.php","prefix":"crayon-","setting":"crayon-setting","selected":"crayon-setting-selected","changed":"crayon-setting-changed","special":"crayon-setting-special","orig_value":"data-orig-value","debug":""};
+var CrayonSyntaxStrings = {"copy":"\u4f7f\u7528 %s \u590d\u5236\uff0c\u4f7f\u7528 %s \u7c98\u8d34\u3002","minimize":"\u70b9\u51fb\u5c55\u5f00\u4ee3\u7801"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='http://blog.kalen25115.cn/wp-content/plugins/crayon-syntax-highlighter/js/min/crayon.min.js?ver=_2.7.2_beta'></script>
+<script type='text/javascript' src='http://blog.kalen25115.cn/wp-content/themes/spacious/js/spacious-custom.js?ver=4.4.2'></script>
+<link rel='https://api.w.org/' href='http://blog.kalen25115.cn/static/wp-json/' />
+<meta name="generator" content="WordPress 4.4.2 - really-static 0.5" />
+		<style type="text/css">.recentcomments a{display:inline !important;padding:0 !important;margin:0 !important;}</style>
+		</head>
+
+<body class="archive category category-embedded-system category-7 ">
+<div id="page" class="hfeed site">
+		<header id="masthead" class="site-header clearfix">
+
+		
+		<div id="header-text-nav-container">
+			<div class="inner-wrap">
+
+				<div id="header-text-nav-wrap" class="clearfix">
+					<div id="header-left-section">
+												<div id="header-text" class="">
+                                       <h3 id="site-title">
+                        <a href="http://blog.kalen25115.cn/static/" title="叁公子的博客" rel="home">叁公子的博客</a>
+                     </h3>
+                                    <!-- #site-description -->
+						</div><!-- #header-text -->
+					</div><!-- #header-left-section -->
+					<div id="header-right-section">
+												<nav id="site-navigation" class="main-navigation" role="navigation">
+							<h3 class="menu-toggle">Menu</h3>
+							<div class="menu"><ul><li class="page_item page-item-16"><a href="http://blog.kalen25115.cn/static/index.php/about/">关于我</a></li></ul></div>
+						</nav>
+			    	</div><!-- #header-right-section -->
+
+			   </div><!-- #header-text-nav-wrap -->
+			</div><!-- .inner-wrap -->
+		</div><!-- #header-text-nav-container -->
+
+		
+						<div class="header-post-title-container clearfix">
+					<div class="inner-wrap">
+						<div class="post-title-wrapper">
+							                                                   <h1 class="header-post-title-class">嵌入式</h1>
+                        						   						</div>
+											</div>
+				</div>
+				</header>
+			<div id="main" class="clearfix">
+		<div class="inner-wrap">
+	
+	<div id="primary">
+		<div id="content" class="clearfix">
+
+			
+				
+					
+<article id="post-26" class="post-26 post type-post status-publish format-standard hentry category-net category-embedded-system">
+	
+		<header class="entry-header">
+	<h2 class="entry-title">
+		<a href="http://blog.kalen25115.cn/static/index.php/2015/05/03/qumo/" title="用c#编写8*8横向取模软件">用c#编写8*8横向取模软件</a>
+	</h2><!-- .entry-title -->
+	</header>
+	
+	
+	<div class="entry-content clearfix">
+		<p>点阵扫描原理： 点阵是通过扫描来实现的，什么是点阵扫描呢？ 扫描其实就是利用肉眼</p>
+	</div>
+
+	<footer class="entry-meta-bar clearfix"><div class="entry-meta clearfix">
+      <span class="by-author author vcard"><a class="url fn n" href="http://blog.kalen25115.cn/static/index.php/author/root/">叁公子</a></span>
+
+      <span class="date"><a href="http://blog.kalen25115.cn/static/index.php/2015/05/03/qumo/" title="上午10:48" rel="bookmark"><time class="entry-date published" datetime="2015-05-03T10:48:11+00:00">2015年5月3日</time><time class="updated" datetime="2015-12-08T01:29:01+00:00">2015年12月8日</time></a></span>
+               <span class="category"><a href="http://blog.kalen25115.cn/static/index.php/category/net/" rel="category tag">.Net</a>, <a href="http://blog.kalen25115.cn/static/index.php/category/embedded-system/" rel="category tag">嵌入式</a></span>
+      
+               <span class="comments"><a href="http://blog.kalen25115.cn/static/index.php/2015/05/03/qumo/#respond">No Comments</a></span>
+      
+      
+               <span class="read-more-link"><a class="read-more" href="http://blog.kalen25115.cn/static/index.php/2015/05/03/qumo/">Read more</a></span>
+      
+      </div></footer>
+	</article>
+				
+				
+
+			
+		</div><!-- #content -->
+	</div><!-- #primary -->
+	
+	
+<div id="secondary">
+			
+		<aside id="search-2" class="widget widget_search"><form action="http://blog.kalen25115.cn/static/" class="search-form searchform clearfix" method="get">
+	<div class="search-wrap">
+		<input type="text" placeholder="Search" class="s field" name="s">
+		<button class="search-icon" type="submit"></button>
+	</div>
+</form><!-- .searchform --></aside>		<aside id="recent-posts-2" class="widget widget_recent_entries">		<h3 class="widget-title"><span>近期文章</span></h3>		<ul>
+					<li>
+				<a href="http://blog.kalen25115.cn/static/index.php/2016/02/11/express-session/">Express实现登陆验证</a>
+						</li>
+					<li>
+				<a href="http://blog.kalen25115.cn/static/index.php/2016/02/10/node-messageboard/">Express+Sequelize写一个简单的留言板</a>
+						</li>
+					<li>
+				<a href="http://blog.kalen25115.cn/static/index.php/2015/12/09/diy-pm2-5/">教你DIY一个PM2.5检测仪</a>
+						</li>
+					<li>
+				<a href="http://blog.kalen25115.cn/static/index.php/2015/12/02/ettercap-dns/">ettercap学习之内网dns劫持</a>
+						</li>
+					<li>
+				<a href="http://blog.kalen25115.cn/static/index.php/2015/11/10/monidenglu/">go语言实现模拟登陆极客学院</a>
+						</li>
+				</ul>
+		</aside>		<aside id="recent-comments-2" class="widget widget_recent_comments"><h3 class="widget-title"><span>近期评论</span></h3><ul id="recentcomments"></ul></aside><aside id="archives-2" class="widget widget_archive"><h3 class="widget-title"><span>文章归档</span></h3>		<ul>
+			<li><a href='http://blog.kalen25115.cn/static/index.php/2016/02/'>2016年二月</a></li>
+	<li><a href='http://blog.kalen25115.cn/static/index.php/2015/12/'>2015年十二月</a></li>
+	<li><a href='http://blog.kalen25115.cn/static/index.php/2015/11/'>2015年十一月</a></li>
+	<li><a href='http://blog.kalen25115.cn/static/index.php/2015/05/'>2015年五月</a></li>
+	<li><a href='http://blog.kalen25115.cn/static/index.php/2012/12/'>2012年十二月</a></li>
+		</ul>
+		</aside><aside id="categories-2" class="widget widget_categories"><h3 class="widget-title"><span>分类目录</span></h3>		<ul>
+	<li class="cat-item cat-item-4"><a href="http://blog.kalen25115.cn/static/index.php/category/net/" >.Net</a>
+</li>
+	<li class="cat-item cat-item-3"><a href="http://blog.kalen25115.cn/static/index.php/category/golang/" >Golang</a>
+</li>
+	<li class="cat-item cat-item-10"><a href="http://blog.kalen25115.cn/static/index.php/category/nodejs/" >NodeJs</a>
+</li>
+	<li class="cat-item cat-item-5"><a href="http://blog.kalen25115.cn/static/index.php/category/webshentou/" >web渗透</a>
+</li>
+	<li class="cat-item cat-item-7 current-cat"><a href="http://blog.kalen25115.cn/static/index.php/category/embedded-system/" >嵌入式</a>
+</li>
+	<li class="cat-item cat-item-2"><a href="http://blog.kalen25115.cn/static/index.php/category/sanwen/" >散文随笔</a>
+</li>
+	<li class="cat-item cat-item-9"><a href="http://blog.kalen25115.cn/static/index.php/category/iot/" >物联网</a>
+</li>
+	<li class="cat-item cat-item-11"><a href="http://blog.kalen25115.cn/static/index.php/category/web-crawler/" >网络爬虫</a>
+</li>
+		</ul>
+</aside>	</div>	
+	
+
+		</div><!-- .inner-wrap -->
+	</div><!-- #main -->	
+			<footer id="colophon" class="clearfix">	
+			
+	
+			<div class="footer-socket-wrapper clearfix">
+				<div class="inner-wrap">
+					<div class="footer-socket-area">
+						<div class="copyright">Copyright &copy; 2016 <a href="http://blog.kalen25115.cn/static/" title="叁公子的博客" ><span>叁公子的博客</span></a>. Powered by <a href="http://wordpress.org" target="_blank" title="WordPress"><span>WordPress</span></a>. Theme: Spacious by <a href="http://themegrill.com/themes/spacious" target="_blank" title="ThemeGrill" rel="designer"><span>ThemeGrill</span></a>.</div>						<nav class="small-menu clearfix">
+									    			</nav>
+					</div>
+				</div>
+			</div>			
+		</footer>
+		<a href="#masthead" id="scroll-up"></a>	
+	</div><!-- #page -->
+	<script type='text/javascript' src='http://blog.kalen25115.cn/wp-content/themes/spacious/js/navigation.js?ver=4.4.2'></script>
+<script type='text/javascript' src='http://blog.kalen25115.cn/wp-includes/js/wp-embed.min.js?ver=4.4.2'></script>
+</body>
+</html>
