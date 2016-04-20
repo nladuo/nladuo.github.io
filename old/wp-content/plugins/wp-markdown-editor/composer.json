@@ -1,0 +1,22 @@
+{
+  "name": "hoducha/wp-markdown-editor",
+  "type": "plugin",
+  "version": "2.0.3",
+  "description": "Markdown Editor for Wordpress",
+  "keywords": [
+    "wordpress",
+    "markdown",
+    "editor"
+  ],
+  "homepage": "http://hoducha.com",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Ha Ho",
+      "email": "hoducha@gmail.com"
+    }
+  ],
+  "require": {
+    "php": ">=5.3.9"
+  }
+}
