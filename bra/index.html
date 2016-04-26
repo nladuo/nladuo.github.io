@@ -5,13 +5,13 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="style.css" type="text/css" media="screen" />
-  <link rel="stylesheet" href="/bra/css/bootstrap.min.css" type="text/css"  />
+  <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css"  />
 
   <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-  <title>Exposition</title>
-  <script type="text/javascript" src="js/jquery-1.11.3.js"></script>
+  <title>淘宝文胸销量分析</title>
+  <script type="text/javascript" src="js/jquery-1.12.3.min.js"></script>
   <script type="text/javascript" src="js/bootstrap.min.js"></script>
-  <script src="js/echarts.js"></script>
+  <script src="js/echarts.min.js"></script>
   <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
   <!--[if lt IE 9]>
@@ -19,7 +19,7 @@
   <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
   <![endif]-->
 </head>
-<body class="linear">
+<body class="linear" onmousewheel="return false;">
   <div id="main">
     <div id="basic" ></div>
     <div id="color" ></div>
@@ -27,7 +27,7 @@
   </div>
   <nav>
     <ul class="pager">
-      <li class="previous">
+      <li class="previous" onmouseup="$('.previous').blur()">
         <a href="#">
           <span class="glyphicon glyphicon-arrow-left
 " aria-hidden="true" style="font-size: 22px"></span>
@@ -181,12 +181,12 @@ option_details = {
     yAxis : [
         {
             type : 'value',
-            name : '人数',
+            name : '人数/%',
             min: 0,
             max: 20,
             interval:5,
             axisLabel : {
-                formatter: '{value} %'
+                formatter: '{value}'
             }
         }
        
@@ -249,7 +249,7 @@ $(".previous").click(function(){
 });
 $(".next").click(function(){
 if (basic_div.is(":visible")){
-    $("#color").width(document.body.clientWidth*0.8);
+    $("#color").width(document.body.clientWidth*0.7);
    var myChart_color = echarts.init(document.getElementById('color'));
     myChart_color.setOption(option_color);
     basic_div.css('display','none');
@@ -258,7 +258,7 @@ if (basic_div.is(":visible")){
     //myChart_color.resize($(color).width());
   }
   else if (color_div.is(":visible")){
-    $("#details").width(document.body.clientWidth*0.8);
+    $("#details").width(document.body.clientWidth*0.7);
     var myChart_details = echarts.init(document.getElementById('details'));
     myChart_details.setOption(option_details);
     color_div.css('display','none');
@@ -267,7 +267,7 @@ if (basic_div.is(":visible")){
     //myChart_details.resize($(details).width());
   }
   else if (details_div.is(":visible")){
-    $("#basic").width(document.body.clientWidth*0.8);
+    $("#basic").width(document.body.clientWidth*0.7);
     var myChart_basic = echarts.init(document.getElementById('basic'));
     myChart_basic.setOption(option_basic);
     details_div.css('display','none');
