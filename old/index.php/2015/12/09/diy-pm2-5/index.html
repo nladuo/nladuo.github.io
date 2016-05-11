@@ -138,10 +138,9 @@ var CrayonSyntaxStrings = {"copy":"\u4f7f\u7528 %s \u590d\u5236\uff0c\u4f7f\u752
 <p>&nbsp;&nbsp;&nbsp;&nbsp;这个传感器分了两个标准检测了PM1.0、PM2.5、以及PM10的浓度，这些我都在软件里显示出来了，当然这个传感器还有一些颗粒物的测量，我这里没有做。（吐槽一句：这是在室内测出来的污染情况，感觉要被毒死了）</p>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;PC端的测试就到这儿，之后我们可以连接蓝牙测试一下手机APP了，这里也给一个样例程序，一个简易版的串口调试助手，是我根据官方给的源码修改的（看的不爽的都改了，嘿嘿）</p>
 <ul>
-<li>iOS样例程序：<a href="https://github.com/nladuo/BLE-SmartCar/tree/master/source/software/sample-iOS" target="_blank">https://github.com/nladuo/BLE-SmartCar/tree/master/source/software/sample-iOS</a></li>
-<li>Android样例程序：<a href="https://github.com/nladuo/BLE-SmartCar/tree/master/source/software/sample-android" target="_blank">https://github.com/nladuo/BLE-SmartCar/tree/master/source/software/sample-android</a></li>
+<li>iOS样例程序：<a href="https://github.com/nladuo/IoT-Firstep/tree/master/code/6.5/BLEComSample-iOS" target="_blank">https://github.com/nladuo/IoT-Firstep/tree/master/code/6.5/BLEComSample-iOS</a></li>
+<li>Android样例程序：<a href="https://github.com/nladuo/IoT-Firstep/tree/master/code/6.3/BLEComSampleAndroid" target="_blank">https://github.com/nladuo/IoT-Firstep/tree/master/code/6.3/BLEComSampleAndroid</a></li>
 </ul>
-<p>（有兴趣也可以看看这个项目，是一个蓝牙小车的案例，本来打算写一个制作蓝牙小车的教程的，不过只写了基本的代码）</p>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;蓝牙的使用其实非常简单，和串口几乎一样的，把传感器的TXD接到蓝牙的RXD上，传感器就会给蓝牙发数据包了。我们的手机连接蓝牙后，蓝牙就会把传感器发送的数据包再传给手机上。我们的手机也就是类似一个“蓝牙串口助手”。这是连接后的效果，USB转TTL模块用来给蓝牙和传感器供电。</p>
 <p><a href="http://nladuo.github.io/old/wp-content/uploads/2015/12/1208_1-1.jpg"><img class="wp-image-84 aligncenter" src="http://nladuo.github.io/old/wp-content/uploads/2015/12/1208_1-1.jpg" alt="1208_1 (1)" width="542" height="406" srcset="http://nladuo.github.io/old/wp-content/uploads/2015/12/1208_1-1-300x225.jpg 300w, http://nladuo.github.io/old/wp-content/uploads/2015/12/1208_1-1-1024x768.jpg 1024w, http://nladuo.github.io/old/wp-content/uploads/2015/12/1208_1-1.jpg 2016w" sizes="(max-width: 542px) 100vw, 542px" /></a></p>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;下面通过修改上面给的示例安卓APP，真机调试之后就可以看到以下的效果，我这里只输出了按照我国标的空气污染指数。（源码下载链接：<a href="http://nladuo.github.io/old/wp-content/uploads/2015/12/BLEAirPolluteDetector.zip">BLEAirPolluteDetector-Android.zip</a>，有基础的话可以看下这个源码，把我的UI改的漂亮一些，直接用也Okay，另外，如果看源码的话，用eclipse导入之后，可能遇到乱码问题，我是在linux环境下开发的，用的是UTF-8编码，把eclipse的编码设置成UTF-8就可以了）</p>
