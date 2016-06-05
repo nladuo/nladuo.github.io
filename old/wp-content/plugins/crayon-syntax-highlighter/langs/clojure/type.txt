@@ -1,5 +1,0 @@
-vector
-map-hash
-list
-atom
-seq

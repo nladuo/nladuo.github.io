@@ -1,8 +1,0 @@
-not-every?
-not-any?
-filter
-reduce
-every?
-some
-map
-for
