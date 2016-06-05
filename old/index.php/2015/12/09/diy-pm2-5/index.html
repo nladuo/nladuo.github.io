@@ -138,8 +138,8 @@ var CrayonSyntaxStrings = {"copy":"\u4f7f\u7528 %s \u590d\u5236\uff0c\u4f7f\u752
 <p>&nbsp;&nbsp;&nbsp;&nbsp;这个传感器分了两个标准检测了PM1.0、PM2.5、以及PM10的浓度，这些我都在软件里显示出来了，当然这个传感器还有一些颗粒物的测量，我这里没有做。（吐槽一句：这是在室内测出来的污染情况，感觉要被毒死了）</p>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;PC端的测试就到这儿，之后我们可以连接蓝牙测试一下手机APP了，这里也给一个样例程序，一个简易版的串口调试助手，是我根据官方给的源码修改的（看的不爽的都改了，嘿嘿）</p>
 <ul>
-<li>iOS样例程序：<a href="https://github.com/nladuo/IoT-Firstep/tree/master/code/6.5/BLEComSample-iOS" target="_blank">https://github.com/nladuo/IoT-Firstep/tree/master/code/6.5/BLEComSample-iOS</a></li>
-<li>Android样例程序：<a href="https://github.com/nladuo/IoT-Firstep/tree/master/code/6.3/BLEComSampleAndroid" target="_blank">https://github.com/nladuo/IoT-Firstep/tree/master/code/6.3/BLEComSampleAndroid</a></li>
+<li>iOS样例程序：<a href="https://github.com/nladuo/IoT-Firstep/tree/master/code/6.5/BLECom" target="_blank">https://github.com/nladuo/IoT-Firstep/tree/master/code/6.5/BLEComSample-iOS</a></li>
+<li>Android样例程序：<a href="https://github.com/nladuo/IoT-Firstep/tree/master/code/6.3/BLECom" target="_blank">https://github.com/nladuo/IoT-Firstep/tree/master/code/6.3/BLEComSampleAndroid</a></li>
 </ul>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;蓝牙的使用其实非常简单，和串口几乎一样的，把传感器的TXD接到蓝牙的RXD上，传感器就会给蓝牙发数据包了。我们的手机连接蓝牙后，蓝牙就会把传感器发送的数据包再传给手机上。我们的手机也就是类似一个“蓝牙串口助手”。这是连接后的效果，USB转TTL模块用来给蓝牙和传感器供电。</p>
 <p><a href="http://nladuo.github.io/old/wp-content/uploads/2015/12/1208_1-1.jpg"><img class="wp-image-84 aligncenter" src="http://nladuo.github.io/old/wp-content/uploads/2015/12/1208_1-1.jpg" alt="1208_1 (1)" width="542" height="406" srcset="http://nladuo.github.io/old/wp-content/uploads/2015/12/1208_1-1-300x225.jpg 300w, http://nladuo.github.io/old/wp-content/uploads/2015/12/1208_1-1-1024x768.jpg 1024w, http://nladuo.github.io/old/wp-content/uploads/2015/12/1208_1-1.jpg 2016w" sizes="(max-width: 542px) 100vw, 542px" /></a></p>
@@ -162,9 +162,6 @@ var CrayonSyntaxStrings = {"copy":"\u4f7f\u7528 %s \u590d\u5236\uff0c\u4f7f\u752
                <span class="category"><a href="http://nladuo.github.io/old/index.php/category/iot/" rel="category tag">物联网</a></span>
 
                <span class="comments"><a href="http://nladuo.github.io/old/index.php/2015/12/09/diy-pm2-5/#respond">No Comments</a></span>
-
-
-
       </div></footer>
 	</article>
 
