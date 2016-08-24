@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <title>一个物联网入门教程——IoT-Firstep | 叁公子的博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="&amp;#x4E00;&amp;#x4E2A;&amp;#x7269;&amp;#x8054;&amp;#x7F51;(IoT)&amp;#x5F00;&amp;#x53D1;&amp;#x7684;&amp;#x5165;&amp;#x95E8;&amp;#x6559;&amp;#x7A0B;&amp;#x3002;&amp;#x6D89;&amp;#x53CA;&amp;#x5355;&amp;#x7247;&amp;#x673A;&amp;#x3001;&amp;#x4E0A;&amp;#x4F4D;&amp;#x673A;&amp;#x3001;&amp;#x79FB;&amp;#x">
+<meta property="og:type" content="article">
+<meta property="og:title" content="一个物联网入门教程——IoT-Firstep">
+<meta property="og:url" content="http://nladuo.github.io/2016/08/24/一个物联网入门教程——IoT-Firstep/index.html">
+<meta property="og:site_name" content="叁公子的博客">
+<meta property="og:description" content="&amp;#x4E00;&amp;#x4E2A;&amp;#x7269;&amp;#x8054;&amp;#x7F51;(IoT)&amp;#x5F00;&amp;#x53D1;&amp;#x7684;&amp;#x5165;&amp;#x95E8;&amp;#x6559;&amp;#x7A0B;&amp;#x3002;&amp;#x6D89;&amp;#x53CA;&amp;#x5355;&amp;#x7247;&amp;#x673A;&amp;#x3001;&amp;#x4E0A;&amp;#x4F4D;&amp;#x673A;&amp;#x3001;&amp;#x79FB;&amp;#x">
+<meta property="og:updated_time" content="2016-08-24T16:04:22.692Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="一个物联网入门教程——IoT-Firstep">
+<meta name="twitter:description" content="&amp;#x4E00;&amp;#x4E2A;&amp;#x7269;&amp;#x8054;&amp;#x7F51;(IoT)&amp;#x5F00;&amp;#x53D1;&amp;#x7684;&amp;#x5165;&amp;#x95E8;&amp;#x6559;&amp;#x7A0B;&amp;#x3002;&amp;#x6D89;&amp;#x53CA;&amp;#x5355;&amp;#x7247;&amp;#x673A;&amp;#x3001;&amp;#x4E0A;&amp;#x4F4D;&amp;#x673A;&amp;#x3001;&amp;#x79FB;&amp;#x">
+  
+    <link rel="alternative" href="/atom.xml" title="叁公子的博客" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="https://nladuo.github.io/img/avatar.jpg" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">nladuo</a></h1>
+		</hgroup>
+
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						<div class="icon-wrap icon-link hide" data-idx="2">
+							<div class="loopback_l"></div>
+							<div class="loopback_r"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>Menu</li>
+						<li>Tags</li>
+						
+						<li>Links</li>
+						
+						
+						<li>Über</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/nladuo" title="github">github</a>
+					        
+								<a class="mail" target="_blank" href="/kalen25115@gmail.com" title="mail">mail</a>
+					        
+								<a class="facebook" target="_blank" href="#" title="facebook">facebook</a>
+					        
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/Net/" style="font-size: 10px;">.Net</a> <a href="/tags/Golang/" style="font-size: 10px;">Golang</a> <a href="/tags/IoT/" style="font-size: 15px;">IoT</a> <a href="/tags/NodeJS/" style="font-size: 15px;">NodeJS</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/机器学习/" style="font-size: 10px;">机器学习</a> <a href="/tags/网络爬虫/" style="font-size: 20px;">网络爬虫</a> <a href="/tags/随笔/" style="font-size: 10px;">随笔</a>
+					</div>
+				</section>
+				
+				
+				
+				<section class="switch-part switch-part3">
+					<div id="js-friends">
+					
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://zhangxiuling.github.io">张秀玲的博客</a>
+			        
+			        </div>
+				</section>
+				
+
+				
+				
+				<section class="switch-part switch-part4">
+				
+					<div id="js-aboutme">Coding is just like writing poem.</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">nladuo</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+			
+				<img lazy-src="https://nladuo.github.io/img/avatar.jpg" class="js-avatar">
+			
+			</div>
+			<hgroup>
+			  <h1 class="header-author">nladuo</h1>
+			</hgroup>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/nladuo" title="github">github</a>
+			        
+						<a class="mail" target="_blank" href="/kalen25115@gmail.com" title="mail">mail</a>
+			        
+						<a class="facebook" target="_blank" href="#" title="facebook">facebook</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+
+      <div class="body-wrap"><article id="post-一个物联网入门教程——IoT-Firstep" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/08/24/一个物联网入门教程——IoT-Firstep/" class="article-date">
+  	<time datetime="2016-08-24T15:57:00.000Z" itemprop="datePublished">2016-08-24</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      一个物联网入门教程——IoT-Firstep
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/IoT/">IoT</a></li></ul>
+	</div>
+
+        
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>&#x4E00;&#x4E2A;&#x7269;&#x8054;&#x7F51;(IoT)&#x5F00;&#x53D1;&#x7684;&#x5165;&#x95E8;&#x6559;&#x7A0B;&#x3002;&#x6D89;&#x53CA;&#x5355;&#x7247;&#x673A;&#x3001;&#x4E0A;&#x4F4D;&#x673A;&#x3001;&#x79FB;&#x52A8;&#x5E94;&#x7528;&#x3001;&#x670D;&#x52A1;&#x5668;&#x540E;&#x53F0;&#x5F00;&#x53D1;&#x7684;&#x77E5;&#x8BC6;&#x3002;&#x4EE5;&#x53CA;&#x84DD;&#x7259;4.0&#x3001;&#x4EE5;&#x592A;&#x7F51;&#x6A21;&#x5757;&#x7684;&#x4F7F;&#x7528;&#x5B9E;&#x4F8B;&#x3002;</p>
+<h2 id="&#x76EE;&#x5F55;"><a href="#&#x76EE;&#x5F55;" class="headerlink" title="&#x76EE;&#x5F55;"></a>&#x76EE;&#x5F55;</h2><ul>
+<li><a href="./book/preface.md">&#x524D;&#x8A00;</a>  </li>
+</ul>
+<h3 id="&#x7B2C;&#x4E00;&#x90E8;&#x5206;&#xFF1A;&#x57FA;&#x7840;&#x5165;&#x95E8;"><a href="#&#x7B2C;&#x4E00;&#x90E8;&#x5206;&#xFF1A;&#x57FA;&#x7840;&#x5165;&#x95E8;" class="headerlink" title="&#x7B2C;&#x4E00;&#x90E8;&#x5206;&#xFF1A;&#x57FA;&#x7840;&#x5165;&#x95E8;"></a>&#x7B2C;&#x4E00;&#x90E8;&#x5206;&#xFF1A;&#x57FA;&#x7840;&#x5165;&#x95E8;</h3><ul>
+<li>&#x7B2C;1&#x90E8;&#x5206;&#xFF1A;<a href="https://github.com/nladuo/IoT-Firstep/blob/master/book/1.0.md" target="_blank" rel="external">&#x5355;&#x7247;&#x673A;&#x5F00;&#x53D1;&#x2014;&#x2014;Arduino</a>  <pre><code>- 1.1 [Arduino&#x5F00;&#x53D1;&#x73AF;&#x5883;&#x642D;&#x5EFA;](https://github.com/nladuo/IoT-Firstep/blob/master/book/1.1.md)  
+- 1.2 [&#x70B9;&#x4EAE;&#x4E00;&#x4E2A;Led](https://github.com/nladuo/IoT-Firstep/blob/master/book/1.2.md)  
+- 1.3 [PWM&#x64CD;&#x4F5C;](https://github.com/nladuo/IoT-Firstep/blob/master/book/1.3.md)  
+- 1.4 [UART&#x7684;&#x4F7F;&#x7528;](https://github.com/nladuo/IoT-Firstep/blob/master/book/1.4.md)  
+</code></pre></li>
+<li>&#x7B2C;2&#x90E8;&#x5206;&#xFF1A;<a href="https://github.com/nladuo/IoT-Firstep/blob/master/book/2.0.md" target="_blank" rel="external">&#x4E0A;&#x4F4D;&#x673A;&#x5F00;&#x53D1;&#x2014;&#x2014;.Net</a>  <pre><code>- 2.1 [winform&#x5FEB;&#x901F;&#x5165;&#x95E8;](https://github.com/nladuo/IoT-Firstep/blob/master/book/2.1.md)  
+- 2.2 [serialport&#x63A7;&#x4EF6;&#x4F7F;&#x7528;](https://github.com/nladuo/IoT-Firstep/blob/master/book/2.2.md)  
+</code></pre></li>
+<li>&#x7B2C;3&#x90E8;&#x5206;&#xFF1A;<a href="https://github.com/nladuo/IoT-Firstep/blob/master/book/3.0.md" target="_blank" rel="external">&#x79FB;&#x52A8;&#x5F00;&#x53D1;&#x2014;&#x2014;Android</a>  <pre><code>- 3.1 [&#x5B89;&#x5353;&#x5F00;&#x53D1;&#x73AF;&#x5883;&#x642D;&#x5EFA;](https://github.com/nladuo/IoT-Firstep/blob/master/book/3.1.md)  
+- 3.2 [HelloActivity&#x5206;&#x6790;](https://github.com/nladuo/IoT-Firstep/blob/master/book/3.2.md)  
+- 3.3 [LinearLayout&#x4E0E;&#x57FA;&#x672C;&#x63A7;&#x4EF6;](https://github.com/nladuo/IoT-Firstep/blob/master/book/3.3.md)  
+- 3.4 [Intent&#x4E0E;Activity&#x7684;&#x751F;&#x547D;&#x5468;&#x671F;](https://github.com/nladuo/IoT-Firstep/blob/master/book/3.4.md)  
+- 3.5 [ListView&#x4E0E;BaseAdapter](https://github.com/nladuo/IoT-Firstep/blob/master/book/3.5.md)  
+- 3.6 [Service&#x5B66;&#x4E60;](https://github.com/nladuo/IoT-Firstep/blob/master/book/3.6.md)  
+- 3.7 [BroadCastReciever&#x5B66;&#x4E60;](https://github.com/nladuo/IoT-Firstep/blob/master/book/3.7.md)  
+</code></pre></li>
+<li><p>&#x7B2C;4&#x90E8;&#x5206;&#xFF1A;<a href="https://github.com/nladuo/IoT-Firstep/blob/master/book/4.0.md" target="_blank" rel="external">&#x79FB;&#x52A8;&#x5F00;&#x53D1;&#x2014;&#x2014;iOS</a>  </p>
+<pre><code>- 4.1 [Objective-C&#x8BED;&#x8A00;&#x5FEB;&#x901F;&#x5165;&#x95E8;]  
+- 4.2 [&#x57FA;&#x672C;&#x63A7;&#x4EF6;&#x4F7F;&#x7528;]  
+- 4.3 [StoryBoard&#x4F7F;&#x7528;]  
+- 4.4 [&#x9875;&#x9762;&#x8DF3;&#x8F6C;&#x4E0E;&#x4F20;&#x503C;]  
+- 4.5 [UITableView&#x7684;&#x4F7F;&#x7528;]  
+</code></pre></li>
+<li><p>&#x7B2C;5&#x90E8;&#x5206;&#xFF1A;<a href="https://github.com/nladuo/IoT-Firstep/blob/master/book/5.0.md" target="_blank" rel="external">&#x540E;&#x7AEF;&#x5F00;&#x53D1;&#x2014;&#x2014;Golang</a>  </p>
+<pre><code>- 5.1 [go&#x8BED;&#x8A00;&#x5F00;&#x53D1;&#x73AF;&#x5883;&#x642D;&#x5EFA;](https://github.com/nladuo/IoT-Firstep/blob/master/book/5.1.md)  
+- 5.2 [go&#x8BED;&#x8A00;&#x57FA;&#x7840;&#x5FEB;&#x901F;&#x5165;&#x95E8;](https://github.com/nladuo/IoT-Firstep/blob/master/book/5.2.md)  
+- 5.3 [&#x7528;go&#x8BED;&#x8A00;&#x663E;&#x793A;&#x4E00;&#x4E2A;&#x7F51;&#x9875;](https://github.com/nladuo/IoT-Firstep/blob/master/book/5.3.md)  
+- 5.4 [go&#x8BED;&#x8A00;web&#x6846;&#x67B6;&#x2014;&#x2014;gin]  
+- 5.5 [&#x90E8;&#x7F72;go&#x8BED;&#x8A00;&#x9879;&#x76EE;]  
+</code></pre></li>
+</ul>
+<h3 id="&#x7B2C;&#x4E8C;&#x90E8;&#x5206;&#xFF1A;&#x6848;&#x4F8B;&#x5B66;&#x4E60;"><a href="#&#x7B2C;&#x4E8C;&#x90E8;&#x5206;&#xFF1A;&#x6848;&#x4F8B;&#x5B66;&#x4E60;" class="headerlink" title="&#x7B2C;&#x4E8C;&#x90E8;&#x5206;&#xFF1A;&#x6848;&#x4F8B;&#x5B66;&#x4E60;"></a>&#x7B2C;&#x4E8C;&#x90E8;&#x5206;&#xFF1A;&#x6848;&#x4F8B;&#x5B66;&#x4E60;</h3><ul>
+<li>&#x7B2C;6&#x90E8;&#x5206;&#xFF1A;<a href="https://github.com/nladuo/IoT-Firstep/blob/master/book/6.0.md" target="_blank" rel="external">&#x84DD;&#x7259;4.0&#x6848;&#x4F8B;&#x2014;&#x2014;&#x624B;&#x673A;&#x63A7;&#x5236;RGB&#x706F;&#x989C;&#x8272;</a>  <pre><code>- 6.1 [&#x7528;&#x4E32;&#x53E3;&#x63A7;&#x5236;RGB&#x706F;&#x989C;&#x8272;](https://github.com/nladuo/IoT-Firstep/blob/master/book/6.1.md)  
+- 6.2 [&#x7528;&#x4E0A;&#x4F4D;&#x673A;&#x63A7;&#x5236;RGB&#x706F;&#x989C;&#x8272;](https://github.com/nladuo/IoT-Firstep/blob/master/book/6.2.md)  
+- 6.3 [&#x84DD;&#x7259;4.0&#x7B80;&#x5355;&#x4ECB;&#x7ECD;](https://github.com/nladuo/IoT-Firstep/blob/master/book/6.3.md)  
+- 6.4 [&#x5B89;&#x5353;&#x2014;&#x2014;&#x84DD;&#x7259;4.0&#x4F8B;&#x7A0B;&#x6E90;&#x7801;&#x9605;&#x8BFB;]  
+- 6.5 [&#x5B89;&#x5353;&#x2014;&#x2014;&#x7528;&#x624B;&#x673A;&#x63A7;&#x5236;RGB&#x706F;&#x989C;&#x8272;]  
+- 6.6 [iOS&#x2014;&#x2014;&#x84DD;&#x7259;4.0&#x4F8B;&#x7A0B;&#x6E90;&#x7801;&#x9605;&#x8BFB;]  
+- 6.7 [iOS&#x2014;&#x2014;&#x7528;&#x624B;&#x673A;&#x63A7;&#x5236;RGB&#x706F;&#x989C;&#x8272;]  
+</code></pre></li>
+<li>&#x7B2C;7&#x90E8;&#x5206;&#xFF1A;<a href="https://github.com/nladuo/IoT-Firstep/blob/master/book/7.0.md" target="_blank" rel="external">&#x7F51;&#x7EDC;&#x6A21;&#x5757;&#x6848;&#x4F8B;&#x2014;&#x2014;&#x6E29;&#x5EA6;&#x91C7;&#x96C6;&#x7CFB;&#x7EDF;&#x5F00;&#x53D1;</a>  <pre><code>- 7.1 [Arduino&#x6E29;&#x5EA6;&#x4F20;&#x611F;&#x5668;&#x7684;&#x4F7F;&#x7528;]  
+- 7.2 [ENC28J60&#x6A21;&#x5757;&#x7684;&#x4F7F;&#x7528;]  
+- 7.3 [&#x7F51;&#x9875;&#x663E;&#x793A;&#x6E29;&#x5EA6;]  
+- 7.4 [&#x603B;&#x7ED3;&#x4E0E;&#x8865;&#x5145;]  
+</code></pre></li>
+</ul>
+<h3 id="&#x9644;&#x5F55;&#xFF1A;"><a href="#&#x9644;&#x5F55;&#xFF1A;" class="headerlink" title="&#x9644;&#x5F55;&#xFF1A;"></a>&#x9644;&#x5F55;&#xFF1A;</h3><ul>
+<li>&#x9644;&#x5F55;A&#xFF1A;[&#x5982;&#x4F55;&#x5BFC;&#x5165;&#x522B;&#x4EBA;&#x7684;&#x5B89;&#x5353;&#x5DE5;&#x7A0B;]  </li>
+<li>&#x9644;&#x5F55;B&#xFF1A;[&#x5982;&#x4F55;&#x5728;&#x5B89;&#x5353;&#x4E2D;&#x8FDB;&#x884C;&#x771F;&#x673A;&#x6D4B;&#x8BD5;]  </li>
+</ul>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2016/07/17/python中使用tor代理/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">python中使用tor代理</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+<div class="share_jia">
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">Share to: &nbsp; </span>
+		<a class="jiathis_button_facebook"></a> 
+    <a class="jiathis_button_twitter"></a>
+    <a class="jiathis_button_plus"></a> 
+    <a class="jiathis_button_tsina"></a>
+		<a class="jiathis_button_cqq"></a>
+		<a class="jiathis_button_douban"></a>
+		<a class="jiathis_button_weixin"></a>
+		<a class="jiathis_button_tumblr"></a>
+    <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	</div>
+	<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
+</div>
+
+
+
+
+
+
+<div class="duoshuo">
+	<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="一个物联网入门教程——IoT-Firstep" data-title="一个物联网入门教程——IoT-Firstep" data-url="http://nladuo.github.io/2016/08/24/一个物联网入门教程——IoT-Firstep/"></div>
+	<!-- 多说评论框 end -->
+	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+	<script type="text/javascript">
+	var duoshuoQuery = {short_name:"true"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+	<!-- 多说公共JS代码 end -->
+</div>
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2016 nladuo
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false
+	}
+</script>
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+  </div>
+</body>
+</html>
