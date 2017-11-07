@@ -659,9 +659,9 @@
     </summary>
     
     
-      <category term="python" scheme="http://nladuo.github.io/tags/python/"/>
-    
       <category term="网络爬虫" scheme="http://nladuo.github.io/tags/%E7%BD%91%E7%BB%9C%E7%88%AC%E8%99%AB/"/>
+    
+      <category term="python" scheme="http://nladuo.github.io/tags/python/"/>
     
   </entry>
   
@@ -851,9 +851,9 @@
     </summary>
     
     
-      <category term="网络爬虫" scheme="http://nladuo.github.io/tags/%E7%BD%91%E7%BB%9C%E7%88%AC%E8%99%AB/"/>
-    
       <category term="Golang" scheme="http://nladuo.github.io/tags/Golang/"/>
+    
+      <category term="网络爬虫" scheme="http://nladuo.github.io/tags/%E7%BD%91%E7%BB%9C%E7%88%AC%E8%99%AB/"/>
     
   </entry>
   
