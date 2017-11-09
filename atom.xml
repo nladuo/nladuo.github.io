@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://nladuo.github.io/"/>
-  <updated>2017-10-26T03:49:16.000Z</updated>
+  <updated>2017-11-09T17:37:07.000Z</updated>
   <id>http://nladuo.github.io/</id>
   
   <author>
@@ -14,6 +14,76 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>读论文Alogorithms for Non-negative Matrix Factorization</title>
+    <link href="http://nladuo.github.io/2017/11/09/%E8%AF%BB%E8%AE%BA%E6%96%87Alogorithms-for-Non-negative-Matrix-Factorization/"/>
+    <id>http://nladuo.github.io/2017/11/09/读论文Alogorithms-for-Non-negative-Matrix-Factorization/</id>
+    <published>2017-11-09T07:27:00.000Z</published>
+    <updated>2017-11-09T17:37:07.000Z</updated>
+    
+    <content type="html"><![CDATA[<h3 id="NMF&#x662F;&#x4EC0;&#x4E48;&#xFF1F;"><a href="#NMF&#x662F;&#x4EC0;&#x4E48;&#xFF1F;" class="headerlink" title="NMF&#x662F;&#x4EC0;&#x4E48;&#xFF1F;"></a>NMF&#x662F;&#x4EC0;&#x4E48;&#xFF1F;</h3><script type="math/tex; mode=display">V_{n*m}≈W_{n*r}H_{r*m}</script><script type="math/tex; mode=display">v_{n*1}≈W_{n*r}h_{r*1}</script><p>&#x627E;&#x51FA;&#x539F;&#x6570;&#x636E;&#x7684;latent&#xFF0C;&#x538B;&#x7F29;&#x6570;&#x636E;&#x3002;&#x5C06;&#x539F;&#x6765;&#x9700;&#x8981;n&#x7EF4;&#x6765;&#x8868;&#x793A;&#x7684;&#x6570;&#x636E;&#x7528;r&#x7EF4;&#x7684;&#x7EBF;&#x6027;&#x7EC4;&#x5408;&#x6765;&#x8868;&#x793A;&#x3002;</p>
+<p><img src="/2017/11/09/&#x8BFB;&#x8BBA;&#x6587;Alogorithms-for-Non-negative-Matrix-Factorization/1.png" alt=""><br><a id="more"></a></p>
+<h3 id="&#x8BE5;&#x6587;&#x6210;&#x679C;"><a href="#&#x8BE5;&#x6587;&#x6210;&#x679C;" class="headerlink" title="&#x8BE5;&#x6587;&#x6210;&#x679C;"></a>&#x8BE5;&#x6587;&#x6210;&#x679C;</h3><ol>
+<li><p>&#x63D0;&#x51FA;&#x4E24;&#x79CD;&#x7B97;&#x6CD5;&#xFF0C;</p>
+</li>
+<li><p>&#x5E76;&#x8BC1;&#x660E;&#x66F4;&#x65B0;&#x89C4;&#x5219;&#x662F;&#x5355;&#x8C03;&#x7684;&#xFF0C;&#x4ECE;&#x800C;&#x7B97;&#x6CD5;&#x53EF;&#x4EE5;&#x6536;&#x655B;&#x5230;&#x5C40;&#x90E8;&#x6700;&#x4F18;&#x3002;</p>
+</li>
+</ol>
+<h3 id="Cost-Function"><a href="#Cost-Function" class="headerlink" title="Cost Function"></a>Cost Function</h3><script type="math/tex; mode=display">||A-B||^2=\sum_{ij}(A_{ij}-B_{ij})^2</script><p>Problem1&#xFF1A;&#x6700;&#x5C0F;&#x5316; <script type="math/tex">||V-WH||^2</script> &#xFF0C;where <script type="math/tex">W,H>0</script></p>
+<script type="math/tex; mode=display">D(A||B)=\sum_{ij}(A_{ij}log\frac{A_{ij}}{B_{ij}})-A_{ij}+B_{ij}</script><p>Problem2&#xFF1A;&#x6700;&#x5C0F;&#x5316; <script type="math/tex">D(V||WH)</script> &#xFF0C;where <script type="math/tex">W,H>0</script></p>
+<p>&#x4E24;&#x4E2A;&#x65B9;&#x7A0B;&#x9488;&#x5BF9;&#x5355;&#x4E2A;W&#x6216;&#x8005;H&#x90FD;&#x662F;&#x51F8;&#x7684;&#xFF0C;&#x4F46;&#x662F;&#x540C;&#x65F6;&#x7684;&#x8BDD;&#x4E0D;&#x662F;&#x51F8;&#x7684;&#x3002;&#x6240;&#x4EE5;&#x53EA;&#x80FD;&#x627E;&#x5230;&#x5C40;&#x90E8;&#x6700;&#x4F18;&#xFF0C;&#x800C;&#x975E;&#x5168;&#x5C40;&#x6700;&#x4F18;&#x3002;</p>
+<p>&#x73B0;&#x6709;&#x65B9;&#x6CD5;&#xFF1A;</p>
+<ul>
+<li>gradient descent&#xFF1A;&#x592A;&#x6162;</li>
+<li>conjugate gradient&#xFF1A;more complicated than gradient descent</li>
+<li>&#x57FA;&#x4E8E;&#x68AF;&#x5EA6;&#x7684;&#x65B9;&#x6CD5;&#xFF1A;&#x5BF9;&#x4E8E;step&#x7684;&#x9009;&#x62E9;&#x6BD4;&#x8F83;&#x654F;&#x611F;&#xFF0C;&#x5BF9;&#x4E8E;&#x5927;&#x578B;&#x5E94;&#x7528;&#x4E0D;&#x65B9;&#x4FBF;</li>
+</ul>
+<h3 id="Updated-rules"><a href="#Updated-rules" class="headerlink" title="Updated rules"></a>Updated rules</h3><h4 id="&#x6B27;&#x6C0F;&#x8DDD;&#x79BB;"><a href="#&#x6B27;&#x6C0F;&#x8DDD;&#x79BB;" class="headerlink" title="&#x6B27;&#x6C0F;&#x8DDD;&#x79BB;"></a>&#x6B27;&#x6C0F;&#x8DDD;&#x79BB;</h4><script type="math/tex; mode=display">H_{a\mu}\leftarrow H_{a\mu}\frac{(W^TV)_{a\mu}}{(W^TWH)_{a\mu}}</script><script type="math/tex; mode=display">W_{ia}\leftarrow W_{ia}\frac{(VH^T)_{ia}}{(WHH^T)_{ia}}</script><h4 id="Divergence"><a href="#Divergence" class="headerlink" title="Divergence"></a>Divergence</h4><script type="math/tex; mode=display">H_{a\mu} \leftarrow H_{a\mu}\frac{\sum_iW_{ia}V_{i\mu}/(WH)_{i\mu}}{\sum_kW_{ka}}</script><script type="math/tex; mode=display">W_{ia} \leftarrow W_{ia}\frac{\sum_{\mu}H_{a\mu}V_{i\mu}/(WH)_{i\mu}}{\sum_vH_{av}}</script><h3 id="Proof-of-Convergence"><a href="#Proof-of-Convergence" class="headerlink" title="Proof of Convergence"></a>Proof of Convergence</h3><h4 id="&#x5B9A;&#x4E49;1"><a href="#&#x5B9A;&#x4E49;1" class="headerlink" title="&#x5B9A;&#x4E49;1"></a>&#x5B9A;&#x4E49;1</h4><script type="math/tex; mode=display">G(h,h')\geq F(h), G(h, h)=F(h)</script><p>&#x5219;<script type="math/tex">G(h,h')</script>&#x662F;<script type="math/tex">F(h)</script>&#x7684;&#x8F85;&#x52A9;&#x51FD;&#x6570;&#xFF0C;&#x5F53;&#x6EE1;&#x8DB3;&#x4E0A;&#x9762;&#x6761;&#x4EF6;&#x65F6;&#x3002;</p>
+<p><img src="/2017/11/09/&#x8BFB;&#x8BBA;&#x6587;Alogorithms-for-Non-negative-Matrix-Factorization/2.png" alt=""></p>
+<h4 id="&#x5F15;&#x7406;1"><a href="#&#x5F15;&#x7406;1" class="headerlink" title="&#x5F15;&#x7406;1"></a>&#x5F15;&#x7406;1</h4><p>&#x6839;&#x636E;&#x5B9A;&#x4E49;1&#xFF0C;&#x6709;<script type="math/tex">F(h^{t+1}) \leq G(h^{t+1}, h^t) \leq G(h^t, h^t) = F(h)</script></p>
+<script type="math/tex; mode=display">h^{t+1} = \arg\min_hG(h,h^t)</script><p>&#x4E0D;&#x65AD;&#x8FED;&#x4EE3;&#x4E0A;&#x5F0F;&#xFF0C;&#x53EF;&#x4EE5;&#x5F97;&#x51FA;&#x5C40;&#x90E8;&#x6700;&#x4F18;&#xFF0C;<script type="math/tex">h_{min} = \arg \min_h F(h)</script></p>
+<h4 id="&#x5F15;&#x7406;2"><a href="#&#x5F15;&#x7406;2" class="headerlink" title="&#x5F15;&#x7406;2"></a>&#x5F15;&#x7406;2</h4><p>&#x5B9A;&#x4E49;&#x5BF9;&#x89D2;&#x9635;<script type="math/tex">K(h^t)</script></p>
+<script type="math/tex; mode=display">K_{ab}(h^t)=\frac{\delta_ab(W^TWh^t)_a}{h_a^t}</script><p>&#x5B9A;&#x4E49;</p>
+<script type="math/tex; mode=display">G(h, h^t) = F(h^t) + (h-h^t)^T\nabla{F(h^t)} + \frac12 (h-h^t)^TK(h^t) (h-h^t)</script><p>&#x5982;&#x679C;&#x8BC1;&#x660E;<script type="math/tex">G(h, h^t)</script>&#x662F;<script type="math/tex">F(h)</script>&#x8F85;&#x52A9;&#x51FD;&#x6570;&#xFF0C;&#x5C31;&#x53EF;&#x4EE5;&#x5F97;&#x51FA;&#x6B27;&#x5F0F;&#x8DDD;&#x79BB;&#x5C40;&#x90E8;&#x6536;&#x655B;&#x4E86;&#x3002;</p>
+<script type="math/tex; mode=display">F(h)=\frac12\sum_i(v_i-\sum_aW_{ia}h_a)^2</script><h5 id="F-h-&#x5728;-h-t-&#x9644;&#x8FD1;&#x7684;&#x4E8C;&#x9636;&#x6CF0;&#x52D2;&#x5C55;&#x5F00;"><a href="#F-h-&#x5728;-h-t-&#x9644;&#x8FD1;&#x7684;&#x4E8C;&#x9636;&#x6CF0;&#x52D2;&#x5C55;&#x5F00;" class="headerlink" title="$F(h)$&#x5728;$h^t$&#x9644;&#x8FD1;&#x7684;&#x4E8C;&#x9636;&#x6CF0;&#x52D2;&#x5C55;&#x5F00;"></a>$F(h)$&#x5728;$h^t$&#x9644;&#x8FD1;&#x7684;&#x4E8C;&#x9636;&#x6CF0;&#x52D2;&#x5C55;&#x5F00;</h5><script type="math/tex; mode=display">F(h)=F(h^t) + (h-h^t)^T\nabla{F(h^t)} + \frac12 (h-h^t)^T\nabla^2F(h^t) (h-h^t)</script><p>&#x5176;&#x4E2D;</p>
+<script type="math/tex; mode=display">\nabla{F(h^t)}=\sum_i{(v_i-\sum_{a}{W_{ia}h_a^t})(-W_{ia})}</script><script type="math/tex; mode=display">\nabla^2F(h^t)= \nabla(\nabla{F(h^t)})=\sum_{ia}(W^T)_{ai}h_a^tW_{ia}=W^TW</script><h5 id="&#x534A;&#x6B63;&#x5B9A;&#x6027;&#x8BC1;&#x660E;"><a href="#&#x534A;&#x6B63;&#x5B9A;&#x6027;&#x8BC1;&#x660E;" class="headerlink" title="&#x534A;&#x6B63;&#x5B9A;&#x6027;&#x8BC1;&#x660E;"></a>&#x534A;&#x6B63;&#x5B9A;&#x6027;&#x8BC1;&#x660E;</h5><p>&#x663E;&#x7136;&#xFF0C;<script type="math/tex">G (h, h)=F(h)</script></p>
+<p>&#x90A3;&#x4E48;<script type="math/tex">G(h, h^t) \geq F(h)</script> &#x7B49;&#x4EF7;&#x4E8E;&#x4E0B;&#x5F0F;</p>
+<script type="math/tex; mode=display">0 \leq (h-h^t)^T[K(h^t)-W^TW](h-h^t)</script><p>&#x7B49;&#x4EF7;&#x4E8E;&#x8BC1;&#x660E;&#x4E0B;&#x9762;&#x77E9;&#x9635;&#x7684;&#x534A;&#x6B63;&#x5B9A;&#x6027;</p>
+<script type="math/tex; mode=display">M_{ab}(h^t)=h_a^t(K(h^t)-W^TW)_{ab}h_b^t</script><p>&#x5BF9;&#x4E8E;&#x4E0B;&#x5F0F;</p>
+<script type="math/tex; mode=display">v^TMv=\sum_{ab}v_aM_{ab}v_b</script><script type="math/tex; mode=display">= \sum_{ab}v_ah_a^tK(h^t)h_b^tv_b-v_ah_a^t(W^TW)_{ab}h_b^tv_b</script><p>&#x5176;&#x4E2D;</p>
+<script type="math/tex; mode=display">\delta_{ab}=\begin{cases}1, &a=b \cr 0, &a\not=b\end{cases}</script><script type="math/tex; mode=display">\sum_{ab}v_ah_a^tK(h^t)h_b^tv_b=\sum_{ab}v_ah_a^t\delta_{ab}(W^TWh^t)_a/h_a^t*h_b^tv_b</script><p>&#x56E0;&#x4E3A;<script type="math/tex">\delta_{ab}</script>&#x662F;&#x5BF9;&#x89D2;&#x9635;&#xFF0C;&#x6240;&#x4EE5;&#x53EF;&#x4EE5;&#x5F97;&#x51FA;<script type="math/tex">v_a=v_b</script><br>&#x5373;&#xFF1A;</p>
+<script type="math/tex; mode=display">\sum_{ab}v_ah_a^tK(h^t)h_b^tv_b=\sum_{ab}(h_a^t)^2(W^TW)_{ab}/h_a^t*h_b^tv_a^2</script><script type="math/tex; mode=display">=\sum_{ab}h_a^t(W^TW)_{ab}h_b^t(\frac12v_a^2+\frac12v_b^2)</script><p>&#x6240;&#x4EE5;&#xFF1A;</p>
+<script type="math/tex; mode=display">v^TMv=\sum_{ab}h_a^t(W^TW)_{ab}h_b^t(\frac12v_a^2+\frac12v_b^2-v_av_b)</script><script type="math/tex; mode=display">=\frac12\sum_{ab}h_a^t(W^TW)_{ab}h_b^t(v_a-v_b)^2</script><script type="math/tex; mode=display">\geq 0</script><h4 id="&#x8BC1;&#x660E;&#x5B9A;&#x7406;1&#xFF1A;"><a href="#&#x8BC1;&#x660E;&#x5B9A;&#x7406;1&#xFF1A;" class="headerlink" title="&#x8BC1;&#x660E;&#x5B9A;&#x7406;1&#xFF1A;"></a>&#x8BC1;&#x660E;&#x5B9A;&#x7406;1&#xFF1A;</h4><p>&#x4E0A;&#x8FF0;&#x5F0F;&#x5B50;&#x5DF2;&#x7ECF;&#x8BC1;&#x660E;<script type="math/tex">G(h,h^t)</script>&#x662F;<script type="math/tex">F(h^t)</script>&#x7684;&#x8F85;&#x52A9;&#x51FD;&#x6570;</p>
+<script type="math/tex; mode=display">G(h, h^t)=F(h^t)+(h-h^t)\nabla{F(h^t)}+\frac12(h-h^t)^TK(h^t)(h-h^t)</script><p>&#x4EE4;<script type="math/tex">\nabla{G(h, h^t)}=0</script></p>
+<script type="math/tex; mode=display">\nabla{F(h^t)}+K(h^t)(h-h^t)=0</script><p>&#x5F97;&#x9012;&#x63A8;&#x5F0F;</p>
+<script type="math/tex; mode=display">h^{t+1}=h^t-K(h^t)^{-1}\nabla{F(h^t)}</script><script type="math/tex; mode=display">h^{t+1} = h^t-\frac{h_a^t}{\delta_{ab}(W^TWh^t)_a}\sum_i{(v_i-\sum_{a}{W_{ia}h_a})(-W_{ia})}</script><script type="math/tex; mode=display">= h^t - \frac{h_a^t}{\delta_{ab}(W^TWh^t)_a}(\sum_{ia}(W^T)_{ai}h_aW_{ia} - \sum_iv_iW_{ia})</script><p>&#x6700;&#x540E;&#x5F97;&#x5230;&#x6B27;&#x5F0F;&#x8DDD;&#x79BB;&#x7684;<script type="math/tex">H</script>&#x7684;update rules&#xFF0C;&#x540C;&#x7406;&#x53EF;&#x5F97;&#x5230;<script type="math/tex">W</script>&#x7684;update rules&#x3002;</p>
+<script type="math/tex; mode=display">h_a^{t+1} = h_a^t\frac{(W^Tv)_a}{(W^TWh^t)_a}</script><h4 id="&#x5F15;&#x7406;2-1"><a href="#&#x5F15;&#x7406;2-1" class="headerlink" title="&#x5F15;&#x7406;2"></a>&#x5F15;&#x7406;2</h4><p>&#x548C;&#x524D;&#x9762;&#x4E00;&#x6837;&#xFF0C;&#x5982;&#x679C;&#x8BC1;&#x660E;<script type="math/tex">G(h, h^t)</script>&#x662F;<script type="math/tex">F(h)</script>&#x8F85;&#x52A9;&#x51FD;&#x6570;&#xFF0C;&#x5C31;&#x53EF;&#x4EE5;&#x5F97;&#x51FA;Divergence&#x4E0B;&#x5C40;&#x90E8;&#x6536;&#x655B;&#x4E86;</p>
+<script type="math/tex; mode=display">G(h, h^t) = \sum_i(v_ilogv_i-v_i)+\sum_{ia}W_{ia}h_a-
+\sum_{ia}v_i\frac{W_{ia}h_a^t}{\sum_bW_{ib}h_b^t}(logW_{ia}h_a-log\frac{W_{ia}h_a^t}{\sum_bW_{ib}h_b^t})</script><script type="math/tex; mode=display">F(h) = \sum_{i}v_{i}log(\frac{v_i}{\sum_a{W_{ia}h_a}})-v_i+\sum_aW_{ia}h_a</script><p>&#x8FD9;&#x91CC;<script type="math/tex">G(h, h) = F(h)</script>&#x5982;&#x4E0B;</p>
+<script type="math/tex; mode=display">G(h, h) =  \sum_i(v_{i}logv_i-v_i)+\sum_{ia}W_{ia}h_a-
+\sum_{ia}v_i\frac{W_{ia}h_a}{\sum_bW_{ib}h_b}(logW_{ia}h_a-log\frac{W_{ia}h_a}{\sum_bW_{ib}h_b})</script><script type="math/tex; mode=display">=  \sum_i(v_ilogv_i-v_i)+\sum_{ia}W_{ia}h_a-
+\sum_{ia}v_i\frac{W_{ia}h_a}{\sum_bW_{ib}h_b}(log{\sum_bW_{ib}h_b})</script><script type="math/tex; mode=display">= \sum_i(v_ilogv_i-v_i)+\sum_{ia}W_{ia}h_a-
+\sum_{i}v_i\frac{\sum_aW_{ia}h_a}{\sum_bW_{ib}h_b}(log{\sum_bW_{ib}h_b})</script><script type="math/tex; mode=display">=  \sum_{i}v_{i}log(\frac{v_i}{\sum_b{W_{ib}h_b}})-v_i+\sum_aW_{ia}h_a = F(h)</script><p>&#x7531;&#x52A0;&#x6743;&#x5F62;&#x5F0F;&#x7684;Jessen&#x4E0D;&#x7B49;&#x5F0F;&#x53EF;&#x5F97;</p>
+<script type="math/tex; mode=display">-log\sum_aW_{ia}h_a \leq -\sum_a\alpha_alog\frac{W_{ia}h_a}{\alpha_a}</script><p>&#x5176;&#x4E2D;&#xFF0C;</p>
+<script type="math/tex; mode=display">\sum_a\alpha_a=1</script><p>&#x4EE4;</p>
+<script type="math/tex; mode=display">\alpha_a=\frac{W_{ia}h_a^t}{\sum_bW_{ib}h_b^t}</script><p>&#x5F97;&#x51FA;</p>
+<script type="math/tex; mode=display">-log\sum_aW_{ia}h_a \leq -\sum_a\frac{W_{ia}h_a^t}{\sum_bW_{ib}h_b^t}(logW_{ia}h_a-log\frac{W_{ia}h_a^t}{\sum_bW_{ib}h_b^t})</script><p>&#x5373;<script type="math/tex">F(h) \leq G(h, h^t)</script></p>
+<h4 id="&#x8BC1;&#x660E;&#x5B9A;&#x7406;2&#xFF1A;"><a href="#&#x8BC1;&#x660E;&#x5B9A;&#x7406;2&#xFF1A;" class="headerlink" title="&#x8BC1;&#x660E;&#x5B9A;&#x7406;2&#xFF1A;"></a>&#x8BC1;&#x660E;&#x5B9A;&#x7406;2&#xFF1A;</h4><p>&#x4EE4;<script type="math/tex">\frac{d{G(h, h^t)}}{dh_a}=0</script><br>&#x5F97;</p>
+<script type="math/tex; mode=display">-\sum_iv_i\frac{W_{ia}h_a^t}{\sum_bW_{ib}h_b^t}\frac{1}{h_a} + \sum_iW_{ia} = 0</script><p>&#x4ECE;&#x800C;&#x5F97;&#x5230;&#x9012;&#x63A8;&#x5F0F;</p>
+<script type="math/tex; mode=display">h_a^{t+1}=\frac{h_a^t}{\sum_bW_{kb}}\sum_i\frac{v_i}{\sum_bW_{ib}h_b^t}W_{ia}</script>]]></content>
+    
+    <summary type="html">
+    
+      &lt;h3 id=&quot;NMF&amp;#x662F;&amp;#x4EC0;&amp;#x4E48;&amp;#xFF1F;&quot;&gt;&lt;a href=&quot;#NMF&amp;#x662F;&amp;#x4EC0;&amp;#x4E48;&amp;#xFF1F;&quot; class=&quot;headerlink&quot; title=&quot;NMF&amp;#x662F;&amp;#x4EC0;&amp;#x4E48;&amp;#xFF1F;&quot;&gt;&lt;/a&gt;NMF&amp;#x662F;&amp;#x4EC0;&amp;#x4E48;&amp;#xFF1F;&lt;/h3&gt;&lt;script type=&quot;math/tex; mode=display&quot;&gt;V_{n*m}≈W_{n*r}H_{r*m}&lt;/script&gt;&lt;script type=&quot;math/tex; mode=display&quot;&gt;v_{n*1}≈W_{n*r}h_{r*1}&lt;/script&gt;&lt;p&gt;&amp;#x627E;&amp;#x51FA;&amp;#x539F;&amp;#x6570;&amp;#x636E;&amp;#x7684;latent&amp;#xFF0C;&amp;#x538B;&amp;#x7F29;&amp;#x6570;&amp;#x636E;&amp;#x3002;&amp;#x5C06;&amp;#x539F;&amp;#x6765;&amp;#x9700;&amp;#x8981;n&amp;#x7EF4;&amp;#x6765;&amp;#x8868;&amp;#x793A;&amp;#x7684;&amp;#x6570;&amp;#x636E;&amp;#x7528;r&amp;#x7EF4;&amp;#x7684;&amp;#x7EBF;&amp;#x6027;&amp;#x7EC4;&amp;#x5408;&amp;#x6765;&amp;#x8868;&amp;#x793A;&amp;#x3002;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/2017/11/09/&amp;#x8BFB;&amp;#x8BBA;&amp;#x6587;Alogorithms-for-Non-negative-Matrix-Factorization/1.png&quot; alt=&quot;&quot;&gt;&lt;br&gt;&lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="机器学习" scheme="http://nladuo.github.io/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/"/>
+    
+  </entry>
   
   <entry>
     <title>Seq2Seq练手之单词镜像</title>
@@ -908,48 +978,6 @@
     <summary type="html">
     
       &lt;p&gt;&amp;#x4EBA;&amp;#x751F;  &amp;#x4F3C;&amp;#x662F;&amp;#x4E00;&amp;#x573A;&amp;#x76F8;&amp;#x9022;&lt;/p&gt;&lt;br&gt;&lt;p&gt;&amp;#x4F60;&amp;#x6211;&amp;#x8EAB;&amp;#x5904;&amp;#x540C;&amp;#x8DEF;&amp;#x4E4B;&amp;#x4E2D;&lt;/p&gt;&lt;br&gt;&lt;p&gt;&amp;#x4F60;&amp;#x4E00;&amp;#x610F;&amp;#x5411;&amp;#x524D;  &amp;#x6B65;&amp;#x884C;&amp;#x5306;&amp;#x5306;&lt;/p&gt;&lt;br&gt;&lt;p&gt;&amp;#x800C;&amp;#x6211;&amp;#x5374;  &amp;#x53EA;&amp;#x80FD;&amp;#x773C;&amp;#x89C1;&amp;#x4F60;&amp;#x7684;&amp;#x80CC;&amp;#x5F71;&lt;/p&gt;&lt;br&gt;&lt;p&gt;&amp;#x8FFD;&amp;#x968F;&amp;#x4F60;&amp;#x90A3;  &amp;#x978B;&amp;#x8DDF;&amp;#x4E0E;&amp;#x5730;&amp;#x9762;&amp;#x78B0;&amp;#x649E;&amp;#x53D1;&amp;#x51FA;&amp;#x7684;&amp;#x811A;&amp;#x6B65;&amp;#x58F0;&lt;/p&gt;&lt;br&gt;
-    
-    </summary>
-    
-    
-      <category term="随笔" scheme="http://nladuo.github.io/tags/%E9%9A%8F%E7%AC%94/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>NO。130。一段歌词。</title>
-    <link href="http://nladuo.github.io/2012/03/09/NO%E3%80%82130%E3%80%82%E4%B8%80%E6%AE%B5%E6%AD%8C%E8%AF%8D%E3%80%82/"/>
-    <id>http://nladuo.github.io/2012/03/09/NO。130。一段歌词。/</id>
-    <published>2012-03-09T13:52:52.000Z</published>
-    <updated>2017-03-30T02:00:01.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>&#x4E5D;&#x6708;&#x4EFD;&#x7684;&#x5929;&#x6C14;</p><br><p>&#x4E00;&#x573A;&#x96E8;</p><br><p>&#x4E0B;&#x5F97;&#x6DC5;&#x6DC5;&#x6CA5;&#x6CA5;</p><br><p>&#x751F;&#x8D77;&#x4E86;&#x5BD2;&#x610F;</p><br><p>&#xA0;</p>
-
-<p>&#x4E5D;&#x6708;&#x4EFD;&#x5F97;&#x5929;&#x6C14;</p><br><p>&#x4E00;&#x7247;&#x53F6;</p><br><p>&#x9759;&#x9759;&#x4FEF;&#x843D;&#x4E8E;&#x5730;</p><br><p>&#x6CDB;&#x8D77;&#x4E86;&#x6D9F;&#x6F2A;</p><br><a id="more"></a><br><p>&#xA0;</p>
-
-<p>&#x4E5D;&#x6708;&#x4EFD;&#x7684;&#x5929;&#x6C14;</p><br><p>&#x5FAE;&#x98CE;&#x62C2;&#x8FC7;&#x6E5B;&#x84DD;&#x8272;&#x7684;&#x5929;&#x9645;</p><br><p>&#x6211;&#x53C8;&#x60F3;&#x8D77;&#x4E86;&#x4F60;</p><br><p>&#x7684;&#x70B9;&#x70B9;&#x6EF4;&#x6EF4;&#xFF0C;&#x548C;&#x6CE2;&#x6F9C;&#x4E0D;&#x60CA;&#x7684;&#x56DE;&#x5FC6;</p><br><p>&#x4F60;&#x6E10;&#x6E10;&#x7684;&#x9760;&#x8FD1;&#xFF0C;&#x6CA1;&#x6709;&#x76EE;&#x7684;</p><br><p>&#x53C8;&#x6084;&#x6084;&#x7684;&#x79BB;&#x53BB;&#xFF0C;&#x4E0D;&#x7559;&#x75D5;&#x8FF9;</p><br><p>&#xA0;</p>
-
-<p>&#x4EBA;&#x751F;&#x96BE;&#x514D;&#x4F1A;&#x6709;&#x5931;&#x610F;</p><br><p>&#x4F55;&#x5FC5;&#x6781;&#x8A00;&#x5FE7;&#x8651;&#xFF0C;&#x4F55;&#x5FC5;&#x6781;&#x8A00;&#x6B22;&#x559C;</p><br><p>&#x65F6;&#x95F4;&#x603B;&#x4F1A;&#x62B9;&#x5E73;&#x4E00;&#x5207;&#x7684;&#x8BB0;&#x5FC6;</p><br><p>&#xA0;</p>
-
-<p>&#x5230;&#x5934;&#x6765;</p><br><p>&#x6211;&#xFF0C;&#x8FD8;&#x662F;&#x6211;</p><br><p>&#x800C;&#x4F60;&#xFF0C;&#x4E5F;&#x8FD8;&#x662F;&#x4F60;</p><br><p>&#xA0;</p>
-
-<p>&#x4E5D;&#x6708;&#x4EFD;&#x7684;&#x5929;&#x6C14;</p><br><p>&#x4E00;&#x573A;&#x96E8;</p><br><p>&#x4E0B;&#x5F97;&#x6DC5;&#x6DC5;&#x6CA5;&#x6CA5;</p><br><p>&#x751F;&#x8D77;&#x4E86;&#x5BD2;&#x610F;</p><br><p>&#xA0;</p>
-
-
-<p>&#x4E5D;&#x6708;&#x4EFD;&#x5F97;&#x5929;&#x6C14;</p><br><p>&#x4E00;&#x7247;&#x53F6;</p><br><p>&#x9759;&#x9759;&#x4FEF;&#x843D;&#x4E8E;&#x5730;</p><br><p>&#x6CDB;&#x8D77;&#x4E86;&#x6D9F;&#x6F2A;</p><br><p>&#xA0;</p>
-
-<p>&#x4E5D;&#x6708;&#x4EFD;&#x7684;&#x5929;&#x6C14;</p><br><p>&#x5FAE;&#x98CE;&#x62C2;&#x8FC7;&#x6E5B;&#x84DD;&#x8272;&#x7684;&#x5929;&#x9645;</p><br><p>&#x6211;&#x603B;&#x662F;&#x4F9D;&#x7A00;&#x8BB0;&#x8D77;&#x4F60;</p><br><p>&#x7684;&#x77EE;&#x5C0F;&#x7684;&#x8EAB;&#x4F53;&#xFF0C;&#x548C;&#x6C89;&#x7761;&#x7684;&#x7247;&#x7247;&#x56DE;&#x5FC6;</p><br><p>&#x4F60;&#x603B;&#x662F;&#x90A3;&#x4E48;&#x5F00;&#x5FC3;&#xFF0C;&#x8361;&#x5E73;&#x6211;&#x4E0D;&#x6109;&#x5FEB;&#x7684;&#x5FC3;&#x60C5;</p><br><p>&#x4F60;&#x603B;&#x662F;&#x90A3;&#x4E48;&#x5FE7;&#x90C1;&#xFF0C;&#x5FE7;&#x90C1;&#x5728;&#x4E86;&#x5FC3;&#x5E95;</p><br><p>&#xA0;</p>
-
-<p>&#x4EBA;&#x751F;&#x96BE;&#x514D;&#x4F1A;&#x6709;&#x5931;&#x610F;</p><br><p>&#x4F55;&#x5FC5;&#x6781;&#x8A00;&#x5FE7;&#x8651;&#xFF0C;&#x4F55;&#x5FC5;&#x6781;&#x8A00;&#x6B22;&#x559C;</p><br><p>&#x65F6;&#x95F4;&#x603B;&#x4F1A;&#x62B9;&#x5E73;&#x4E00;&#x5207;&#x7684;&#x8BB0;&#x5FC6;</p><br><p>&#x5230;&#x5934;&#x6765;</p><br><p>&#xA0;</p>
-
-<p>&#x6211;&#xFF0C;&#x8FD8;&#x662F;&#x6211;</p><br><p>&#x800C;&#x4F60;&#xFF0C;&#x4E5F;&#x8FD8;&#x662F;&#x4F60;</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;&amp;#x4E5D;&amp;#x6708;&amp;#x4EFD;&amp;#x7684;&amp;#x5929;&amp;#x6C14;&lt;/p&gt;&lt;br&gt;&lt;p&gt;&amp;#x4E00;&amp;#x573A;&amp;#x96E8;&lt;/p&gt;&lt;br&gt;&lt;p&gt;&amp;#x4E0B;&amp;#x5F97;&amp;#x6DC5;&amp;#x6DC5;&amp;#x6CA5;&amp;#x6CA5;&lt;/p&gt;&lt;br&gt;&lt;p&gt;&amp;#x751F;&amp;#x8D77;&amp;#x4E86;&amp;#x5BD2;&amp;#x610F;&lt;/p&gt;&lt;br&gt;&lt;p&gt;&amp;#xA0;&lt;/p&gt;
-
-&lt;p&gt;&amp;#x4E5D;&amp;#x6708;&amp;#x4EFD;&amp;#x5F97;&amp;#x5929;&amp;#x6C14;&lt;/p&gt;&lt;br&gt;&lt;p&gt;&amp;#x4E00;&amp;#x7247;&amp;#x53F6;&lt;/p&gt;&lt;br&gt;&lt;p&gt;&amp;#x9759;&amp;#x9759;&amp;#x4FEF;&amp;#x843D;&amp;#x4E8E;&amp;#x5730;&lt;/p&gt;&lt;br&gt;&lt;p&gt;&amp;#x6CDB;&amp;#x8D77;&amp;#x4E86;&amp;#x6D9F;&amp;#x6F2A;&lt;/p&gt;&lt;br&gt;
     
     </summary>
     
