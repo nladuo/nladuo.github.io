@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://nladuo.github.io/"/>
-  <updated>2017-11-10T01:01:00.000Z</updated>
+  <updated>2017-11-10T01:10:01.000Z</updated>
   <id>http://nladuo.github.io/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://nladuo.github.io/2017/11/09/%E8%AF%BB%E8%AE%BA%E6%96%87Alogorithms-for-Non-negative-Matrix-Factorization/"/>
     <id>http://nladuo.github.io/2017/11/09/读论文Alogorithms-for-Non-negative-Matrix-Factorization/</id>
     <published>2017-11-09T07:27:00.000Z</published>
-    <updated>2017-11-10T01:01:00.000Z</updated>
+    <updated>2017-11-10T01:10:01.000Z</updated>
     
     <content type="html"><![CDATA[<h3 id="NMF&#x662F;&#x4EC0;&#x4E48;&#xFF1F;"><a href="#NMF&#x662F;&#x4EC0;&#x4E48;&#xFF1F;" class="headerlink" title="NMF&#x662F;&#x4EC0;&#x4E48;&#xFF1F;"></a>NMF&#x662F;&#x4EC0;&#x4E48;&#xFF1F;</h3><script type="math/tex; mode=display">V_{n*m}≈W_{n*r}H_{r*m}</script><script type="math/tex; mode=display">v_{n*1}≈W_{n*r}h_{r*1}</script><p>&#x627E;&#x51FA;&#x539F;&#x6570;&#x636E;&#x7684;latent&#xFF0C;&#x538B;&#x7F29;&#x6570;&#x636E;&#x3002;&#x5C06;&#x539F;&#x6765;&#x9700;&#x8981;n&#x7EF4;&#x6765;&#x8868;&#x793A;&#x7684;&#x6570;&#x636E;&#x7528;r&#x7EF4;&#x7684;&#x7EBF;&#x6027;&#x7EC4;&#x5408;&#x6765;&#x8868;&#x793A;&#x3002;</p>
 <p><img src="/2017/11/09/&#x8BFB;&#x8BBA;&#x6587;Alogorithms-for-Non-negative-Matrix-Factorization/1.jpeg" alt=""><br><a id="more"></a></p>
@@ -46,7 +46,7 @@
 <h4 id="&#x5F15;&#x7406;2"><a href="#&#x5F15;&#x7406;2" class="headerlink" title="&#x5F15;&#x7406;2"></a>&#x5F15;&#x7406;2</h4><p>&#x5B9A;&#x4E49;&#x5BF9;&#x89D2;&#x9635;<script type="math/tex">K(h^t)</script></p>
 <script type="math/tex; mode=display">K_{ab}(h^t)=\frac{\delta_ab(W^TWh^t)_a}{h_a^t}</script><p>&#x5B9A;&#x4E49;</p>
 <script type="math/tex; mode=display">G(h, h^t) = F(h^t) + (h-h^t)^T\nabla{F(h^t)} + \frac12 (h-h^t)^TK(h^t) (h-h^t)</script><p>&#x5982;&#x679C;&#x8BC1;&#x660E;<script type="math/tex">G(h, h^t)</script>&#x662F;<script type="math/tex">F(h)</script>&#x8F85;&#x52A9;&#x51FD;&#x6570;&#xFF0C;&#x5C31;&#x53EF;&#x4EE5;&#x5F97;&#x51FA;&#x6B27;&#x5F0F;&#x8DDD;&#x79BB;&#x5C40;&#x90E8;&#x6536;&#x655B;&#x4E86;&#x3002;</p>
-<script type="math/tex; mode=display">F(h)=\frac12\sum_i(v_i-\sum_aW_{ia}h_a)^2</script><h5 id="F-h-&#x5728;-h-t-&#x9644;&#x8FD1;&#x7684;&#x4E8C;&#x9636;&#x6CF0;&#x52D2;&#x5C55;&#x5F00;"><a href="#F-h-&#x5728;-h-t-&#x9644;&#x8FD1;&#x7684;&#x4E8C;&#x9636;&#x6CF0;&#x52D2;&#x5C55;&#x5F00;" class="headerlink" title="$F(h)$&#x5728;$h^t$&#x9644;&#x8FD1;&#x7684;&#x4E8C;&#x9636;&#x6CF0;&#x52D2;&#x5C55;&#x5F00;"></a>$F(h)$&#x5728;$h^t$&#x9644;&#x8FD1;&#x7684;&#x4E8C;&#x9636;&#x6CF0;&#x52D2;&#x5C55;&#x5F00;</h5><script type="math/tex; mode=display">F(h)=F(h^t) + (h-h^t)^T\nabla{F(h^t)} + \frac12 (h-h^t)^T\nabla^2F(h^t) (h-h^t)</script><p>&#x5176;&#x4E2D;</p>
+<script type="math/tex; mode=display">F(h)=\frac12\sum_i(v_i-\sum_aW_{ia}h_a)^2</script><h5 id="F-h-&#x5728;h-t&#x9644;&#x8FD1;&#x7684;&#x4E8C;&#x9636;&#x6CF0;&#x52D2;&#x5C55;&#x5F00;"><a href="#F-h-&#x5728;h-t&#x9644;&#x8FD1;&#x7684;&#x4E8C;&#x9636;&#x6CF0;&#x52D2;&#x5C55;&#x5F00;" class="headerlink" title="F(h)&#x5728;h^t&#x9644;&#x8FD1;&#x7684;&#x4E8C;&#x9636;&#x6CF0;&#x52D2;&#x5C55;&#x5F00;"></a><script type="math/tex">F(h)</script>&#x5728;<script type="math/tex">h^t</script>&#x9644;&#x8FD1;&#x7684;&#x4E8C;&#x9636;&#x6CF0;&#x52D2;&#x5C55;&#x5F00;</h5><script type="math/tex; mode=display">F(h)=F(h^t) + (h-h^t)^T\nabla{F(h^t)} + \frac12 (h-h^t)^T\nabla^2F(h^t) (h-h^t)</script><p>&#x5176;&#x4E2D;</p>
 <script type="math/tex; mode=display">\nabla{F(h^t)}=\sum_i{(v_i-\sum_{a}{W_{ia}h_a^t})(-W_{ia})}</script><script type="math/tex; mode=display">\nabla^2F(h^t)= \nabla(\nabla{F(h^t)})=\sum_{ia}(W^T)_{ai}h_a^tW_{ia}=W^TW</script><h5 id="&#x534A;&#x6B63;&#x5B9A;&#x6027;&#x8BC1;&#x660E;"><a href="#&#x534A;&#x6B63;&#x5B9A;&#x6027;&#x8BC1;&#x660E;" class="headerlink" title="&#x534A;&#x6B63;&#x5B9A;&#x6027;&#x8BC1;&#x660E;"></a>&#x534A;&#x6B63;&#x5B9A;&#x6027;&#x8BC1;&#x660E;</h5><p>&#x663E;&#x7136;&#xFF0C;<script type="math/tex">G (h, h)=F(h)</script></p>
 <p>&#x90A3;&#x4E48;<script type="math/tex">G(h, h^t) \geq F(h)</script> &#x7B49;&#x4EF7;&#x4E8E;&#x4E0B;&#x5F0F;</p>
 <script type="math/tex; mode=display">0 \leq (h-h^t)^T[K(h^t)-W^TW](h-h^t)</script><p>&#x7B49;&#x4EF7;&#x4E8E;&#x8BC1;&#x660E;&#x4E0B;&#x9762;&#x77E9;&#x9635;&#x7684;&#x534A;&#x6B63;&#x5B9A;&#x6027;</p>
