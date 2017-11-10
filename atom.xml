@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://nladuo.github.io/"/>
-  <updated>2017-11-09T17:37:07.000Z</updated>
+  <updated>2017-11-10T00:35:04.000Z</updated>
   <id>http://nladuo.github.io/</id>
   
   <author>
@@ -20,10 +20,10 @@
     <link href="http://nladuo.github.io/2017/11/09/%E8%AF%BB%E8%AE%BA%E6%96%87Alogorithms-for-Non-negative-Matrix-Factorization/"/>
     <id>http://nladuo.github.io/2017/11/09/读论文Alogorithms-for-Non-negative-Matrix-Factorization/</id>
     <published>2017-11-09T07:27:00.000Z</published>
-    <updated>2017-11-09T17:37:07.000Z</updated>
+    <updated>2017-11-10T00:35:04.000Z</updated>
     
     <content type="html"><![CDATA[<h3 id="NMF&#x662F;&#x4EC0;&#x4E48;&#xFF1F;"><a href="#NMF&#x662F;&#x4EC0;&#x4E48;&#xFF1F;" class="headerlink" title="NMF&#x662F;&#x4EC0;&#x4E48;&#xFF1F;"></a>NMF&#x662F;&#x4EC0;&#x4E48;&#xFF1F;</h3><script type="math/tex; mode=display">V_{n*m}≈W_{n*r}H_{r*m}</script><script type="math/tex; mode=display">v_{n*1}≈W_{n*r}h_{r*1}</script><p>&#x627E;&#x51FA;&#x539F;&#x6570;&#x636E;&#x7684;latent&#xFF0C;&#x538B;&#x7F29;&#x6570;&#x636E;&#x3002;&#x5C06;&#x539F;&#x6765;&#x9700;&#x8981;n&#x7EF4;&#x6765;&#x8868;&#x793A;&#x7684;&#x6570;&#x636E;&#x7528;r&#x7EF4;&#x7684;&#x7EBF;&#x6027;&#x7EC4;&#x5408;&#x6765;&#x8868;&#x793A;&#x3002;</p>
-<p><img src="/2017/11/09/&#x8BFB;&#x8BBA;&#x6587;Alogorithms-for-Non-negative-Matrix-Factorization/1.png" alt=""><br><a id="more"></a></p>
+<p><img src="/2017/11/09/&#x8BFB;&#x8BBA;&#x6587;Alogorithms-for-Non-negative-Matrix-Factorization/1.jpeg" alt=""><br><a id="more"></a></p>
 <h3 id="&#x8BE5;&#x6587;&#x6210;&#x679C;"><a href="#&#x8BE5;&#x6587;&#x6210;&#x679C;" class="headerlink" title="&#x8BE5;&#x6587;&#x6210;&#x679C;"></a>&#x8BE5;&#x6587;&#x6210;&#x679C;</h3><ol>
 <li><p>&#x63D0;&#x51FA;&#x4E24;&#x79CD;&#x7B97;&#x6CD5;&#xFF0C;</p>
 </li>
@@ -76,7 +76,7 @@
     <summary type="html">
     
       &lt;h3 id=&quot;NMF&amp;#x662F;&amp;#x4EC0;&amp;#x4E48;&amp;#xFF1F;&quot;&gt;&lt;a href=&quot;#NMF&amp;#x662F;&amp;#x4EC0;&amp;#x4E48;&amp;#xFF1F;&quot; class=&quot;headerlink&quot; title=&quot;NMF&amp;#x662F;&amp;#x4EC0;&amp;#x4E48;&amp;#xFF1F;&quot;&gt;&lt;/a&gt;NMF&amp;#x662F;&amp;#x4EC0;&amp;#x4E48;&amp;#xFF1F;&lt;/h3&gt;&lt;script type=&quot;math/tex; mode=display&quot;&gt;V_{n*m}≈W_{n*r}H_{r*m}&lt;/script&gt;&lt;script type=&quot;math/tex; mode=display&quot;&gt;v_{n*1}≈W_{n*r}h_{r*1}&lt;/script&gt;&lt;p&gt;&amp;#x627E;&amp;#x51FA;&amp;#x539F;&amp;#x6570;&amp;#x636E;&amp;#x7684;latent&amp;#xFF0C;&amp;#x538B;&amp;#x7F29;&amp;#x6570;&amp;#x636E;&amp;#x3002;&amp;#x5C06;&amp;#x539F;&amp;#x6765;&amp;#x9700;&amp;#x8981;n&amp;#x7EF4;&amp;#x6765;&amp;#x8868;&amp;#x793A;&amp;#x7684;&amp;#x6570;&amp;#x636E;&amp;#x7528;r&amp;#x7EF4;&amp;#x7684;&amp;#x7EBF;&amp;#x6027;&amp;#x7EC4;&amp;#x5408;&amp;#x6765;&amp;#x8868;&amp;#x793A;&amp;#x3002;&lt;/p&gt;
-&lt;p&gt;&lt;img src=&quot;/2017/11/09/&amp;#x8BFB;&amp;#x8BBA;&amp;#x6587;Alogorithms-for-Non-negative-Matrix-Factorization/1.png&quot; alt=&quot;&quot;&gt;&lt;br&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/2017/11/09/&amp;#x8BFB;&amp;#x8BBA;&amp;#x6587;Alogorithms-for-Non-negative-Matrix-Factorization/1.jpeg&quot; alt=&quot;&quot;&gt;&lt;br&gt;&lt;/p&gt;
     
     </summary>
     
