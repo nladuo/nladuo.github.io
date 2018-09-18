@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://nladuo.github.io/2017/10/23/Seq2Seq%E7%BB%83%E6%89%8B%E4%B9%8B%E5%8D%95%E8%AF%8D%E9%95%9C%E5%83%8F/</loc>
+    
+    <lastmod>2018-09-18T07:11:02.459Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://nladuo.github.io/2018/05/07/wxpy%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%8F%91%E9%80%81%E4%B8%AD%E6%96%87%E6%96%87%E4%BB%B6%E9%97%AE%E9%A2%98%E5%B0%8F%E8%AE%B0/</loc>
     
     <lastmod>2018-05-07T13:16:02.000Z</lastmod>
@@ -75,13 +82,6 @@
     <loc>http://nladuo.github.io/2017/11/09/%E8%AF%BB%E8%AE%BA%E6%96%87Alogorithms-for-Non-negative-Matrix-Factorization/</loc>
     
     <lastmod>2017-11-11T11:23:22.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://nladuo.github.io/2017/10/23/Seq2Seq%E7%BB%83%E6%89%8B%E4%B9%8B%E5%8D%95%E8%AF%8D%E9%95%9C%E5%83%8F/</loc>
-    
-    <lastmod>2017-10-26T03:49:16.000Z</lastmod>
     
   </url>
   
