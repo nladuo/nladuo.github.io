@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://nladuo.github.io/"/>
-  <updated>2019-01-04T06:44:31.200Z</updated>
+  <updated>2019-03-19T08:25:12.466Z</updated>
   <id>http://nladuo.github.io/</id>
   
   <author>
@@ -14,6 +14,90 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>信息检索基本概念知识笔记总结</title>
+    <link href="http://nladuo.github.io/2019/03/19/%E4%BF%A1%E6%81%AF%E6%A3%80%E7%B4%A2%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E7%9F%A5%E8%AF%86%E7%AC%94%E8%AE%B0%E6%80%BB%E7%BB%93/"/>
+    <id>http://nladuo.github.io/2019/03/19/信息检索基本概念知识笔记总结/</id>
+    <published>2019-03-19T10:24:51.000Z</published>
+    <updated>2019-03-19T08:25:12.466Z</updated>
+    
+    <content type="html"><![CDATA[<p>&#x4E4B;&#x524D;&#x5B66;&#x8FC7;&#x7684;&#x4FE1;&#x606F;&#x68C0;&#x7D22;&#x90FD;&#x5FD8;&#x5F97;&#x5DEE;&#x4E0D;&#x591A;&#x4E86;&#xFF0C;&#x8FD9;&#x7BC7;&#x6587;&#x7AE0;&#x7528;&#x6765;&#x603B;&#x7ED3;&#x548C;&#x8BB0;&#x5F55;&#x4E00;&#x4E9B;&#x4FE1;&#x606F;&#x68C0;&#x7D22;&#xFF08;IR&#xFF09;&#x9886;&#x57DF;&#x7684;&#x6982;&#x5FF5;&#x548C;&#x57FA;&#x7840;&#x77E5;&#x8BC6;&#x3002;</p>
+<h2 id="&#x603B;&#x89C8;"><a href="#&#x603B;&#x89C8;" class="headerlink" title="&#x603B;&#x89C8;"></a>&#x603B;&#x89C8;</h2><p>&#x4FE1;&#x606F;&#x68C0;&#x7D22;&#x5176;&#x5B9E;&#x5C31;&#x662F;&#x6709;&#x4E00;&#x4E2A;&#x67E5;&#x8BE2;&#x548C;&#x5DF2;&#x6709;&#x7684;&#x6587;&#x6863;&#x6570;&#x636E;&#x96C6;&#x3002;&#x7ED9;&#x4E00;&#x4E2A;&#x67E5;&#x8BE2;query&#xFF0C;&#x4ECE;&#x6570;&#x636E;&#x5E93;&#x4E2D;&#x7684;&#x6587;&#x6863;&#x4E2D;&#x627E;&#x51FA;&#x76F8;&#x5173;&#x7684;document&#x6587;&#x6863;&#x6765;&#x3002;</p>
+<p>&#x7B14;&#x8BB0;&#x76EE;&#x5F55;&#x5982;&#x4E0B;&#xFF1A;</p>
+<ul>
+<li>&#x5E03;&#x5C14;&#x68C0;&#x7D22;</li>
+<li>&#x5411;&#x91CF;&#x7A7A;&#x95F4;&#x6A21;&#x578B;</li>
+<li>&#x4FE1;&#x606F;&#x68C0;&#x7D22;&#x7684;&#x8BC4;&#x4EF7;</li>
+<li>&#x6392;&#x5E8F;&#x5B66;&#x4E60;</li>
+</ul>
+<a id="more"></a>
+<h2 id="&#x5E03;&#x5C14;&#x68C0;&#x7D22;"><a href="#&#x5E03;&#x5C14;&#x68C0;&#x7D22;" class="headerlink" title="&#x5E03;&#x5C14;&#x68C0;&#x7D22;"></a>&#x5E03;&#x5C14;&#x68C0;&#x7D22;</h2><p>&#x5E03;&#x5C14;&#x68C0;&#x7D22;&#x7684;&#x67E5;&#x8BE2;&#xFF0C;&#x662F;&#x6307;&#x5229;&#x7528; AND, OR &#x6216;&#x8005; NOT&#x64CD;&#x4F5C;&#x7B26;&#x5C06;&#x8BCD;&#x9879;&#x8FDE;&#x63A5;&#x8D77;&#x6765;&#x7684;&#x67E5;&#x8BE2;&#x3002;</p>
+<p>&#x6BD4;&#x5982;&#x8BF4;&#x6211;&#x4EEC;&#x7684;&#x76EE;&#x6807;&#x662F;&#xFF1A;&#x5728;&#x300A;&#x838E;&#x58EB;&#x6BD4;&#x4E9A;&#x5168;&#x96C6;&#x300B;&#x627E;&#x51FA;&#x5305;&#x542B;Brutus AND Caesar &#xFF0C;&#x540C;&#x65F6;&#x53C8;&#x4E0D;&#x5305;&#x542B;Calpurnia&#x7684;&#x7AE0;&#x8282;&#xFF08;&#x6587;&#x6863;&#xFF09;&#x6765;&#x3002;</p>
+<h3 id="&#x8BCD;&#x9879;-&#x6587;&#x6863;&#x5173;&#x8054;&#x77E9;&#x9635;"><a href="#&#x8BCD;&#x9879;-&#x6587;&#x6863;&#x5173;&#x8054;&#x77E9;&#x9635;" class="headerlink" title="&#x8BCD;&#x9879;-&#x6587;&#x6863;&#x5173;&#x8054;&#x77E9;&#x9635;"></a>&#x8BCD;&#x9879;-&#x6587;&#x6863;&#x5173;&#x8054;&#x77E9;&#x9635;</h3><p>&#x8FD9;&#x91CC;&#x80AF;&#x5B9A;&#x4E0D;&#x80FD;&#x5C06;&#x6587;&#x6863;&#x626B;&#x63CF;&#x4E00;&#x904D;&#xFF0C;&#x800C;&#x662F;&#x53EF;&#x4EE5;&#x901A;&#x8FC7;&#x4E00;&#x4E2A;&#x4E00;&#x4E2A;&#x8BCD;&#x9879;&#x6587;&#x6863;&#x5173;&#x8054;&#x77E9;&#x9635;&#x6765;&#x8FDB;&#x884C;&#x68C0;&#x7D22;&#x3002;<br><img src="/2019/03/19/&#x4FE1;&#x606F;&#x68C0;&#x7D22;&#x57FA;&#x672C;&#x6982;&#x5FF5;&#x77E5;&#x8BC6;&#x7B14;&#x8BB0;&#x603B;&#x7ED3;/term-doc-matrix.png" alt=""></p>
+<p>&#x7ED9;&#x5B9A;&#x67E5;&#x8BE2;Brutus AND Caesar AND NOT Calpurnia, &#x6C42;&#x89E3;&#x65B9;&#x6CD5;&#x5982;&#x4E0B;&#xFF1A;</p>
+<ul>
+<li>&#x53D6;&#x51FA;&#x4E09;&#x4E2A;&#x8BCD;&#x9879;&#x5BF9;&#x5E94;&#x7684;&#x884C;&#x5411;&#x91CF; &#xFF0C;&#x5E76;&#x5BF9;Calpurnia &#x7684;&#x884C;&#x5411;&#x91CF;&#x6C42;&#x53CD;&#xFF0C;&#x6700;&#x540E;&#x6309;&#x4F4D;&#x8FDB;&#x884C;&#x4E0E;&#x64CD;&#x4F5C;</li>
+<li>110100 AND 110111 AND 101111 = 100100.</li>
+</ul>
+<p>&#x7B2C;&#x4E00;&#x7BC7;&#x6587;&#x6863;&#x548C;&#x7B2C;&#x56DB;&#x7BC7;&#x6587;&#x6863;&#x662F;&#x6211;&#x4EEC;&#x7684;&#x67E5;&#x8BE2;&#x7ED3;&#x679C;&#x3002;</p>
+<h3 id="&#x5012;&#x6392;&#x7D22;&#x5F15;"><a href="#&#x5012;&#x6392;&#x7D22;&#x5F15;" class="headerlink" title="&#x5012;&#x6392;&#x7D22;&#x5F15;"></a>&#x5012;&#x6392;&#x7D22;&#x5F15;</h3><p>&#x968F;&#x7740;&#x8BCD;&#x9879;&#x7684;&#x589E;&#x591A;&#xFF0C;&#x4F1A;&#x5BFC;&#x81F4;&#x5173;&#x8054;&#x77E9;&#x9635;&#x4F1A;&#x53D8;&#x5F97;&#x975E;&#x5E38;&#x7A00;&#x758F;&#x3002;&#x4E00;&#x822C;&#x6765;&#x8BF4;&#x8BCD;&#x8868;&#x5927;&#x5C0F;&#x4F1A;&#x6709;&#x597D;&#x51E0;&#x4E07;&#x751A;&#x81F3;&#x51E0;&#x5341;&#x4E07;&#xFF0C;&#x800C;&#x4E00;&#x7BC7;&#x6587;&#x7AE0;&#x4E2D;&#x4E00;&#x822C;&#x4E5F;&#x5C31;&#x51E0;&#x767E;&#x51E0;&#x5343;&#x4E2A;&#x8BCD;&#xFF0C;&#x6240;&#x4EE5;&#x4F1A;&#x6709;&#x6570;&#x636E;&#x5F88;&#x591A;&#x4E3A;0&#x3002;</p>
+<p>&#x5012;&#x6392;&#x7D22;&#x5F15;(inverted index)&#x5176;&#x5B9E;&#x4E5F;&#x5C31;&#x662F;&#x8BCD;&#x9879;-&#x6587;&#x6863;&#x5173;&#x8054;&#x77E9;&#x9635;&#xFF0C;&#x4F46;&#x662F;&#x8FDB;&#x884C;&#x4E86;&#x538B;&#x7F29;&#xFF0C;&#x4F7F;&#x7528;&#x66F4;&#x5C11;&#x7684;&#x7A7A;&#x95F4;&#x8FDB;&#x884C;&#x5B58;&#x50A8;&#x3002;&#x5176;&#x5F62;&#x5F0F;&#x5982;&#x4E0B;&#xFF1A;</p>
+<p><img src="/2019/03/19/&#x4FE1;&#x606F;&#x68C0;&#x7D22;&#x57FA;&#x672C;&#x6982;&#x5FF5;&#x77E5;&#x8BC6;&#x7B14;&#x8BB0;&#x603B;&#x7ED3;/inverted-index.png" alt=""></p>
+<p>&#x76F8;&#x5F53;&#x4E8E;&#x539F;&#x5148;&#x7684;&#x5B58;&#x50A8;&#x7A7A;&#x95F4;&#x662F;&#xFF1A;&#x8BCD;&#x9879;&#x4E2A;&#x6570;<em>&#x6587;&#x6863;&#x4E2A;&#x6570;&#x3002;&#x73B0;&#x5728;&#x662F;&#xFF1A;&#x8BCD;&#x9879;&#x4E2A;&#x6570;</em>&#x6587;&#x6863;&#x5E73;&#x5747;&#x957F;&#x5EA6;&#x3002;</p>
+<h2 id="&#x5411;&#x91CF;&#x7A7A;&#x95F4;&#x6A21;&#x578B;"><a href="#&#x5411;&#x91CF;&#x7A7A;&#x95F4;&#x6A21;&#x578B;" class="headerlink" title="&#x5411;&#x91CF;&#x7A7A;&#x95F4;&#x6A21;&#x578B;"></a>&#x5411;&#x91CF;&#x7A7A;&#x95F4;&#x6A21;&#x578B;</h2><p>&#x5728;&#x5E03;&#x5C14;&#x6A21;&#x578B;&#x4E2D;&#xFF0C;&#x53EA;&#x8BA8;&#x8BBA;&#x4E86;&#x8BCD;&#x662F;&#x4E0D;&#x662F;&#x51FA;&#x73B0;&#x7684;&#x95EE;&#x9898;&#xFF0C;&#x8FD9;&#x91CC;&#x7684;&#x5047;&#x8BBE;&#x662F;&#x6BCF;&#x4E2A;&#x8BCD;&#x90FD;&#x662F;&#x540C;&#x7B49;&#x91CD;&#x8981;&#x7684;&#x3002;&#x4F46;&#x5176;&#x5B9E;&#x5E76;&#x4E0D;&#x662F;&#x6BCF;&#x4E2A;&#x8BCD;&#x91CD;&#x8981;&#x7A0B;&#x5EA6;&#x3002;&#x6240;&#x4EE5;&#x8FD9;&#x91CC;&#x9700;&#x8981;&#x5BF9;&#x4E0D;&#x540C;&#x7684;&#x8BCD;&#x5F15;&#x5165;&#x6743;&#x91CD;&#x7684;&#x6982;&#x5FF5;&#x3002;</p>
+<h3 id="TF-IDF"><a href="#TF-IDF" class="headerlink" title="TF-IDF"></a>TF-IDF</h3><p>TF&#xFF1A;term frequency&#xFF0C;&#x8BCD;&#x9879;t&#x5728;&#x6587;&#x6863;&#x4E2D;&#x51FA;&#x73B0;&#x7684;&#x6B21;&#x6570;&#x3002;&#x51FA;&#x73B0;&#x7684;&#x8D8A;&#x591A;&#x5C31;&#x8D8A;&#x91CD;&#x8981;&#x3002;</p>
+<p>IDF&#xFF1A;inverse document frequency&#x3002;document frequency&#x662F;&#x6307;&#x5728;&#x6574;&#x4E2A;&#x6587;&#x6863;&#x96C6;&#x51FA;&#x73B0;&#x7684;&#x6B21;&#x6570;&#xFF0C;&#x51FA;&#x73B0;&#x7684;&#x8D8A;&#x5C11;&#xFF0C;&#x8BF4;&#x660E;&#x8FD9;&#x4E2A;&#x8BCD;&#x5728;&#x6587;&#x6863;&#x8D8A;&#x91CD;&#x8981;&#xFF0C;&#x4E5F;&#x5C31;&#x662F;&#x201C;&#x7269;&#x4EE5;&#x7A00;&#x4E3A;&#x8D35;&#x201D;&#x3002;</p>
+<p>&#x6240;&#x4EE5;TF-IDF&#x5176;&#x5B9E;&#x5C31;&#x662F;&#xFF1A;</p>
+<script type="math/tex; mode=display">tf-idf_{t,d} = tf_{t,d} \times idf_{t}</script><h3 id="&#x8BC4;&#x5206;&#x8BA1;&#x7B97;"><a href="#&#x8BC4;&#x5206;&#x8BA1;&#x7B97;" class="headerlink" title="&#x8BC4;&#x5206;&#x8BA1;&#x7B97;"></a>&#x8BC4;&#x5206;&#x8BA1;&#x7B97;</h3><p>&#x4EE5;&#x4E0A;&#x7684;TF-IDF&#x662F;&#x9488;&#x5BF9;document&#x7684;&#x4E00;&#x4E2A;term&#x8FDB;&#x884C;&#x7684;&#x3002;</p>
+<p>&#x5BF9;&#x4E8E;&#x4E00;&#x4E2A;&#x6587;&#x6863;&#x6765;&#x8BF4;&#xFF0C;&#x628A;&#x6BCF;&#x4E2A;term&#x90FD;&#x8BA1;&#x7B97;tf-idf&#x53EF;&#x4EE5;&#x5F97;&#x5230;&#x6587;&#x6863;&#x7684;&#x5411;&#x91CF;&#x8868;&#x793A;<script type="math/tex">\vec{V}(d)</script>&#xFF0C;&#x540C;&#x7406;&#x4E5F;&#x53EF;&#x4EE5;&#x5F97;&#x5230;&#x67E5;&#x8BE2;q&#x7684;&#x5411;&#x91CF;&#x8868;&#x793A;<script type="math/tex">\vec{V}(q)</script>&#xFF0C;&#x8FD9;&#x4E5F;&#x5C31;&#x662F;&#x5411;&#x91CF;&#x7A7A;&#x95F4;&#x6A21;&#x578B;&#x3002;</p>
+<p>&#x6211;&#x4EEC;&#x5728;&#x641C;&#x7D22;&#x4E2D;&#xFF0C;&#x5176;&#x5B9E;&#x76EE;&#x6807;&#x5C31;&#x662F;&#x627E;&#x51FA;&#x67E5;&#x8BE2;&#x5411;&#x91CF;<script type="math/tex">\vec{V}(q)</script>&#x548C;&#x6BCF;&#x4E2A;&#x6587;&#x6863;&#x5411;&#x91CF;<script type="math/tex">\vec{V}(d)</script>&#x7684;&#x76F8;&#x4F3C;&#x5EA6;&#xFF0C;&#x7136;&#x540E;&#x5F97;&#x5230;&#x4E00;&#x4E2A;&#x6392;&#x5E8F;&#xFF0C;&#x5F97;&#x5206;&#x9AD8;&#x7684;&#x6392;&#x5728;&#x524D;&#x9762;&#xFF0C;&#x5F97;&#x5206;&#x4F4E;&#x7684;&#x5728;&#x540E;&#x9762;&#x3002;</p>
+<script type="math/tex; mode=display">score(q,d)=\frac{\vec{V}(q) \cdot \vec{V}(d)}{|\vec{V}(q)| \cdot |\vec{V}(d)|}</script><h3 id="Okapi-BM25"><a href="#Okapi-BM25" class="headerlink" title="Okapi BM25"></a>Okapi BM25</h3><p>BM25&#x662F;&#x4E00;&#x79CD;&#x7528;&#x6765;&#x8BC4;&#x4EF7;&#x641C;&#x7D22;&#x8BCD;&#x548C;&#x6587;&#x6863;&#x4E4B;&#x95F4;&#x76F8;&#x5173;&#x6027;&#x7684;&#x7B97;&#x6CD5;&#xFF0C;&#x5B83;&#x662F;&#x4E00;&#x79CD;&#x57FA;&#x4E8E;<strong>&#x6982;&#x7387;&#x68C0;&#x7D22;&#x6A21;&#x578B;</strong>&#x63D0;&#x51FA;&#x7684;&#x7B97;&#x6CD5;&#xFF0C;&#x518D;&#x7528;&#x7B80;&#x5355;&#x7684;&#x8BDD;&#x6765;&#x63CF;&#x8FF0;&#x4E0B;BM25&#x7B97;&#x6CD5;&#xFF1A;&#x6211;&#x4EEC;&#x6709;&#x4E00;&#x4E2A;query&#x548C;&#x4E00;&#x6279;&#x6587;&#x6863;Ds&#xFF0C;&#x73B0;&#x5728;&#x8981;&#x8BA1;&#x7B97;query&#x548C;&#x6BCF;&#x7BC7;&#x6587;&#x6863;D&#x4E4B;&#x95F4;&#x7684;&#x76F8;&#x5173;&#x6027;&#x5206;&#x6570;&#xFF0C;&#x6211;&#x4EEC;&#x7684;&#x505A;&#x6CD5;&#x662F;&#xFF0C;&#x5148;&#x5BF9;query&#x8FDB;&#x884C;&#x5207;&#x5206;&#xFF0C;&#x5F97;&#x5230;&#x5355;&#x8BCD;&#xFF0C;&#x7136;&#x540E;&#x5355;&#x8BCD;&#x7684;&#x5206;&#x6570;&#x7531;3&#x90E8;&#x5206;&#x7EC4;&#x6210;&#xFF1A;</p>
+<ul>
+<li>&#x5355;&#x8BCD;&#x548C;D&#x4E4B;&#x95F4;&#x7684;&#x76F8;&#x5173;&#x6027;</li>
+<li>&#x5355;&#x8BCD;&#x548C;query&#x4E4B;&#x95F4;&#x7684;&#x76F8;&#x5173;&#x6027;</li>
+<li>&#x6BCF;&#x4E2A;&#x5355;&#x8BCD;&#x7684;&#x6743;&#x91CD;<br>&#x6700;&#x540E;&#x5BF9;&#x4E8E;&#x6BCF;&#x4E2A;&#x5355;&#x8BCD;&#x7684;&#x5206;&#x6570;&#x6211;&#x4EEC;&#x505A;&#x4E00;&#x4E2A;&#x6C42;&#x548C;&#xFF0C;&#x5C31;&#x5F97;&#x5230;&#x4E86;query&#x548C;&#x6587;&#x6863;&#x4E4B;&#x95F4;&#x7684;&#x5206;&#x6570;&#x3002;</li>
+</ul>
+<p><img src="/2019/03/19/&#x4FE1;&#x606F;&#x68C0;&#x7D22;&#x57FA;&#x672C;&#x6982;&#x5FF5;&#x77E5;&#x8BC6;&#x7B14;&#x8BB0;&#x603B;&#x7ED3;/bm25.png" alt=""></p>
+<h2 id="&#x4FE1;&#x606F;&#x68C0;&#x7D22;&#x7684;&#x8BC4;&#x4EF7;"><a href="#&#x4FE1;&#x606F;&#x68C0;&#x7D22;&#x7684;&#x8BC4;&#x4EF7;" class="headerlink" title="&#x4FE1;&#x606F;&#x68C0;&#x7D22;&#x7684;&#x8BC4;&#x4EF7;"></a>&#x4FE1;&#x606F;&#x68C0;&#x7D22;&#x7684;&#x8BC4;&#x4EF7;</h2><h3 id="MAP"><a href="#MAP" class="headerlink" title="MAP"></a>MAP</h3><ul>
+<li>&#x5E73;&#x5747;&#x6B63;&#x786E;&#x7387;(Average Precision, AP)&#xFF1A;&#x5BF9;&#x4E0D;&#x540C;&#x53EC;&#x56DE;&#x7387;&#x70B9;&#x4E0A;&#x7684;&#x6B63;&#x786E;&#x7387;&#x8FDB;&#x884C;&#x5E73;&#x5747;</li>
+<li>Mean Average Precision&#xFF1A;&#x5BF9;&#x6240;&#x6709;&#x67E5;&#x8BE2;&#x7684;AP&#x6C42;&#x5B8F;&#x5E73;&#x5747;&#x3002;&#xFF08;&#x5B8F;&#x5E73;&#x5747;&#xFF1A;&#x5BF9;&#x6BCF;&#x4E2A;&#x67E5;&#x8BE2;&#x6C42;&#x51FA;&#x67D0;&#x4E2A;&#x6307;&#x6807;&#xFF0C;&#x7136;&#x540E;&#x5BF9;&#x8FD9;&#x4E9B;&#x6307;&#x6807;&#x8FDB;&#x884C;&#x7B97;&#x672F;&#x5E73;&#x5747;&#xFF09;<br>&#x7CFB;&#x7EDF;&#x68C0;&#x7D22;&#x51FA;&#x6765;&#x7684;&#x76F8;&#x5173;&#x6587;&#x6863;&#x8D8A;&#x9760;&#x524D;(rank &#x8D8A;&#x9AD8;)&#xFF0C;MAP&#x5C31;&#x53EF;&#x80FD;&#x8D8A;&#x9AD8;&#x3002;</li>
+</ul>
+<h3 id="NDCG"><a href="#NDCG" class="headerlink" title="NDCG"></a>NDCG</h3><p>&#x6BCF;&#x4E2A;&#x6587;&#x6863;&#x4E0D;&#x4EC5;&#x4EC5;&#x53EA;&#x6709;&#x76F8;&#x5173;&#x548C;&#x4E0D;&#x76F8;&#x5173;&#x4E24;&#x79CD;&#x60C5;&#x51B5;&#xFF0C;&#x800C;&#x662F;&#x6709;&#x76F8;&#x5173;&#x5EA6;&#x7EA7;&#x522B;&#xFF0C;&#x6BD4;&#x5982;0,1,2,3,4&#xFF08;bad&#x3001;fair&#x3001;good&#x3001;excellent&#x3001;perfect&#xFF09;&#x3002;&#x6211;&#x4EEC;&#x53EF;&#x4EE5;&#x5047;&#x8BBE;&#xFF0C;&#x5BF9;&#x4E8E;&#x8FD4;&#x56DE;&#x7ED3;&#x679C;&#xFF1A;</p>
+<ul>
+<li>&#x76F8;&#x5173;&#x5EA6;&#x7EA7;&#x522B;&#x8D8A;&#x9AD8;&#x7684;&#x7ED3;&#x679C;&#x8D8A;&#x591A;&#x8D8A;&#x597D;</li>
+<li>&#x76F8;&#x5173;&#x5EA6;&#x7EA7;&#x522B;&#x8D8A;&#x9AD8;&#x7684;&#x7ED3;&#x679C;&#x8D8A;&#x9760;&#x524D;&#x8D8A;&#x597D;</li>
+</ul>
+<p>Normalized Discounted Cumulative Gain&#xFF1A;<br><img src="/2019/03/19/&#x4FE1;&#x606F;&#x68C0;&#x7D22;&#x57FA;&#x672C;&#x6982;&#x5FF5;&#x77E5;&#x8BC6;&#x7B14;&#x8BB0;&#x603B;&#x7ED3;/ndcg.png" alt=""></p>
+<h2 id="&#x6392;&#x5E8F;&#x5B66;&#x4E60;&#xFF08;Learning-to-Rank&#xFF09;"><a href="#&#x6392;&#x5E8F;&#x5B66;&#x4E60;&#xFF08;Learning-to-Rank&#xFF09;" class="headerlink" title="&#x6392;&#x5E8F;&#x5B66;&#x4E60;&#xFF08;Learning to Rank&#xFF09;"></a>&#x6392;&#x5E8F;&#x5B66;&#x4E60;&#xFF08;Learning to Rank&#xFF09;</h2><p>&#x6392;&#x5E8F;&#x95EE;&#x9898;&#x5C31;&#x662F;&#x4F7F;&#x7528;&#x4E00;&#x4E2A;&#x6A21;&#x578B; <script type="math/tex">f(q,d)</script>&#x6765;&#x5BF9;&#x8BE5;query&#x4E0B;&#x7684;documents&#x8FDB;&#x884C;&#x6392;&#x5E8F;&#x3002;&#x4F20;&#x7EDF;&#x7684;Learning to Rank&#xFF08;LTR&#xFF09;&#x6A21;&#x578B;&#x6709;&#x4E09;&#x79CD;&#x65B9;&#x6CD5;&#xFF1A;</p>
+<h3 id="Pointwise-approach"><a href="#Pointwise-approach" class="headerlink" title="Pointwise approach"></a>Pointwise approach</h3><p>&#x901A;&#x8FC7;ML&#x7684;&#x65B9;&#x6CD5;&#x6765;&#x5B66;&#x4E60;&#x67E5;&#x8BE2;-&#x6587;&#x6863;&#x5BF9;&#x7684;&#x5F97;&#x5206;&#xFF1A;f(query,document)&#x3002;&#x6BD4;&#x5982;&#x8BF4;&#x4E0D;&#x76F8;&#x5173;&#x7684;document&#x6253;1-10&#x5206;&#xFF0C;&#x76F8;&#x5173;&#x7684;document&#x6253;10-50&#x5206;&#x3002;&#x7136;&#x540E;&#x6839;&#x636E;&#x5F97;&#x5206;&#x6765;&#x6392;&#x5E8F;&#x3002;</p>
+<h3 id="Pairwise-approach"><a href="#Pairwise-approach" class="headerlink" title="Pairwise approach"></a>Pairwise approach</h3><p>&#x5728;&#x68C0;&#x7D22;&#x4E2D;&#xFF0C;&#x5176;&#x5B9E;&#x5E76;&#x4E0D;&#x9700;&#x8981;&#x8BA1;&#x7B97;&#x5F97;&#x5206;&#x3002;&#x6211;&#x4EEC;&#x53EA;&#x8981;&#x77E5;&#x9053;&#x4E24;&#x4E2A;&#x6587;&#x6863;&#x7684;&#x5E8F;&#x5C31;&#x597D;&#x4E86;&#x3002;&#x6240;&#x4EE5;&#x53EA;&#x8981;&#x77E5;&#x9053;f(query,doc1)&#x548C;f(query, doc2)&#x54EA;&#x4E2A;&#x6392;&#x5728;&#x54EA;&#x4E2A;&#x524D;&#x9762;&#x5C31;&#x597D;&#x4E86;&#x3002;&#x6211;&#x4EEC;&#x77E5;&#x9053;&#x4E24;&#x4E24;&#x7684;&#x6392;&#x5E8F;&#x5173;&#x7CFB;&#xFF0C;&#x4E5F;&#x53EF;&#x4EE5;&#x5F97;&#x5230;&#x6700;&#x7EC8;&#x7684;&#x6392;&#x5E8F;&#x7ED3;&#x679C;&#x3002;</p>
+<h3 id="listwise-approach"><a href="#listwise-approach" class="headerlink" title="listwise approach"></a>listwise approach</h3><p>Listwise&#x4E0E;&#x4E0A;&#x8FF0;&#x4E24;&#x79CD;&#x65B9;&#x6CD5;&#x4E0D;&#x540C;&#xFF0C;&#x5B83;&#x662F;&#x5C06;&#x6BCF;&#x4E2A;&#x67E5;&#x8BE2;&#x5BF9;&#x5E94;&#x7684;&#x6240;&#x6709;&#x641C;&#x7D22;&#x7ED3;&#x679C;&#x5217;&#x8868;&#x4F5C;&#x4E3A;&#x4E00;&#x4E2A;&#x8BAD;&#x7EC3;&#x6837;&#x4F8B;&#x3002;</p>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><ul>
+<li>ChristopherD.Manning, PrabhakarRaghavan, HinrichSchutze,&#x7B49;. &#x4FE1;&#x606F;&#x68C0;&#x7D22;&#x5BFC;&#x8BBA;[J]. 2010.</li>
+<li><a href="https://www.zybuluo.com/zhuanxu/note/974675" target="_blank" rel="external">https://www.zybuluo.com/zhuanxu/note/974675</a></li>
+<li><a href="https://www.cnblogs.com/eyeszjwang/articles/2368087.html" target="_blank" rel="external">https://www.cnblogs.com/eyeszjwang/articles/2368087.html</a></li>
+</ul>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;&amp;#x4E4B;&amp;#x524D;&amp;#x5B66;&amp;#x8FC7;&amp;#x7684;&amp;#x4FE1;&amp;#x606F;&amp;#x68C0;&amp;#x7D22;&amp;#x90FD;&amp;#x5FD8;&amp;#x5F97;&amp;#x5DEE;&amp;#x4E0D;&amp;#x591A;&amp;#x4E86;&amp;#xFF0C;&amp;#x8FD9;&amp;#x7BC7;&amp;#x6587;&amp;#x7AE0;&amp;#x7528;&amp;#x6765;&amp;#x603B;&amp;#x7ED3;&amp;#x548C;&amp;#x8BB0;&amp;#x5F55;&amp;#x4E00;&amp;#x4E9B;&amp;#x4FE1;&amp;#x606F;&amp;#x68C0;&amp;#x7D22;&amp;#xFF08;IR&amp;#xFF09;&amp;#x9886;&amp;#x57DF;&amp;#x7684;&amp;#x6982;&amp;#x5FF5;&amp;#x548C;&amp;#x57FA;&amp;#x7840;&amp;#x77E5;&amp;#x8BC6;&amp;#x3002;&lt;/p&gt;
+&lt;h2 id=&quot;&amp;#x603B;&amp;#x89C8;&quot;&gt;&lt;a href=&quot;#&amp;#x603B;&amp;#x89C8;&quot; class=&quot;headerlink&quot; title=&quot;&amp;#x603B;&amp;#x89C8;&quot;&gt;&lt;/a&gt;&amp;#x603B;&amp;#x89C8;&lt;/h2&gt;&lt;p&gt;&amp;#x4FE1;&amp;#x606F;&amp;#x68C0;&amp;#x7D22;&amp;#x5176;&amp;#x5B9E;&amp;#x5C31;&amp;#x662F;&amp;#x6709;&amp;#x4E00;&amp;#x4E2A;&amp;#x67E5;&amp;#x8BE2;&amp;#x548C;&amp;#x5DF2;&amp;#x6709;&amp;#x7684;&amp;#x6587;&amp;#x6863;&amp;#x6570;&amp;#x636E;&amp;#x96C6;&amp;#x3002;&amp;#x7ED9;&amp;#x4E00;&amp;#x4E2A;&amp;#x67E5;&amp;#x8BE2;query&amp;#xFF0C;&amp;#x4ECE;&amp;#x6570;&amp;#x636E;&amp;#x5E93;&amp;#x4E2D;&amp;#x7684;&amp;#x6587;&amp;#x6863;&amp;#x4E2D;&amp;#x627E;&amp;#x51FA;&amp;#x76F8;&amp;#x5173;&amp;#x7684;document&amp;#x6587;&amp;#x6863;&amp;#x6765;&amp;#x3002;&lt;/p&gt;
+&lt;p&gt;&amp;#x7B14;&amp;#x8BB0;&amp;#x76EE;&amp;#x5F55;&amp;#x5982;&amp;#x4E0B;&amp;#xFF1A;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&amp;#x5E03;&amp;#x5C14;&amp;#x68C0;&amp;#x7D22;&lt;/li&gt;
+&lt;li&gt;&amp;#x5411;&amp;#x91CF;&amp;#x7A7A;&amp;#x95F4;&amp;#x6A21;&amp;#x578B;&lt;/li&gt;
+&lt;li&gt;&amp;#x4FE1;&amp;#x606F;&amp;#x68C0;&amp;#x7D22;&amp;#x7684;&amp;#x8BC4;&amp;#x4EF7;&lt;/li&gt;
+&lt;li&gt;&amp;#x6392;&amp;#x5E8F;&amp;#x5B66;&amp;#x4E60;&lt;/li&gt;
+&lt;/ul&gt;
+    
+    </summary>
+    
+    
+      <category term="信息检索" scheme="http://nladuo.github.io/tags/%E4%BF%A1%E6%81%AF%E6%A3%80%E7%B4%A2/"/>
+    
+  </entry>
   
   <entry>
     <title>Ubuntu-VPS光速搭建Shadowsocks服务</title>
@@ -466,92 +550,6 @@
     
     
       <category term="网络爬虫" scheme="http://nladuo.github.io/tags/%E7%BD%91%E7%BB%9C%E7%88%AC%E8%99%AB/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>信息检索基本概念知识笔记总结</title>
-    <link href="http://nladuo.github.io/2018/11/27/%E4%BF%A1%E6%81%AF%E6%A3%80%E7%B4%A2%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E7%9F%A5%E8%AF%86%E7%AC%94%E8%AE%B0%E6%80%BB%E7%BB%93/"/>
-    <id>http://nladuo.github.io/2018/11/27/信息检索基本概念知识笔记总结/</id>
-    <published>2018-11-27T10:24:51.000Z</published>
-    <updated>2018-11-27T11:00:18.196Z</updated>
-    
-    <content type="html"><![CDATA[<p>&#x4E4B;&#x524D;&#x5B66;&#x8FC7;&#x7684;&#x4FE1;&#x606F;&#x68C0;&#x7D22;&#x90FD;&#x5FD8;&#x5F97;&#x5DEE;&#x4E0D;&#x591A;&#x4E86;&#xFF0C;&#x8FD9;&#x7BC7;&#x6587;&#x7AE0;&#x7528;&#x6765;&#x603B;&#x7ED3;&#x548C;&#x8BB0;&#x5F55;&#x4E00;&#x4E9B;&#x4FE1;&#x606F;&#x68C0;&#x7D22;&#xFF08;IR&#xFF09;&#x9886;&#x57DF;&#x7684;&#x6982;&#x5FF5;&#x548C;&#x57FA;&#x7840;&#x77E5;&#x8BC6;&#x3002;</p>
-<h2 id="&#x603B;&#x89C8;"><a href="#&#x603B;&#x89C8;" class="headerlink" title="&#x603B;&#x89C8;"></a>&#x603B;&#x89C8;</h2><p>&#x4FE1;&#x606F;&#x68C0;&#x7D22;&#x5176;&#x5B9E;&#x5C31;&#x662F;&#x6709;&#x4E00;&#x4E2A;&#x67E5;&#x8BE2;&#x548C;&#x5DF2;&#x6709;&#x7684;&#x6587;&#x6863;&#x6570;&#x636E;&#x96C6;&#x3002;&#x7ED9;&#x4E00;&#x4E2A;&#x67E5;&#x8BE2;query&#xFF0C;&#x4ECE;&#x6570;&#x636E;&#x5E93;&#x4E2D;&#x7684;&#x6587;&#x6863;&#x4E2D;&#x627E;&#x51FA;&#x76F8;&#x5173;&#x7684;document&#x6587;&#x6863;&#x6765;&#x3002;</p>
-<p>&#x7B14;&#x8BB0;&#x76EE;&#x5F55;&#x5982;&#x4E0B;&#xFF1A;</p>
-<ul>
-<li>&#x5E03;&#x5C14;&#x68C0;&#x7D22;</li>
-<li>&#x5411;&#x91CF;&#x7A7A;&#x95F4;&#x6A21;&#x578B;</li>
-<li>&#x4FE1;&#x606F;&#x68C0;&#x7D22;&#x7684;&#x8BC4;&#x4EF7;</li>
-<li>&#x6392;&#x5E8F;&#x5B66;&#x4E60;</li>
-</ul>
-<a id="more"></a>
-<h2 id="&#x5E03;&#x5C14;&#x68C0;&#x7D22;"><a href="#&#x5E03;&#x5C14;&#x68C0;&#x7D22;" class="headerlink" title="&#x5E03;&#x5C14;&#x68C0;&#x7D22;"></a>&#x5E03;&#x5C14;&#x68C0;&#x7D22;</h2><p>&#x5E03;&#x5C14;&#x68C0;&#x7D22;&#x7684;&#x67E5;&#x8BE2;&#xFF0C;&#x662F;&#x6307;&#x5229;&#x7528; AND, OR &#x6216;&#x8005; NOT&#x64CD;&#x4F5C;&#x7B26;&#x5C06;&#x8BCD;&#x9879;&#x8FDE;&#x63A5;&#x8D77;&#x6765;&#x7684;&#x67E5;&#x8BE2;&#x3002;</p>
-<p>&#x6BD4;&#x5982;&#x8BF4;&#x6211;&#x4EEC;&#x7684;&#x76EE;&#x6807;&#x662F;&#xFF1A;&#x5728;&#x300A;&#x838E;&#x58EB;&#x6BD4;&#x4E9A;&#x5168;&#x96C6;&#x300B;&#x627E;&#x51FA;&#x5305;&#x542B;Brutus AND Caesar &#xFF0C;&#x540C;&#x65F6;&#x53C8;&#x4E0D;&#x5305;&#x542B;Calpurnia&#x7684;&#x7AE0;&#x8282;&#xFF08;&#x6587;&#x6863;&#xFF09;&#x6765;&#x3002;</p>
-<h3 id="&#x8BCD;&#x9879;-&#x6587;&#x6863;&#x5173;&#x8054;&#x77E9;&#x9635;"><a href="#&#x8BCD;&#x9879;-&#x6587;&#x6863;&#x5173;&#x8054;&#x77E9;&#x9635;" class="headerlink" title="&#x8BCD;&#x9879;-&#x6587;&#x6863;&#x5173;&#x8054;&#x77E9;&#x9635;"></a>&#x8BCD;&#x9879;-&#x6587;&#x6863;&#x5173;&#x8054;&#x77E9;&#x9635;</h3><p>&#x8FD9;&#x91CC;&#x80AF;&#x5B9A;&#x4E0D;&#x80FD;&#x5C06;&#x6587;&#x6863;&#x626B;&#x63CF;&#x4E00;&#x904D;&#xFF0C;&#x800C;&#x662F;&#x53EF;&#x4EE5;&#x901A;&#x8FC7;&#x4E00;&#x4E2A;&#x4E00;&#x4E2A;&#x8BCD;&#x9879;&#x6587;&#x6863;&#x5173;&#x8054;&#x77E9;&#x9635;&#x6765;&#x8FDB;&#x884C;&#x68C0;&#x7D22;&#x3002;<br><img src="/2018/11/27/&#x4FE1;&#x606F;&#x68C0;&#x7D22;&#x57FA;&#x672C;&#x6982;&#x5FF5;&#x77E5;&#x8BC6;&#x7B14;&#x8BB0;&#x603B;&#x7ED3;/term-doc-matrix.png" alt=""></p>
-<p>&#x7ED9;&#x5B9A;&#x67E5;&#x8BE2;Brutus AND Caesar AND NOT Calpurnia, &#x6C42;&#x89E3;&#x65B9;&#x6CD5;&#x5982;&#x4E0B;&#xFF1A;</p>
-<ul>
-<li>&#x53D6;&#x51FA;&#x4E09;&#x4E2A;&#x8BCD;&#x9879;&#x5BF9;&#x5E94;&#x7684;&#x884C;&#x5411;&#x91CF; &#xFF0C;&#x5E76;&#x5BF9;Calpurnia &#x7684;&#x884C;&#x5411;&#x91CF;&#x6C42;&#x53CD;&#xFF0C;&#x6700;&#x540E;&#x6309;&#x4F4D;&#x8FDB;&#x884C;&#x4E0E;&#x64CD;&#x4F5C;</li>
-<li>110100 AND 110111 AND 101111 = 100100.</li>
-</ul>
-<p>&#x7B2C;&#x4E00;&#x7BC7;&#x6587;&#x6863;&#x548C;&#x7B2C;&#x56DB;&#x7BC7;&#x6587;&#x6863;&#x662F;&#x6211;&#x4EEC;&#x7684;&#x67E5;&#x8BE2;&#x7ED3;&#x679C;&#x3002;</p>
-<h3 id="&#x5012;&#x6392;&#x7D22;&#x5F15;"><a href="#&#x5012;&#x6392;&#x7D22;&#x5F15;" class="headerlink" title="&#x5012;&#x6392;&#x7D22;&#x5F15;"></a>&#x5012;&#x6392;&#x7D22;&#x5F15;</h3><p>&#x968F;&#x7740;&#x8BCD;&#x9879;&#x7684;&#x589E;&#x591A;&#xFF0C;&#x4F1A;&#x5BFC;&#x81F4;&#x5173;&#x8054;&#x77E9;&#x9635;&#x4F1A;&#x53D8;&#x5F97;&#x975E;&#x5E38;&#x7A00;&#x758F;&#x3002;&#x4E00;&#x822C;&#x6765;&#x8BF4;&#x8BCD;&#x8868;&#x5927;&#x5C0F;&#x4F1A;&#x6709;&#x597D;&#x51E0;&#x4E07;&#x751A;&#x81F3;&#x51E0;&#x5341;&#x4E07;&#xFF0C;&#x800C;&#x4E00;&#x7BC7;&#x6587;&#x7AE0;&#x4E2D;&#x4E00;&#x822C;&#x4E5F;&#x5C31;&#x51E0;&#x767E;&#x51E0;&#x5343;&#x4E2A;&#x8BCD;&#xFF0C;&#x6240;&#x4EE5;&#x4F1A;&#x6709;&#x6570;&#x636E;&#x5F88;&#x591A;&#x4E3A;0&#x3002;</p>
-<p>&#x5012;&#x6392;&#x7D22;&#x5F15;(inverted index)&#x5176;&#x5B9E;&#x4E5F;&#x5C31;&#x662F;&#x8BCD;&#x9879;-&#x6587;&#x6863;&#x5173;&#x8054;&#x77E9;&#x9635;&#xFF0C;&#x4F46;&#x662F;&#x8FDB;&#x884C;&#x4E86;&#x538B;&#x7F29;&#xFF0C;&#x4F7F;&#x7528;&#x66F4;&#x5C11;&#x7684;&#x7A7A;&#x95F4;&#x8FDB;&#x884C;&#x5B58;&#x50A8;&#x3002;&#x5176;&#x5F62;&#x5F0F;&#x5982;&#x4E0B;&#xFF1A;</p>
-<p><img src="/2018/11/27/&#x4FE1;&#x606F;&#x68C0;&#x7D22;&#x57FA;&#x672C;&#x6982;&#x5FF5;&#x77E5;&#x8BC6;&#x7B14;&#x8BB0;&#x603B;&#x7ED3;/inverted-index.png" alt=""></p>
-<p>&#x76F8;&#x5F53;&#x4E8E;&#x539F;&#x5148;&#x7684;&#x5B58;&#x50A8;&#x7A7A;&#x95F4;&#x662F;&#xFF1A;&#x8BCD;&#x9879;&#x4E2A;&#x6570;<em>&#x6587;&#x6863;&#x4E2A;&#x6570;&#x3002;&#x73B0;&#x5728;&#x662F;&#xFF1A;&#x8BCD;&#x9879;&#x4E2A;&#x6570;</em>&#x6587;&#x6863;&#x5E73;&#x5747;&#x957F;&#x5EA6;&#x3002;</p>
-<h2 id="&#x5411;&#x91CF;&#x7A7A;&#x95F4;&#x6A21;&#x578B;"><a href="#&#x5411;&#x91CF;&#x7A7A;&#x95F4;&#x6A21;&#x578B;" class="headerlink" title="&#x5411;&#x91CF;&#x7A7A;&#x95F4;&#x6A21;&#x578B;"></a>&#x5411;&#x91CF;&#x7A7A;&#x95F4;&#x6A21;&#x578B;</h2><p>&#x5728;&#x5E03;&#x5C14;&#x6A21;&#x578B;&#x4E2D;&#xFF0C;&#x53EA;&#x8BA8;&#x8BBA;&#x4E86;&#x8BCD;&#x662F;&#x4E0D;&#x662F;&#x51FA;&#x73B0;&#x7684;&#x95EE;&#x9898;&#xFF0C;&#x8FD9;&#x91CC;&#x7684;&#x5047;&#x8BBE;&#x662F;&#x6BCF;&#x4E2A;&#x8BCD;&#x90FD;&#x662F;&#x540C;&#x7B49;&#x91CD;&#x8981;&#x7684;&#x3002;&#x4F46;&#x5176;&#x5B9E;&#x5E76;&#x4E0D;&#x662F;&#x6BCF;&#x4E2A;&#x8BCD;&#x91CD;&#x8981;&#x7A0B;&#x5EA6;&#x3002;&#x6240;&#x4EE5;&#x8FD9;&#x91CC;&#x9700;&#x8981;&#x5BF9;&#x4E0D;&#x540C;&#x7684;&#x8BCD;&#x5F15;&#x5165;&#x6743;&#x91CD;&#x7684;&#x6982;&#x5FF5;&#x3002;</p>
-<h3 id="TF-IDF"><a href="#TF-IDF" class="headerlink" title="TF-IDF"></a>TF-IDF</h3><p>TF&#xFF1A;term frequency&#xFF0C;&#x8BCD;&#x9879;t&#x5728;&#x6587;&#x6863;&#x4E2D;&#x51FA;&#x73B0;&#x7684;&#x6B21;&#x6570;&#x3002;&#x51FA;&#x73B0;&#x7684;&#x8D8A;&#x591A;&#x5C31;&#x8D8A;&#x91CD;&#x8981;&#x3002;</p>
-<p>IDF&#xFF1A;inverse document frequency&#x3002;document frequency&#x662F;&#x6307;&#x5728;&#x6574;&#x4E2A;&#x6587;&#x6863;&#x96C6;&#x51FA;&#x73B0;&#x7684;&#x6B21;&#x6570;&#xFF0C;&#x51FA;&#x73B0;&#x7684;&#x8D8A;&#x5C11;&#xFF0C;&#x8BF4;&#x660E;&#x8FD9;&#x4E2A;&#x8BCD;&#x5728;&#x6587;&#x6863;&#x8D8A;&#x91CD;&#x8981;&#xFF0C;&#x4E5F;&#x5C31;&#x662F;&#x201C;&#x7269;&#x4EE5;&#x7A00;&#x4E3A;&#x8D35;&#x201D;&#x3002;</p>
-<p>&#x6240;&#x4EE5;TF-IDF&#x5176;&#x5B9E;&#x5C31;&#x662F;&#xFF1A;</p>
-<script type="math/tex; mode=display">tf-idf_{t,d} = tf_{t,d} \times idf_{t}</script><h3 id="&#x8BC4;&#x5206;&#x8BA1;&#x7B97;"><a href="#&#x8BC4;&#x5206;&#x8BA1;&#x7B97;" class="headerlink" title="&#x8BC4;&#x5206;&#x8BA1;&#x7B97;"></a>&#x8BC4;&#x5206;&#x8BA1;&#x7B97;</h3><p>&#x4EE5;&#x4E0A;&#x7684;TF-IDF&#x662F;&#x9488;&#x5BF9;document&#x7684;&#x4E00;&#x4E2A;term&#x8FDB;&#x884C;&#x7684;&#x3002;</p>
-<p>&#x5BF9;&#x4E8E;&#x4E00;&#x4E2A;&#x6587;&#x6863;&#x6765;&#x8BF4;&#xFF0C;&#x628A;&#x6BCF;&#x4E2A;term&#x90FD;&#x8BA1;&#x7B97;tf-idf&#x53EF;&#x4EE5;&#x5F97;&#x5230;&#x6587;&#x6863;&#x7684;&#x5411;&#x91CF;&#x8868;&#x793A;<script type="math/tex">\vec{V}(d)</script>&#xFF0C;&#x540C;&#x7406;&#x4E5F;&#x53EF;&#x4EE5;&#x5F97;&#x5230;&#x67E5;&#x8BE2;q&#x7684;&#x5411;&#x91CF;&#x8868;&#x793A;<script type="math/tex">\vec{V}(q)</script>&#xFF0C;&#x8FD9;&#x4E5F;&#x5C31;&#x662F;&#x5411;&#x91CF;&#x7A7A;&#x95F4;&#x6A21;&#x578B;&#x3002;</p>
-<p>&#x6211;&#x4EEC;&#x5728;&#x641C;&#x7D22;&#x4E2D;&#xFF0C;&#x5176;&#x5B9E;&#x76EE;&#x6807;&#x5C31;&#x662F;&#x627E;&#x51FA;&#x67E5;&#x8BE2;&#x5411;&#x91CF;<script type="math/tex">\vec{V}(q)</script>&#x548C;&#x6BCF;&#x4E2A;&#x6587;&#x6863;&#x5411;&#x91CF;<script type="math/tex">\vec{V}(d)</script>&#x7684;&#x76F8;&#x4F3C;&#x5EA6;&#xFF0C;&#x7136;&#x540E;&#x5F97;&#x5230;&#x4E00;&#x4E2A;&#x6392;&#x5E8F;&#xFF0C;&#x5F97;&#x5206;&#x9AD8;&#x7684;&#x6392;&#x5728;&#x524D;&#x9762;&#xFF0C;&#x5F97;&#x5206;&#x4F4E;&#x7684;&#x5728;&#x540E;&#x9762;&#x3002;</p>
-<script type="math/tex; mode=display">score(q,d)=\frac{\vec{V}(q) \cdot \vec{V}(d)}{|\vec{V}(q)| \cdot |\vec{V}(d)|}</script><h3 id="Okapi-BM25"><a href="#Okapi-BM25" class="headerlink" title="Okapi BM25"></a>Okapi BM25</h3><p>BM25&#x662F;&#x4E00;&#x79CD;&#x7528;&#x6765;&#x8BC4;&#x4EF7;&#x641C;&#x7D22;&#x8BCD;&#x548C;&#x6587;&#x6863;&#x4E4B;&#x95F4;&#x76F8;&#x5173;&#x6027;&#x7684;&#x7B97;&#x6CD5;&#xFF0C;&#x5B83;&#x662F;&#x4E00;&#x79CD;&#x57FA;&#x4E8E;<strong>&#x6982;&#x7387;&#x68C0;&#x7D22;&#x6A21;&#x578B;</strong>&#x63D0;&#x51FA;&#x7684;&#x7B97;&#x6CD5;&#xFF0C;&#x518D;&#x7528;&#x7B80;&#x5355;&#x7684;&#x8BDD;&#x6765;&#x63CF;&#x8FF0;&#x4E0B;BM25&#x7B97;&#x6CD5;&#xFF1A;&#x6211;&#x4EEC;&#x6709;&#x4E00;&#x4E2A;query&#x548C;&#x4E00;&#x6279;&#x6587;&#x6863;Ds&#xFF0C;&#x73B0;&#x5728;&#x8981;&#x8BA1;&#x7B97;query&#x548C;&#x6BCF;&#x7BC7;&#x6587;&#x6863;D&#x4E4B;&#x95F4;&#x7684;&#x76F8;&#x5173;&#x6027;&#x5206;&#x6570;&#xFF0C;&#x6211;&#x4EEC;&#x7684;&#x505A;&#x6CD5;&#x662F;&#xFF0C;&#x5148;&#x5BF9;query&#x8FDB;&#x884C;&#x5207;&#x5206;&#xFF0C;&#x5F97;&#x5230;&#x5355;&#x8BCD;&#xFF0C;&#x7136;&#x540E;&#x5355;&#x8BCD;&#x7684;&#x5206;&#x6570;&#x7531;3&#x90E8;&#x5206;&#x7EC4;&#x6210;&#xFF1A;</p>
-<ul>
-<li>&#x5355;&#x8BCD;&#x548C;D&#x4E4B;&#x95F4;&#x7684;&#x76F8;&#x5173;&#x6027;</li>
-<li>&#x5355;&#x8BCD;&#x548C;query&#x4E4B;&#x95F4;&#x7684;&#x76F8;&#x5173;&#x6027;</li>
-<li>&#x6BCF;&#x4E2A;&#x5355;&#x8BCD;&#x7684;&#x6743;&#x91CD;<br>&#x6700;&#x540E;&#x5BF9;&#x4E8E;&#x6BCF;&#x4E2A;&#x5355;&#x8BCD;&#x7684;&#x5206;&#x6570;&#x6211;&#x4EEC;&#x505A;&#x4E00;&#x4E2A;&#x6C42;&#x548C;&#xFF0C;&#x5C31;&#x5F97;&#x5230;&#x4E86;query&#x548C;&#x6587;&#x6863;&#x4E4B;&#x95F4;&#x7684;&#x5206;&#x6570;&#x3002;</li>
-</ul>
-<p><img src="/2018/11/27/&#x4FE1;&#x606F;&#x68C0;&#x7D22;&#x57FA;&#x672C;&#x6982;&#x5FF5;&#x77E5;&#x8BC6;&#x7B14;&#x8BB0;&#x603B;&#x7ED3;/bm25.png" alt=""></p>
-<h2 id="&#x4FE1;&#x606F;&#x68C0;&#x7D22;&#x7684;&#x8BC4;&#x4EF7;"><a href="#&#x4FE1;&#x606F;&#x68C0;&#x7D22;&#x7684;&#x8BC4;&#x4EF7;" class="headerlink" title="&#x4FE1;&#x606F;&#x68C0;&#x7D22;&#x7684;&#x8BC4;&#x4EF7;"></a>&#x4FE1;&#x606F;&#x68C0;&#x7D22;&#x7684;&#x8BC4;&#x4EF7;</h2><h3 id="MAP"><a href="#MAP" class="headerlink" title="MAP"></a>MAP</h3><ul>
-<li>&#x5E73;&#x5747;&#x6B63;&#x786E;&#x7387;(Average Precision, AP)&#xFF1A;&#x5BF9;&#x4E0D;&#x540C;&#x53EC;&#x56DE;&#x7387;&#x70B9;&#x4E0A;&#x7684;&#x6B63;&#x786E;&#x7387;&#x8FDB;&#x884C;&#x5E73;&#x5747;</li>
-<li>Mean Average Precision&#xFF1A;&#x5BF9;&#x6240;&#x6709;&#x67E5;&#x8BE2;&#x7684;AP&#x6C42;&#x5B8F;&#x5E73;&#x5747;&#x3002;&#xFF08;&#x5B8F;&#x5E73;&#x5747;&#xFF1A;&#x5BF9;&#x6BCF;&#x4E2A;&#x67E5;&#x8BE2;&#x6C42;&#x51FA;&#x67D0;&#x4E2A;&#x6307;&#x6807;&#xFF0C;&#x7136;&#x540E;&#x5BF9;&#x8FD9;&#x4E9B;&#x6307;&#x6807;&#x8FDB;&#x884C;&#x7B97;&#x672F;&#x5E73;&#x5747;&#xFF09;<br>&#x7CFB;&#x7EDF;&#x68C0;&#x7D22;&#x51FA;&#x6765;&#x7684;&#x76F8;&#x5173;&#x6587;&#x6863;&#x8D8A;&#x9760;&#x524D;(rank &#x8D8A;&#x9AD8;)&#xFF0C;MAP&#x5C31;&#x53EF;&#x80FD;&#x8D8A;&#x9AD8;&#x3002;</li>
-</ul>
-<h3 id="NDCG"><a href="#NDCG" class="headerlink" title="NDCG"></a>NDCG</h3><p>&#x6BCF;&#x4E2A;&#x6587;&#x6863;&#x4E0D;&#x4EC5;&#x4EC5;&#x53EA;&#x6709;&#x76F8;&#x5173;&#x548C;&#x4E0D;&#x76F8;&#x5173;&#x4E24;&#x79CD;&#x60C5;&#x51B5;&#xFF0C;&#x800C;&#x662F;&#x6709;&#x76F8;&#x5173;&#x5EA6;&#x7EA7;&#x522B;&#xFF0C;&#x6BD4;&#x5982;0,1,2,3,4&#xFF08;bad&#x3001;fair&#x3001;good&#x3001;excellent&#x3001;perfect&#xFF09;&#x3002;&#x6211;&#x4EEC;&#x53EF;&#x4EE5;&#x5047;&#x8BBE;&#xFF0C;&#x5BF9;&#x4E8E;&#x8FD4;&#x56DE;&#x7ED3;&#x679C;&#xFF1A;</p>
-<ul>
-<li>&#x76F8;&#x5173;&#x5EA6;&#x7EA7;&#x522B;&#x8D8A;&#x9AD8;&#x7684;&#x7ED3;&#x679C;&#x8D8A;&#x591A;&#x8D8A;&#x597D;</li>
-<li>&#x76F8;&#x5173;&#x5EA6;&#x7EA7;&#x522B;&#x8D8A;&#x9AD8;&#x7684;&#x7ED3;&#x679C;&#x8D8A;&#x9760;&#x524D;&#x8D8A;&#x597D;</li>
-</ul>
-<p>Normalized Discounted Cumulative Gain&#xFF1A;<br><img src="/2018/11/27/&#x4FE1;&#x606F;&#x68C0;&#x7D22;&#x57FA;&#x672C;&#x6982;&#x5FF5;&#x77E5;&#x8BC6;&#x7B14;&#x8BB0;&#x603B;&#x7ED3;/ndcg.png" alt=""></p>
-<h2 id="&#x6392;&#x5E8F;&#x5B66;&#x4E60;&#xFF08;Learning-to-Rank&#xFF09;"><a href="#&#x6392;&#x5E8F;&#x5B66;&#x4E60;&#xFF08;Learning-to-Rank&#xFF09;" class="headerlink" title="&#x6392;&#x5E8F;&#x5B66;&#x4E60;&#xFF08;Learning to Rank&#xFF09;"></a>&#x6392;&#x5E8F;&#x5B66;&#x4E60;&#xFF08;Learning to Rank&#xFF09;</h2><p>&#x6392;&#x5E8F;&#x95EE;&#x9898;&#x5C31;&#x662F;&#x4F7F;&#x7528;&#x4E00;&#x4E2A;&#x6A21;&#x578B; <script type="math/tex">f(q,d)</script>&#x6765;&#x5BF9;&#x8BE5;query&#x4E0B;&#x7684;documents&#x8FDB;&#x884C;&#x6392;&#x5E8F;&#x3002;&#x4F20;&#x7EDF;&#x7684;Learning to Rank&#xFF08;LTR&#xFF09;&#x6A21;&#x578B;&#x6709;&#x4E09;&#x79CD;&#x65B9;&#x6CD5;&#xFF1A;</p>
-<ul>
-<li>pointwise approach</li>
-<li>pairwise approach</li>
-<li>listwise approach</li>
-</ul>
-<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><ul>
-<li>ChristopherD.Manning, PrabhakarRaghavan, HinrichSchutze,&#x7B49;. &#x4FE1;&#x606F;&#x68C0;&#x7D22;&#x5BFC;&#x8BBA;[J]. 2010.</li>
-<li><a href="https://www.zybuluo.com/zhuanxu/note/974675" target="_blank" rel="external">https://www.zybuluo.com/zhuanxu/note/974675</a></li>
-<li><a href="https://www.cnblogs.com/eyeszjwang/articles/2368087.html" target="_blank" rel="external">https://www.cnblogs.com/eyeszjwang/articles/2368087.html</a></li>
-</ul>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;&amp;#x4E4B;&amp;#x524D;&amp;#x5B66;&amp;#x8FC7;&amp;#x7684;&amp;#x4FE1;&amp;#x606F;&amp;#x68C0;&amp;#x7D22;&amp;#x90FD;&amp;#x5FD8;&amp;#x5F97;&amp;#x5DEE;&amp;#x4E0D;&amp;#x591A;&amp;#x4E86;&amp;#xFF0C;&amp;#x8FD9;&amp;#x7BC7;&amp;#x6587;&amp;#x7AE0;&amp;#x7528;&amp;#x6765;&amp;#x603B;&amp;#x7ED3;&amp;#x548C;&amp;#x8BB0;&amp;#x5F55;&amp;#x4E00;&amp;#x4E9B;&amp;#x4FE1;&amp;#x606F;&amp;#x68C0;&amp;#x7D22;&amp;#xFF08;IR&amp;#xFF09;&amp;#x9886;&amp;#x57DF;&amp;#x7684;&amp;#x6982;&amp;#x5FF5;&amp;#x548C;&amp;#x57FA;&amp;#x7840;&amp;#x77E5;&amp;#x8BC6;&amp;#x3002;&lt;/p&gt;
-&lt;h2 id=&quot;&amp;#x603B;&amp;#x89C8;&quot;&gt;&lt;a href=&quot;#&amp;#x603B;&amp;#x89C8;&quot; class=&quot;headerlink&quot; title=&quot;&amp;#x603B;&amp;#x89C8;&quot;&gt;&lt;/a&gt;&amp;#x603B;&amp;#x89C8;&lt;/h2&gt;&lt;p&gt;&amp;#x4FE1;&amp;#x606F;&amp;#x68C0;&amp;#x7D22;&amp;#x5176;&amp;#x5B9E;&amp;#x5C31;&amp;#x662F;&amp;#x6709;&amp;#x4E00;&amp;#x4E2A;&amp;#x67E5;&amp;#x8BE2;&amp;#x548C;&amp;#x5DF2;&amp;#x6709;&amp;#x7684;&amp;#x6587;&amp;#x6863;&amp;#x6570;&amp;#x636E;&amp;#x96C6;&amp;#x3002;&amp;#x7ED9;&amp;#x4E00;&amp;#x4E2A;&amp;#x67E5;&amp;#x8BE2;query&amp;#xFF0C;&amp;#x4ECE;&amp;#x6570;&amp;#x636E;&amp;#x5E93;&amp;#x4E2D;&amp;#x7684;&amp;#x6587;&amp;#x6863;&amp;#x4E2D;&amp;#x627E;&amp;#x51FA;&amp;#x76F8;&amp;#x5173;&amp;#x7684;document&amp;#x6587;&amp;#x6863;&amp;#x6765;&amp;#x3002;&lt;/p&gt;
-&lt;p&gt;&amp;#x7B14;&amp;#x8BB0;&amp;#x76EE;&amp;#x5F55;&amp;#x5982;&amp;#x4E0B;&amp;#xFF1A;&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&amp;#x5E03;&amp;#x5C14;&amp;#x68C0;&amp;#x7D22;&lt;/li&gt;
-&lt;li&gt;&amp;#x5411;&amp;#x91CF;&amp;#x7A7A;&amp;#x95F4;&amp;#x6A21;&amp;#x578B;&lt;/li&gt;
-&lt;li&gt;&amp;#x4FE1;&amp;#x606F;&amp;#x68C0;&amp;#x7D22;&amp;#x7684;&amp;#x8BC4;&amp;#x4EF7;&lt;/li&gt;
-&lt;li&gt;&amp;#x6392;&amp;#x5E8F;&amp;#x5B66;&amp;#x4E60;&lt;/li&gt;
-&lt;/ul&gt;
-    
-    </summary>
-    
-    
-      <category term="信息检索" scheme="http://nladuo.github.io/tags/%E4%BF%A1%E6%81%AF%E6%A3%80%E7%B4%A2/"/>
     
   </entry>
   
