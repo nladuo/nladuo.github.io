@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://nladuo.github.io/"/>
-  <updated>2019-08-31T02:24:01.192Z</updated>
+  <updated>2019-08-31T14:40:08.574Z</updated>
   <id>http://nladuo.github.io/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://nladuo.github.io/2019/08/31/%E4%BD%BF%E7%94%A8Python%E5%AF%B9%E9%9F%B3%E9%A2%91%E8%BF%9B%E8%A1%8C%E7%89%B9%E5%BE%81%E6%8F%90%E5%8F%96/"/>
     <id>http://nladuo.github.io/2019/08/31/使用Python对音频进行特征提取/</id>
     <published>2019-08-31T02:00:39.000Z</published>
-    <updated>2019-08-31T02:24:01.192Z</updated>
+    <updated>2019-08-31T14:40:08.574Z</updated>
     
     <content type="html"><![CDATA[<h2 id="&#x5199;&#x5728;&#x524D;&#x9762;"><a href="#&#x5199;&#x5728;&#x524D;&#x9762;" class="headerlink" title="&#x5199;&#x5728;&#x524D;&#x9762;"></a>&#x5199;&#x5728;&#x524D;&#x9762;</h2><p>&#x56E0;&#x4E3A;&#x559C;&#x6B22;&#x73A9;&#x513F;&#x97F3;&#x4E50;&#x6E38;&#x620F;&#xFF0C;&#x6240;&#x4EE5;&#x6253;&#x7B97;&#x7814;&#x7A76;&#x4E00;&#x4E0B;&#x5982;&#x4F55;&#x7528;&#x6DF1;&#x5EA6;&#x5B66;&#x4E60;&#x7684;&#x6A21;&#x578B;&#x751F;&#x6210;&#x97F3;&#x6E38;&#x7684;&#x8C31;&#x9762;&#x3002;&#x8FD9;&#x7BC7;&#x6587;&#x7AE0;&#x4E3B;&#x8981;&#x76EE;&#x7684;&#x662F;&#x4ECB;&#x7ECD;&#x6216;&#x8005;&#x603B;&#x7ED3;&#x4E00;&#x4E9B;&#x97F3;&#x9891;&#x7684;&#x77E5;&#x8BC6;&#x548C;&#x4EE3;&#x7801;&#x3002;</p>
 <p>&#x6069;&#x3002;&#x5982;&#x679C;&#x6CA1;&#x73A9;&#x513F;&#x8FC7;&#x7684;&#x8BDD;&#xFF0C;&#x97F3;&#x4E50;&#x6E38;&#x620F;&#x5927;&#x6982;&#x662F;&#x4E0B;&#x9762;&#x8FD9;&#x4E2A;&#x6837;&#x5B50;&#x3002;</p>
@@ -124,7 +124,7 @@
 <p>&#x8BAD;&#x7EC3;&#x5F88;&#x5FEB;&#x5C31;&#x5B8C;&#x4E86;&#xFF0C;&#x7136;&#x540E;&#x4F7F;&#x7528;<code>evaluate</code>&#x65B9;&#x6CD5;&#x8FDB;&#x884C;&#x8BC4;&#x4F30;&#x3002;<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">test_loss, test_acc = model.evaluate(X_test,y_test)</div><div class="line">print(<span class="string">&apos;test_acc: &apos;</span>,test_acc)</div></pre></td></tr></table></figure></p>
 <p><img src="/2019/08/31/&#x4F7F;&#x7528;Python&#x5BF9;&#x97F3;&#x9891;&#x8FDB;&#x884C;&#x7279;&#x5F81;&#x63D0;&#x53D6;/test_acc.png" alt=""></p>
 <p>&#x8FD9;&#x91CC;&#x7684;&#x6D4B;&#x8BD5;&#x51C6;&#x786E;&#x7387;&#x4E5F;&#x5C31;&#x767E;&#x5206;&#x4E4B;70&#x4E0D;&#x5230;&#xFF0C;&#x539F;&#x4F5C;&#x8005;&#x540E;&#x9762;&#x8FD8;&#x6709;&#x4F7F;&#x7528;&#x6A21;&#x578B;&#x9884;&#x6D4B;&#x7684;&#x4EE3;&#x7801;&#xFF0C;&#x611F;&#x89C9;&#x90FD;&#x6CA1;&#x6709;&#x5FC5;&#x8981;&#x4E86;&#x3002;</p>
-<h2 id="&#x603B;&#x7ED3;"><a href="#&#x603B;&#x7ED3;" class="headerlink" title="&#x603B;&#x7ED3;"></a>&#x603B;&#x7ED3;</h2><p>&#x8FD9;&#x7BC7;&#x535A;&#x5BA2;&#x4E3B;&#x8981;&#x662F;&#x603B;&#x7ED3;&#x4E00;&#x4E9B;&#x58F0;&#x97F3;&#x65B9;&#x9762;&#x7684;&#x7279;&#x5F81;&#x63D0;&#x53D6;&#x7684;&#x77E5;&#x8BC6;&#x548C;&#x4EE3;&#x7801;&#xFF0C;&#x5173;&#x4E8E;&#x6700;&#x540E;&#x7684;&#x6848;&#x4F8B;&#x770B;&#x7740;&#x73A9;&#x73A9;&#x513F;&#x5C31;&#x884C;&#xFF0C;&#x57FA;&#x672C;&#x4E0D;&#x5177;&#x6709;&#x5B9E;&#x7528;&#x6027;&#x3002;</p>
+<h2 id="&#x603B;&#x7ED3;"><a href="#&#x603B;&#x7ED3;" class="headerlink" title="&#x603B;&#x7ED3;"></a>&#x603B;&#x7ED3;</h2><p>&#x8FD9;&#x7BC7;&#x535A;&#x5BA2;&#x4E3B;&#x8981;&#x662F;&#x4ECB;&#x7ECD;&#x4E86;&#x4E00;&#x4E9B;&#x58F0;&#x97F3;&#x65B9;&#x9762;&#x7684;&#x7279;&#x5F81;&#x63D0;&#x53D6;&#x7684;&#x77E5;&#x8BC6;&#x548C;&#x4EE3;&#x7801;&#xFF0C;&#x5173;&#x4E8E;&#x6700;&#x540E;&#x7684;&#x6848;&#x4F8B;&#x770B;&#x7740;&#x73A9;&#x73A9;&#x513F;&#x5C31;&#x884C;&#xFF0C;&#x57FA;&#x672C;&#x4E0D;&#x5177;&#x6709;&#x5B9E;&#x7528;&#x6027;&#x3002;</p>
 ]]></content>
     
     <summary type="html">
