@@ -2,16 +2,23 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>http://nladuo.github.io/2019/08/31/%E4%BD%BF%E7%94%A8Python%E5%AF%B9%E9%9F%B3%E9%A2%91%E8%BF%9B%E8%A1%8C%E7%89%B9%E5%BE%81%E6%8F%90%E5%8F%96/</loc>
+    <loc>http://nladuo.github.io/2017/10/23/Seq2Seq%E7%BB%83%E6%89%8B%E4%B9%8B%E5%8D%95%E8%AF%8D%E9%95%9C%E5%83%8F/</loc>
     
-    <lastmod>2019-08-31T14:40:08.574Z</lastmod>
+    <lastmod>2019-10-23T04:05:57.859Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://nladuo.github.io/2017/10/23/Seq2Seq%E7%BB%83%E6%89%8B%E4%B9%8B%E5%8D%95%E8%AF%8D%E9%95%9C%E5%83%8F/</loc>
+    <loc>http://nladuo.github.io/2018/10/20/%E8%AF%BB%E8%AE%BA%E6%96%87Multi-digit-Number-Recognition-from-Street-View-Imagery-using-Deep-Convolutional-Neural-Networks/</loc>
     
-    <lastmod>2019-08-27T08:42:00.529Z</lastmod>
+    <lastmod>2019-10-23T04:05:15.874Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://nladuo.github.io/2019/08/31/%E4%BD%BF%E7%94%A8Python%E5%AF%B9%E9%9F%B3%E9%A2%91%E8%BF%9B%E8%A1%8C%E7%89%B9%E5%BE%81%E6%8F%90%E5%8F%96/</loc>
+    
+    <lastmod>2019-08-31T14:40:08.574Z</lastmod>
     
   </url>
   
@@ -131,13 +138,6 @@
     <loc>http://nladuo.github.io/2018/01/09/%E6%88%91%E6%8A%8A%E6%88%91%E7%9A%84%E5%BF%83%E6%8E%B0%E6%88%90%E4%B8%A4%E7%93%A3%E5%84%BF/</loc>
     
     <lastmod>2018-12-03T07:42:10.578Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://nladuo.github.io/2018/10/20/%E8%AF%BB%E8%AE%BA%E6%96%87Multi-digit-Number-Recognition-from-Street-View-Imagery-using-Deep-Convolutional-Neural-Networks/</loc>
-    
-    <lastmod>2018-12-03T07:36:09.917Z</lastmod>
     
   </url>
   
