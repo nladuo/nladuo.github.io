@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="keywords" content="" />
+  <meta name="author" content="叁公子KCN" />
+  <meta name="description" content="" />
+  
+  
+  <title>
+    
+      那些年，我爬过的北科(九)——搜索案例之爬虫编写 
+      
+      
+      |
+    
+     叁公子的博客
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="../../../../js/fancybox.js"></script>
+
+
+  
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/"></a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="../../../../js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="../../../../js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">那些年，我爬过的北科(九)——搜索案例之爬虫编写</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
+          2018-12-13 00:17:53
+        </span>
+        
+      </div>
+      <div class="markdown-body">
+        <h2 id="案例介绍"><a href="#案例介绍" class="headerlink" title="案例介绍"></a>案例介绍</h2><p>从本章开始，我们将要开始进入最后的案例实践篇。</p>
+<p>在爬取数据之后，我们一般会怎么用数据呢？一般来讲，我们可能会做一个搜索引擎，比如说我们爬了新闻，可能会做一个新闻的搜索；爬取了小说可能做一个小说的搜索。</p>
+<p>本案例将要爬取北科贴吧的帖子数据，并在此基础上构建一个简单的搜索功能。</p>
+<span id="more"></span>
+<h2 id="百度贴吧分析"><a href="#百度贴吧分析" class="headerlink" title="百度贴吧分析"></a>百度贴吧分析</h2><p>这里我们首先打开<code>北京科技大学</code>的百度贴吧：<a target="_blank" rel="noopener" href="http://tieba.baidu.com/f?kw=%E5%8C%97%E4%BA%AC%E7%A7%91%E6%8A%80%E5%A4%A7%E5%AD%A6">http://tieba.baidu.com/f?kw=北京科技大学</a></p>
+<p><img src="/tieba.png"></p>
+<p>我们的目标是关注帖子的标题名称，比如这个：<code>“北邮人下载需要流量吗”</code>，<code>“请问一下学长学姐，全国大学生数学竞赛初赛全国一等奖在咱们学校”</code>。</p>
+<p>还有就是我们肯定不能只爬取一页的信息，这里我们将要爬取前1000页的信息。</p>
+<h3 id="页面分析"><a href="#页面分析" class="headerlink" title="页面分析"></a>页面分析</h3><p>首先我们打开Chrome开发者工具看一下列表如何解析。</p>
+<p><img src="/analysis_page.png"></p>
+<p>这里我们选中一个标题名称后，可以直接看到一个<code>a</code>标签，它的class为<code>j_th_tit</code>。</p>
+<p>所以使用以下代码就可以打印出所有的标题来。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">soup = BeautifulSoup(resp.content, <span class="string">&quot;html.parser&quot;</span>)</span><br><span class="line">items = soup.find_all(<span class="string">&quot;a&quot;</span>, &#123;<span class="string">&quot;class&quot;</span>, <span class="string">&quot;j_th_tit&quot;</span>&#125;)</span><br><span class="line"><span class="keyword">for</span> a <span class="keyword">in</span> items:</span><br><span class="line">    title = item.get_text()</span><br><span class="line">    <span class="built_in">print</span>(title)</span><br></pre></td></tr></table></figure>
+
+<h3 id="分页分析"><a href="#分页分析" class="headerlink" title="分页分析"></a>分页分析</h3><p>页面分析完了之后就可以分析一下分页了，我们把小箭头晃到底部分页的位置。<br><img src="/analysis_pagination.png"></p>
+<p>可以发现分页对应的网址主要是pn的值不一样。第2页对应50，第3页对应100，第4页对应150。</p>
+<p>也就是，$$pn&#x3D;(page-1)*50$$这样的关系。</p>
+<h2 id="爬虫编写"><a href="#爬虫编写" class="headerlink" title="爬虫编写"></a>爬虫编写</h2><p>完成以上的分析工作之后，就可以开始实现我们的爬虫了。</p>
+<h3 id="数据库操作"><a href="#数据库操作" class="headerlink" title="数据库操作"></a>数据库操作</h3><p>首先是数据库的操作，这里使用到<code>tieba</code>数据库的<code>beike</code>集合。然后保存文档的话就直接insert就好了。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">init_collection</span>():</span><br><span class="line">    client = pymongo.MongoClient(host=<span class="string">&quot;localhost&quot;</span>, port=<span class="number">27017</span>)</span><br><span class="line">    db = client[<span class="string">&#x27;tieba&#x27;</span>]</span><br><span class="line">    <span class="keyword">return</span> db[<span class="string">&quot;beike&quot;</span>]</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">save_docs</span>(<span class="params">docs</span>):</span><br><span class="line">    beike.insert(docs)</span><br><span class="line"></span><br><span class="line">beike = init_collection()</span><br></pre></td></tr></table></figure>
+
+<h3 id="任务初始化"><a href="#任务初始化" class="headerlink" title="任务初始化"></a>任务初始化</h3><p>下面，我们不编写worker，而是先进行任务的初始化。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    crawler = SimpleCrawler(<span class="number">5</span>)</span><br><span class="line">    crawler.add_worker(<span class="string">&quot;worker&quot;</span>, worker)</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, <span class="number">11</span>):</span><br><span class="line">        crawler.add_task(&#123;<span class="string">&quot;id&quot;</span>: <span class="string">&quot;worker&quot;</span>, <span class="string">&quot;page&quot;</span>: i&#125;)</span><br><span class="line">    crawler.start()</span><br></pre></td></tr></table></figure>
+<p>这里我们首先初始化<code>SimpleCrawler</code>，然后给添加<code>worker</code>以及<code>task</code>。</p>
+<p>关于task，可以看到上面的代码通过循环，添加了10个任务，每个任务的page属性不一样。worker肯定是爬取某一页并解析加入数据库的代码，我们这里其实就是添加了爬取前10页的任务。</p>
+<p>这里虽然也可以写直接添加爬取前1000页的任务，但是考虑到实际情况下任务可能会非常多，为了让任务队列不溢出，开始可以少添加一些。</p>
+<h3 id="Worker编写"><a href="#Worker编写" class="headerlink" title="Worker编写"></a>Worker编写</h3><p>接下来是<code>worker</code>的编写。</p>
+<p>首先worker肯定要有三个基础部分：下载页面、解析页面、保存数据。除此之外，因为要爬取1000页，所以还要添加新的任务来爬取剩下的990。</p>
+<p>这里可以判断当前页码+10是否大于1000，如果不大于的话把当前页码+10的网页添加到新的任务队列中。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">worker</span>(<span class="params">queue, task, lock</span>):</span><br><span class="line">    offset = (task[<span class="string">&quot;page&quot;</span>] - <span class="number">1</span>) * <span class="number">50</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;downloading: page %d&quot;</span> % task[<span class="string">&quot;page&quot;</span>])</span><br><span class="line">    <span class="comment"># 1. 下载页面</span></span><br><span class="line">    resp = requests.get(<span class="string">&quot;http://tieba.baidu.com/f?kw=&quot;</span></span><br><span class="line">                        <span class="string">&quot;%E5%8C%97%E4%BA%AC%E7%A7%91%E6%8A%80%E5%A4%A7%E5%AD%A6&amp;ie=utf-8&amp;pn=&quot;</span> + <span class="built_in">str</span>(offset))</span><br><span class="line">    soup = BeautifulSoup(resp.content, <span class="string">&quot;html.parser&quot;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 2. 解析页面</span></span><br><span class="line">    items = soup.find_all(<span class="string">&quot;a&quot;</span>, &#123;<span class="string">&quot;class&quot;</span>, <span class="string">&quot;j_th_tit&quot;</span>&#125;)</span><br><span class="line"></span><br><span class="line">    docs = []</span><br><span class="line">    <span class="keyword">for</span> index, item <span class="keyword">in</span> <span class="built_in">enumerate</span>(items):</span><br><span class="line">        docs.append(&#123;</span><br><span class="line">            <span class="string">&quot;page&quot;</span>: task[<span class="string">&quot;page&quot;</span>],</span><br><span class="line">            <span class="string">&quot;index&quot;</span>: index,</span><br><span class="line">            <span class="string">&quot;title&quot;</span>: item.get_text(),</span><br><span class="line">            <span class="string">&quot;href&quot;</span>: <span class="string">&quot;http://tieba.baidu.com&quot;</span> + item.attrs[<span class="string">&quot;href&quot;</span>]</span><br><span class="line">        &#125;)</span><br><span class="line">        <span class="built_in">print</span>(task[<span class="string">&quot;page&quot;</span>], index, item.get_text())</span><br><span class="line">    <span class="comment"># 3. 保存数据</span></span><br><span class="line">    <span class="keyword">with</span> lock:</span><br><span class="line">        save_docs(docs)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 4. 添加新任务</span></span><br><span class="line">    <span class="keyword">if</span> (task[<span class="string">&quot;page&quot;</span>] + <span class="number">10</span>) &gt; <span class="number">1000</span>:</span><br><span class="line">        queue.put(&#123;<span class="string">&quot;id&quot;</span>: <span class="string">&quot;NO&quot;</span>&#125;)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        queue.put(&#123;<span class="string">&quot;id&quot;</span>: <span class="string">&quot;worker&quot;</span>, <span class="string">&quot;page&quot;</span>: task[<span class="string">&quot;page&quot;</span>] + <span class="number">10</span>&#125;)</span><br></pre></td></tr></table></figure>
+<h3 id="运行效果"><a href="#运行效果" class="headerlink" title="运行效果"></a>运行效果</h3><p>以上就是爬虫的全部代码，运行后可以看到类型下面的结果。<br><img src="/result.png"><br>通过以上代码大概爬了4万多条数据，之后的两章我们将把这些标题当做语料库，然后对这些数据进行搜索。</p>
+<h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><p>网站可能会经常变化，如果上述爬虫不能用的话，可以爬取我保存下来的贴吧网页：<a target="_blank" rel="noopener" href="http://nladuo.cn/beike_tieba/1.html">http://nladuo.cn/beike_tieba&#x2F;1.html</a>。</p>
+<p>分页的格式类似于1.html、2.html、…、1000.html。</p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="../../08/%E9%82%A3%E4%BA%9B%E5%B9%B4%EF%BC%8C%E6%88%91%E7%88%AC%E8%BF%87%E7%9A%84%E5%8C%97%E7%A7%91-%E5%85%AB-%E2%80%94%E2%80%94%E5%8F%8D%E5%8F%8D%E7%88%AC%E8%99%AB%E4%B9%8B%E9%AA%8C%E8%AF%81%E7%A0%81%E8%AF%86%E5%88%AB/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>Prev</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
+              2018-12-13 00:17:53
+            </span>
+            
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="../%E9%82%A3%E4%BA%9B%E5%B9%B4%EF%BC%8C%E6%88%91%E7%88%AC%E8%BF%87%E7%9A%84%E5%8C%97%E7%A7%91-%E5%8D%81-%E2%80%94%E2%80%94%E6%90%9C%E7%B4%A2%E6%A1%88%E4%BE%8B%E4%B9%8BElasticSearch%E7%9A%84%E4%BD%BF%E7%94%A8/" target="_self">
+                <span>Next</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">Contents</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A1%88%E4%BE%8B%E4%BB%8B%E7%BB%8D"><span class="toc-text">案例介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%99%BE%E5%BA%A6%E8%B4%B4%E5%90%A7%E5%88%86%E6%9E%90"><span class="toc-text">百度贴吧分析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%A1%B5%E9%9D%A2%E5%88%86%E6%9E%90"><span class="toc-text">页面分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%86%E9%A1%B5%E5%88%86%E6%9E%90"><span class="toc-text">分页分析</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%88%AC%E8%99%AB%E7%BC%96%E5%86%99"><span class="toc-text">爬虫编写</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93%E6%93%8D%E4%BD%9C"><span class="toc-text">数据库操作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%BB%E5%8A%A1%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="toc-text">任务初始化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Worker%E7%BC%96%E5%86%99"><span class="toc-text">Worker编写</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%90%E8%A1%8C%E6%95%88%E6%9E%9C"><span class="toc-text">运行效果</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AF%B4%E6%98%8E"><span class="toc-text">说明</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="../../../../js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="http://www.beian.miit.gov.cn/">http://www.beian.miit.gov.cn/  京ICP备17062395号</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="../../../../js/backtotop.js"></script>
+
+
+
+        
+  <div class="search-icon tools-bar-item" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="Search...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>First search, index file loading, please wait...<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>No result<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The search.xml file was not found, please refer to：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The request failed, Try to refresh the page or try again later.<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="../../../../js/colorscheme.js"></script>
+
+
+
+
+
+        
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + %E9%82%A3%E4%BA%9B%E5%B9%B4%EF%BC%8C%E6%88%91%E7%88%AC%E8%BF%87%E7%9A%84%E5%8C%97%E7%A7%91(%E4%B9%9D)%E2%80%94%E2%80%94%E6%90%9C%E7%B4%A2%E6%A1%88%E4%BE%8B%E4%B9%8B%E7%88%AC%E8%99%AB%E7%BC%96%E5%86%99 + '&url=' + http%3A%2F%2Fnladuo.github.io%2F2018%2F12%2F13%2F%25E9%2582%25A3%25E4%25BA%259B%25E5%25B9%25B4%25EF%25BC%258C%25E6%2588%2591%25E7%2588%25AC%25E8%25BF%2587%25E7%259A%2584%25E5%258C%2597%25E7%25A7%2591-%25E4%25B9%259D-%25E2%2580%2594%25E2%2580%2594%25E6%2590%259C%25E7%25B4%25A2%25E6%25A1%2588%25E4%25BE%258B%25E4%25B9%258B%25E7%2588%25AC%25E8%2599%25AB%25E7%25BC%2596%25E5%2586%2599%2F + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=http://nladuo.github.io/2018/12/13/%E9%82%A3%E4%BA%9B%E5%B9%B4%EF%BC%8C%E6%88%91%E7%88%AC%E8%BF%87%E7%9A%84%E5%8C%97%E7%A7%91-%E4%B9%9D-%E2%80%94%E2%80%94%E6%90%9C%E7%B4%A2%E6%A1%88%E4%BE%8B%E4%B9%8B%E7%88%AC%E8%99%AB%E7%BC%96%E5%86%99/" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
+  
+  
+<script src="../../../../js/shares.js"></script>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>

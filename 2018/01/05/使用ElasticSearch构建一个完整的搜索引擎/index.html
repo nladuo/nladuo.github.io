@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="keywords" content="" />
+  <meta name="author" content="叁公子KCN" />
+  <meta name="description" content="" />
+  
+  
+  <title>
+    
+      使用ElasticSearch构建一个完整的搜索引擎 
+      
+      
+      |
+    
+     叁公子的博客
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="../../../../js/fancybox.js"></script>
+
+
+  
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/"></a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="../../../../js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="../../../../js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">使用ElasticSearch构建一个完整的搜索引擎</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
+          2018-01-05 11:10:20
+        </span>
+        
+      </div>
+      <div class="markdown-body">
+        <h2 id="任务需求"><a href="#任务需求" class="headerlink" title="任务需求"></a>任务需求</h2><p>信息检索导论课的大作业要求完成一个搜索引擎，以下是搜索引擎的需求。<br><img src="/command.png"></p>
+<span id="more"></span>
+<h2 id="爬虫系统"><a href="#爬虫系统" class="headerlink" title="爬虫系统"></a>爬虫系统</h2><h4 id="表"><a href="#表" class="headerlink" title="表"></a>表</h4><p>我主要是爬了网易和新浪两大网站，建了两张表：新闻和新闻评论。<br><img src="/table.png"></p>
+<h4 id="news表"><a href="#news表" class="headerlink" title="news表"></a>news表</h4><p>主要是news的url、title(标题)、content(文章内容)、时间<br><img src="/news.png"></p>
+<h4 id="comments表"><a href="#comments表" class="headerlink" title="comments表"></a>comments表</h4><p>新闻和新闻评论是一对多的关系，新闻评论通过新闻的url和新闻表关联。<br><img src="/comments.png"></p>
+<h2 id="索引以外的功能点"><a href="#索引以外的功能点" class="headerlink" title="索引以外的功能点"></a>索引以外的功能点</h2><h4 id="查询自动补齐"><a href="#查询自动补齐" class="headerlink" title="查询自动补齐"></a>查询自动补齐</h4><p>主要是根据历史搜索先定义好，这里使用了百度的API。<br><img src="/query_append.png"></p>
+<h4 id="评论褒贬分析"><a href="#评论褒贬分析" class="headerlink" title="评论褒贬分析"></a>评论褒贬分析</h4><ul>
+<li>方案1：使用朴素贝叶斯分类器。</li>
+<li>方案2：使用一个三层的神经网络，①Embedding层②LSTM③全连接的sigmoid层。</li>
+</ul>
+<h4 id="相关新闻推荐"><a href="#相关新闻推荐" class="headerlink" title="相关新闻推荐"></a>相关新闻推荐</h4><ul>
+<li>1.对所有新闻的content先TF-IDF。</li>
+<li>2.归一化。</li>
+<li>3.聚类。</li>
+<li>4.在每个簇中使用余弦相似度，对每个新闻找出最近的K个新闻。</li>
+</ul>
+<h4 id="相关搜索推荐"><a href="#相关搜索推荐" class="headerlink" title="相关搜索推荐"></a>相关搜索推荐</h4><ul>
+<li>对于搜索结果是一个词的，可以使用word2vec，找出距离最近的词向量。比如说搜索詹姆斯，会出来科比、JR史密斯等等。</li>
+<li>对于一般的query，对已有的用户query做索引，找出评分高的。</li>
+</ul>
+<p>由于没有语料库，这里实现直接通过webkit渲染js的方式来爬取百度的相关搜索。</p>
+<h2 id="搭建ElasticSearch"><a href="#搭建ElasticSearch" class="headerlink" title="搭建ElasticSearch"></a>搭建ElasticSearch</h2><h4 id="安装ES"><a href="#安装ES" class="headerlink" title="安装ES"></a>安装ES</h4><p>这里首先安装<a target="_blank" rel="noopener" href="http://www.oracle.com/technetwork/java/javase/downloads/index.html">JDK</a>，然后安装<a target="_blank" rel="noopener" href="https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-6.0.0.zip">ElasticSearch-6.0.0</a>版本。</p>
+<p>把ElasticSearch的bin目录添加到PATH中。(以下为linux命令)</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> PATH=<span class="variable">$HOME</span>/ProgramFiles/elasticsearch-6.0.0/bin:<span class="variable">$&#123;PATH&#125;</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="使用elasticsearch-analysis-ik"><a href="#使用elasticsearch-analysis-ik" class="headerlink" title="使用elasticsearch-analysis-ik"></a>使用elasticsearch-analysis-ik</h4><p>ElasticSearch自带的中文分词做的不好，所以使用到ik的一个插件。使用以下命令安装即可。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">elasticsearch-plugin install https://github.com/medcl/elasticsearch-analysis-ik/releases/download/v6.0.0/elasticsearch-analysis-ik-6.0.0.zip</span><br></pre></td></tr></table></figure>
+<h4 id="开启ElasticSearch服务"><a href="#开启ElasticSearch服务" class="headerlink" title="开启ElasticSearch服务"></a>开启ElasticSearch服务</h4><p>在命令行中输入<code>elasticsearch</code>即可开启服务。<br><img src="/elastic_cli.png"></p>
+<h2 id="索引"><a href="#索引" class="headerlink" title="索引"></a>索引</h2><h4 id="索引建立"><a href="#索引建立" class="headerlink" title="索引建立"></a>索引建立</h4><p>对title和content字段建立分词索引。</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> elasticsearch <span class="keyword">import</span> Elasticsearch</span><br><span class="line"><span class="keyword">from</span> db_model <span class="keyword">import</span> DBSession, News, Comment</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"></span><br><span class="line">es = Elasticsearch()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 初始化索引的Mappings设置，三个字段，新闻标题，新闻内容，创建时间。</span></span><br><span class="line">index_mappings = &#123;</span><br><span class="line">  <span class="string">&quot;mappings&quot;</span>: &#123;</span><br><span class="line">    <span class="string">&quot;news&quot;</span>: &#123;</span><br><span class="line">      <span class="string">&quot;properties&quot;</span>: &#123;</span><br><span class="line">        <span class="string">&quot;title&quot;</span>:    &#123;</span><br><span class="line">            <span class="string">&quot;type&quot;</span>: <span class="string">&quot;text&quot;</span>,</span><br><span class="line">            <span class="string">&quot;analyzer&quot;</span>: <span class="string">&quot;ik_max_word&quot;</span>,</span><br><span class="line">            <span class="string">&quot;search_analyzer&quot;</span>: <span class="string">&quot;ik_max_word&quot;</span></span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="string">&quot;content&quot;</span>:     &#123;</span><br><span class="line">            <span class="string">&quot;type&quot;</span>: <span class="string">&quot;text&quot;</span>,</span><br><span class="line">            <span class="string">&quot;analyzer&quot;</span>: <span class="string">&quot;ik_max_word&quot;</span>,</span><br><span class="line">            <span class="string">&quot;search_analyzer&quot;</span>: <span class="string">&quot;ik_max_word&quot;</span></span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="string">&quot;timestamp&quot;</span>: &#123;</span><br><span class="line">            <span class="string">&quot;type&quot;</span>: <span class="string">&quot;integer&quot;</span></span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> es.indices.exists(index=<span class="string">&#x27;news_index&#x27;</span>) <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">True</span>:</span><br><span class="line">    <span class="built_in">print</span> <span class="string">&quot;create news_index&quot;</span></span><br><span class="line">    es.indices.create(index=<span class="string">&#x27;news_index&#x27;</span>, body=index_mappings)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">get_news</span>():  <span class="comment"># 获取新闻</span></span><br><span class="line">    session = DBSession()</span><br><span class="line">    newses = session.query(News).<span class="built_in">filter</span>(News.source == source).<span class="built_in">all</span>()</span><br><span class="line">    <span class="keyword">for</span> news <span class="keyword">in</span> newses:</span><br><span class="line">        <span class="keyword">yield</span> news</span><br><span class="line">    session.close()</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i, news <span class="keyword">in</span> <span class="built_in">enumerate</span>(get_news()):</span><br><span class="line">    doc = &#123;</span><br><span class="line">        <span class="string">&quot;id&quot;</span>: news.<span class="built_in">id</span>,</span><br><span class="line">        <span class="string">&quot;title&quot;</span>: news.title,</span><br><span class="line">        <span class="string">&quot;timestamp&quot;</span>: time.mktime(time.strptime(news.time, <span class="string">&#x27;%m/%d/%Y %H:%M:%S&#x27;</span>)),</span><br><span class="line">        <span class="string">&quot;content&quot;</span>: news.content,</span><br><span class="line">    &#125;</span><br><span class="line">    res = es.index(index=<span class="string">&quot;news_index&quot;</span>, doc_type=<span class="string">&quot;news&quot;</span>, <span class="built_in">id</span>=news.<span class="built_in">id</span>, body=doc)</span><br><span class="line">    <span class="built_in">print</span> res</span><br></pre></td></tr></table></figure>
+
+
+<h4 id="索引查找"><a href="#索引查找" class="headerlink" title="索引查找"></a>索引查找</h4><p>查找title和content这两个字段，并显示snippet（对于搜索关键词标红），这里只显示10条。</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">search</span>(<span class="params">query</span>):</span><br><span class="line">    query_contains = &#123;</span><br><span class="line">        <span class="string">&#x27;query&#x27;</span>: &#123;</span><br><span class="line">            <span class="string">&#x27;multi_match&#x27;</span>: &#123;</span><br><span class="line">                <span class="string">&#x27;query&#x27;</span>: query,</span><br><span class="line">                <span class="string">&quot;fields&quot;</span>: [<span class="string">&quot;title&quot;</span>, <span class="string">&quot;content&quot;</span>]</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="string">&quot;highlight&quot;</span>: &#123;</span><br><span class="line">            <span class="string">&quot;fields&quot;</span>: &#123;</span><br><span class="line">                <span class="string">&quot;content&quot;</span>: &#123;&#125;,</span><br><span class="line">                <span class="string">&quot;title&quot;</span>: &#123;&#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    es = Elasticsearch()</span><br><span class="line">    searched = es.search(<span class="string">&quot;news_index&quot;</span>, doc_type=<span class="string">&quot;news&quot;</span>, body=query_contains, size=<span class="number">10</span>)</span><br><span class="line">    <span class="keyword">return</span> json.dumps(searched)</span><br></pre></td></tr></table></figure>
+
+<h4 id="索引分页"><a href="#索引分页" class="headerlink" title="索引分页"></a>索引分页</h4><p>相比索引查找，加一个offset。</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">search</span>(<span class="params">query, page=<span class="number">1</span></span>):</span><br><span class="line">    offset = (page - <span class="number">1</span>) * <span class="number">10</span></span><br><span class="line">    query_contains = &#123;</span><br><span class="line">        <span class="string">&#x27;query&#x27;</span>: &#123;</span><br><span class="line">            <span class="string">&#x27;multi_match&#x27;</span>: &#123;</span><br><span class="line">                <span class="string">&#x27;query&#x27;</span>: query,</span><br><span class="line">                <span class="string">&quot;fields&quot;</span>: [<span class="string">&quot;title&quot;</span>, <span class="string">&quot;content&quot;</span>]</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="string">&quot;highlight&quot;</span>: &#123;</span><br><span class="line">            <span class="string">&quot;fields&quot;</span>: &#123;</span><br><span class="line">                <span class="string">&quot;content&quot;</span>: &#123;&#125;,</span><br><span class="line">                <span class="string">&quot;title&quot;</span>: &#123;&#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    es = Elasticsearch()</span><br><span class="line">    searched = es.search(<span class="string">&quot;news_index&quot;</span>, doc_type=<span class="string">&quot;news&quot;</span>, body=query_contains, size=<span class="number">10</span>, from_=offset)</span><br><span class="line">    <span class="keyword">return</span> json.dumps(searched)</span><br></pre></td></tr></table></figure>
+
+<h4 id="索引排序"><a href="#索引排序" class="headerlink" title="索引排序"></a>索引排序</h4><p>添加sort字段。</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">sort_list = &#123;</span><br><span class="line">    <span class="string">&quot;0&quot;</span>: [],</span><br><span class="line">    <span class="string">&quot;1&quot;</span>: [<span class="string">&quot;timestamp:desc&quot;</span>],</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">search</span>(<span class="params">query, page=<span class="number">1</span>, sort=[]</span>):</span><br><span class="line">    offset = (page - <span class="number">1</span>) * <span class="number">10</span></span><br><span class="line">    query_contains = &#123;</span><br><span class="line">        <span class="string">&#x27;query&#x27;</span>: &#123;</span><br><span class="line">            <span class="string">&#x27;multi_match&#x27;</span>: &#123;</span><br><span class="line">                <span class="string">&#x27;query&#x27;</span>: query,</span><br><span class="line">                <span class="string">&quot;fields&quot;</span>: [<span class="string">&quot;title&quot;</span>, <span class="string">&quot;content&quot;</span>]</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="string">&quot;highlight&quot;</span>: &#123;</span><br><span class="line">            <span class="string">&quot;fields&quot;</span>: &#123;</span><br><span class="line">                <span class="string">&quot;content&quot;</span>: &#123;&#125;,</span><br><span class="line">                <span class="string">&quot;title&quot;</span>: &#123;&#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    es = Elasticsearch()</span><br><span class="line">    searched = es.search(<span class="string">&quot;news_index&quot;</span>, doc_type=<span class="string">&quot;news&quot;</span>, body=query_contains, size=<span class="number">10</span>, from_=offset,</span><br><span class="line">                         sort=sort)</span><br><span class="line">    <span class="keyword">return</span> json.dumps(searched)</span><br><span class="line"></span><br><span class="line">search(<span class="string">&quot;詹姆斯&quot;</span>, <span class="number">1</span>, sort_list[<span class="number">1</span>])  <span class="comment"># 按照时间排序</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="效果"><a href="#效果" class="headerlink" title="效果"></a>效果</h2><p><img src="/screenshot.png"></p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="../../../../2017/11/09/%E8%AF%BB%E8%AE%BA%E6%96%87Alogorithms-for-Non-negative-Matrix-Factorization/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>Prev</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
+              2018-01-05 11:10:20
+            </span>
+            
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="../../../02/07/Echarts%E7%BB%98%E5%88%B6%E5%8C%97%E4%BA%AC%E6%91%A9%E6%8B%9C%E5%8D%95%E8%BD%A6%E5%88%86%E5%B8%83%E7%83%AD%E5%8A%9B%E5%9B%BE/" target="_self">
+                <span>Next</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">Contents</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%BB%E5%8A%A1%E9%9C%80%E6%B1%82"><span class="toc-text">任务需求</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%88%AC%E8%99%AB%E7%B3%BB%E7%BB%9F"><span class="toc-text">爬虫系统</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%A1%A8"><span class="toc-text">表</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#news%E8%A1%A8"><span class="toc-text">news表</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#comments%E8%A1%A8"><span class="toc-text">comments表</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%B4%A2%E5%BC%95%E4%BB%A5%E5%A4%96%E7%9A%84%E5%8A%9F%E8%83%BD%E7%82%B9"><span class="toc-text">索引以外的功能点</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9F%A5%E8%AF%A2%E8%87%AA%E5%8A%A8%E8%A1%A5%E9%BD%90"><span class="toc-text">查询自动补齐</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%AF%84%E8%AE%BA%E8%A4%92%E8%B4%AC%E5%88%86%E6%9E%90"><span class="toc-text">评论褒贬分析</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%9B%B8%E5%85%B3%E6%96%B0%E9%97%BB%E6%8E%A8%E8%8D%90"><span class="toc-text">相关新闻推荐</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%9B%B8%E5%85%B3%E6%90%9C%E7%B4%A2%E6%8E%A8%E8%8D%90"><span class="toc-text">相关搜索推荐</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%90%AD%E5%BB%BAElasticSearch"><span class="toc-text">搭建ElasticSearch</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%89%E8%A3%85ES"><span class="toc-text">安装ES</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8elasticsearch-analysis-ik"><span class="toc-text">使用elasticsearch-analysis-ik</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%BC%80%E5%90%AFElasticSearch%E6%9C%8D%E5%8A%A1"><span class="toc-text">开启ElasticSearch服务</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%B4%A2%E5%BC%95"><span class="toc-text">索引</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%B4%A2%E5%BC%95%E5%BB%BA%E7%AB%8B"><span class="toc-text">索引建立</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%B4%A2%E5%BC%95%E6%9F%A5%E6%89%BE"><span class="toc-text">索引查找</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%B4%A2%E5%BC%95%E5%88%86%E9%A1%B5"><span class="toc-text">索引分页</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%B4%A2%E5%BC%95%E6%8E%92%E5%BA%8F"><span class="toc-text">索引排序</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%88%E6%9E%9C"><span class="toc-text">效果</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="../../../../js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="http://www.beian.miit.gov.cn/">http://www.beian.miit.gov.cn/  京ICP备17062395号</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="../../../../js/backtotop.js"></script>
+
+
+
+        
+  <div class="search-icon tools-bar-item" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="Search...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>First search, index file loading, please wait...<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>No result<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The search.xml file was not found, please refer to：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The request failed, Try to refresh the page or try again later.<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="../../../../js/colorscheme.js"></script>
+
+
+
+
+
+        
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + %E4%BD%BF%E7%94%A8ElasticSearch%E6%9E%84%E5%BB%BA%E4%B8%80%E4%B8%AA%E5%AE%8C%E6%95%B4%E7%9A%84%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E + '&url=' + http%3A%2F%2Fnladuo.github.io%2F2018%2F01%2F05%2F%25E4%25BD%25BF%25E7%2594%25A8ElasticSearch%25E6%259E%2584%25E5%25BB%25BA%25E4%25B8%2580%25E4%25B8%25AA%25E5%25AE%258C%25E6%2595%25B4%25E7%259A%2584%25E6%2590%259C%25E7%25B4%25A2%25E5%25BC%2595%25E6%2593%258E%2F + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=http://nladuo.github.io/2018/01/05/%E4%BD%BF%E7%94%A8ElasticSearch%E6%9E%84%E5%BB%BA%E4%B8%80%E4%B8%AA%E5%AE%8C%E6%95%B4%E7%9A%84%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E/" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
+  
+  
+<script src="../../../../js/shares.js"></script>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>

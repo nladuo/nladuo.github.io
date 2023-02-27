@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="keywords" content="" />
+  <meta name="author" content="叁公子KCN" />
+  <meta name="description" content="" />
+  
+  
+  <title>
+    
+      那些年，我爬过的北科(一)——爬虫基础之环境搭建与入门 
+      
+      
+      |
+    
+     叁公子的博客
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="../../../../js/fancybox.js"></script>
+
+
+  
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/"></a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="../../../../js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="../../../../js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">那些年，我爬过的北科(一)——爬虫基础之环境搭建与入门</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
+          2017-09-18 16:09:22
+        </span>
+        
+      </div>
+      <div class="markdown-body">
+        <h2 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a>环境搭建</h2><h3 id="关于语言"><a href="#关于语言" class="headerlink" title="关于语言"></a>关于语言</h3><p>对于网络爬虫来说，其本质就是发送http请求，然后提取网页的内容信息进行入库分析等操作，所以对于任何语言都可以构建爬虫应用。我曾经就用过C#、C++、Java、Swift、Golang、Python这些语言来编写爬虫应用。</p>
+<p>总结来说，这里还是最推荐python，其优点就是学习简单，并且库十分全面，编写起代码来十分轻巧，另外python拥有丰富的机器学习库、数据处理库，如scikit-learn、numpy、pandas等等，可以用来处理我们爬取的数据。</p>
+<span id="more"></span>
+<p>本系列文章假设读者已经掌握了python语言的最基本语法，并有一定的编程基础。</p>
+<h3 id="关于代码编辑器"><a href="#关于代码编辑器" class="headerlink" title="关于代码编辑器"></a>关于代码编辑器</h3><p>作为一门脚本语言，python代码不需要编译、链接等步骤，只需要使用python的解释器解释执行就好了，所以使用一个记事本就可以完成python的编码工作。不过为了更加高效的编写代码，程序员都会选择一款代码编辑器。</p>
+<p>如果对于python很熟悉，不需要代码拼写提示等功能，其实使用常见的代码编辑器如<a target="_blank" rel="noopener" href="https://atom.io/">Atom</a>、<a target="_blank" rel="noopener" href="http://www.sublimetext.com/">Sublime Text</a> 即可（当然如果配置插件，这些编辑器也可以有强大的代码提示功能，不过新手配置起来可能会遇到困难）。</p>
+<p>如果需要代码提示，我感觉用的最舒服的还是JetBrains系列的<a target="_blank" rel="noopener" href="https://www.jetbrains.com/pycharm/">Pycharm</a>更好用一些。我本身也主要在用Pycharm。</p>
+<h3 id="关于浏览器"><a href="#关于浏览器" class="headerlink" title="关于浏览器"></a>关于浏览器</h3><p>浏览器除了浏览网页以外，对爬虫开发者来说还可以对网页的Html元素、发送的HTTP请求进行分析。市面上基本上所有的浏览器都支持这两种功能，但是普遍来说用的最多的还是Chrome浏览器。</p>
+<p>下面，我们首先通过Chrome浏览器下载一个weibo上的小视频，来学习如何用Chrome浏览器抓取网络请求。</p>
+<h4 id="用Chrome抓取网络请求"><a href="#用Chrome抓取网络请求" class="headerlink" title="用Chrome抓取网络请求"></a>用Chrome抓取网络请求</h4><p>视频的链接：<a target="_blank" rel="noopener" href="http://weibo.com/tv/v/FaOp9o8Ct">http://weibo.com/tv/v/FaOp9o8Ct</a></p>
+<p>打开Chrome浏览器后，我们可以首先打开一共空白页面，然后右键，选择检查。<br><img src="/%E9%82%A3%E4%BA%9B%E5%B9%B4%EF%BC%8C%E6%88%91%E7%88%AC%E8%BF%87%E7%9A%84%E5%8C%97%E7%A7%91-%E4%B8%80-%E2%80%94%E2%80%94%E7%88%AC%E8%99%AB%E5%9F%BA%E7%A1%80%E4%B9%8B%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA%E4%B8%8E%E5%85%A5%E9%97%A8/chrome1.png" alt="chrome1"></p>
+<p>点击检查后，可以看到弹出一个Dock窗口，为了方便查看页面内容，我习惯把这个Dock窗口放在右边。<br><img src="/%E9%82%A3%E4%BA%9B%E5%B9%B4%EF%BC%8C%E6%88%91%E7%88%AC%E8%BF%87%E7%9A%84%E5%8C%97%E7%A7%91-%E4%B8%80-%E2%80%94%E2%80%94%E7%88%AC%E8%99%AB%E5%9F%BA%E7%A1%80%E4%B9%8B%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA%E4%B8%8E%E5%85%A5%E9%97%A8/chrome2.png" alt="chrome2"></p>
+<p>在这个Dock窗口中，有很多个选项卡，在本系列教程中，主要使用到Elements和NetWork这两个，一个负责审查Html元素，一个负责记录网络请求。目前需要使用网络抓取功能，所以先跳到Network这个选项卡中。<br><img src="/%E9%82%A3%E4%BA%9B%E5%B9%B4%EF%BC%8C%E6%88%91%E7%88%AC%E8%BF%87%E7%9A%84%E5%8C%97%E7%A7%91-%E4%B8%80-%E2%80%94%E2%80%94%E7%88%AC%E8%99%AB%E5%9F%BA%E7%A1%80%E4%B9%8B%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA%E4%B8%8E%E5%85%A5%E9%97%A8/chrome3.png" alt="chrome3"></p>
+<p>下面，在浏览器中输入视频的链接并回车，就可以看到网页加载出来了，其中的网络请求也记录在了右边。<br><img src="/%E9%82%A3%E4%BA%9B%E5%B9%B4%EF%BC%8C%E6%88%91%E7%88%AC%E8%BF%87%E7%9A%84%E5%8C%97%E7%A7%91-%E4%B8%80-%E2%80%94%E2%80%94%E7%88%AC%E8%99%AB%E5%9F%BA%E7%A1%80%E4%B9%8B%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA%E4%B8%8E%E5%85%A5%E9%97%A8/chrome4.png" alt="chrome4"></p>
+<p>可以看到这些网络请求有html、css、js、图片等等，点击一个条目后都可以看到请求的详情，在这里面其中有一个请求大小很大，并且在一直增长，可以想象这就是我们正在观看的视频文件。<br><img src="/%E9%82%A3%E4%BA%9B%E5%B9%B4%EF%BC%8C%E6%88%91%E7%88%AC%E8%BF%87%E7%9A%84%E5%8C%97%E7%A7%91-%E4%B8%80-%E2%80%94%E2%80%94%E7%88%AC%E8%99%AB%E5%9F%BA%E7%A1%80%E4%B9%8B%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA%E4%B8%8E%E5%85%A5%E9%97%A8/chrome5.png" alt="chrome5"></p>
+<p>我们点击这个请求可以看到请求的真实链接地址，这个地址中还带了个mp4，显然就是我们正在观看的视频文件。<br><img src="/%E9%82%A3%E4%BA%9B%E5%B9%B4%EF%BC%8C%E6%88%91%E7%88%AC%E8%BF%87%E7%9A%84%E5%8C%97%E7%A7%91-%E4%B8%80-%E2%80%94%E2%80%94%E7%88%AC%E8%99%AB%E5%9F%BA%E7%A1%80%E4%B9%8B%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA%E4%B8%8E%E5%85%A5%E9%97%A8/chrome6.png" alt="chrome6"></p>
+<p>我们把链接复制下来，在一个新的Tab中输入链接后回车，可以看到已经把视频下载到了本地。<br><img src="/%E9%82%A3%E4%BA%9B%E5%B9%B4%EF%BC%8C%E6%88%91%E7%88%AC%E8%BF%87%E7%9A%84%E5%8C%97%E7%A7%91-%E4%B8%80-%E2%80%94%E2%80%94%E7%88%AC%E8%99%AB%E5%9F%BA%E7%A1%80%E4%B9%8B%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA%E4%B8%8E%E5%85%A5%E9%97%A8/chrome7.png" alt="chrome7"></p>
+<p>用本地的影音播放器打开，和线上的一模一样。<br><img src="/%E9%82%A3%E4%BA%9B%E5%B9%B4%EF%BC%8C%E6%88%91%E7%88%AC%E8%BF%87%E7%9A%84%E5%8C%97%E7%A7%91-%E4%B8%80-%E2%80%94%E2%80%94%E7%88%AC%E8%99%AB%E5%9F%BA%E7%A1%80%E4%B9%8B%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA%E4%B8%8E%E5%85%A5%E9%97%A8/local_mp4.png" alt="local_mp4"></p>
+<h2 id="爬虫入门"><a href="#爬虫入门" class="headerlink" title="爬虫入门"></a>爬虫入门</h2><p>学习了上面的小技巧，如果碰到你想下载的音乐、想下载的视频，通过这种方法就可以下载下来（当然优酷、爱奇艺这样的专门做视频的网站已经规避了这种方法）。</p>
+<p>下面，将正式开始学习网络爬虫，本章将以<a target="_blank" rel="noopener" href="http://nladuo.cn/scce_site/">http://nladuo.cn/scce_site&#x2F;</a>为例, 爬取它的通知公告的文本信息。<br><img src="/%E9%82%A3%E4%BA%9B%E5%B9%B4%EF%BC%8C%E6%88%91%E7%88%AC%E8%BF%87%E7%9A%84%E5%8C%97%E7%A7%91-%E4%B8%80-%E2%80%94%E2%80%94%E7%88%AC%E8%99%AB%E5%9F%BA%E7%A1%80%E4%B9%8B%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA%E4%B8%8E%E5%85%A5%E9%97%A8/goal.png" alt="goal">  </p>
+<h3 id="使用requests下载网页"><a href="#使用requests下载网页" class="headerlink" title="使用requests下载网页"></a>使用requests下载网页</h3><p>网页主要由HTML、CSS、JavaScript代码以及图片等资源组成，其中HTML控制页面的结构，CSS控制页面的样式，JavaScript控制页面的逻辑。对于目前大部分的网站，我们要爬取的文本信息一般情况下都保存在HTML中。（也有些网站使用JavaScript来控制页面的结构和信息，HTML中不存在需要爬取的信息，我们将在反反爬虫篇再详细介绍这种情况。）</p>
+<p>在python中，我们可以通过requests库来下载一个网页的html。比如说上面的这个链接，我们可以通过以下一行代码把网页信息下载下来，然后通过print打印它。</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"></span><br><span class="line">resp = requests.get(<span class="string">&quot;http://nladuo.cn/scce_site/&quot;</span>)</span><br><span class="line"><span class="built_in">print</span> resp.content</span><br></pre></td></tr></table></figure>
+<p>在运行代码前，请先使用pip安装requests库，使用以下命令即可完成对库的安装：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install requests</span><br></pre></td></tr></table></figure>
+<p>运行代码后，可以看到显示出一堆html的标签。<br><img src="/%E9%82%A3%E4%BA%9B%E5%B9%B4%EF%BC%8C%E6%88%91%E7%88%AC%E8%BF%87%E7%9A%84%E5%8C%97%E7%A7%91-%E4%B8%80-%E2%80%94%E2%80%94%E7%88%AC%E8%99%AB%E5%9F%BA%E7%A1%80%E4%B9%8B%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA%E4%B8%8E%E5%85%A5%E9%97%A8/download_html.png" alt="download_html"></p>
+<p>在浏览器中，也是先下载这样的html页面，然后根据html代码的结构展示到显示屏中的。</p>
+<h3 id="网页结构"><a href="#网页结构" class="headerlink" title="网页结构"></a>网页结构</h3><p>下面，我们来看看HTML如何对应到网页的结构中的，我们先打开这个网址然后使用chrome浏览器查看一下这个网页的结构，像上面的抓取网络请求一样，我们按下右键然后选择检查，并在右边弹出的选项卡中选择Elements项。<br><img src="/%E9%82%A3%E4%BA%9B%E5%B9%B4%EF%BC%8C%E6%88%91%E7%88%AC%E8%BF%87%E7%9A%84%E5%8C%97%E7%A7%91-%E4%B8%80-%E2%80%94%E2%80%94%E7%88%AC%E8%99%AB%E5%9F%BA%E7%A1%80%E4%B9%8B%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA%E4%B8%8E%E5%85%A5%E9%97%A8/structure.jpeg" alt="structure"></p>
+<p>在Elements的左侧有个箭头，点击这个箭头后，箭头变为选中状态。箭头处于选中状态时，用鼠标滑动到左侧的网页中，可以看到右侧对应的html信息。</p>
+<p>在上图中，可以看到新闻信息处在class为every_list的div标签中。展开div的class为every_list标签后，可以看到在class为list_title标签下面的a标签中，存放着新闻的链接(a.href)，新闻的标题(a中间的文本)；在class为list_time的标签中，存放了新闻发布的日期。<br><img src="/%E9%82%A3%E4%BA%9B%E5%B9%B4%EF%BC%8C%E6%88%91%E7%88%AC%E8%BF%87%E7%9A%84%E5%8C%97%E7%A7%91-%E4%B8%80-%E2%80%94%E2%80%94%E7%88%AC%E8%99%AB%E5%9F%BA%E7%A1%80%E4%B9%8B%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA%E4%B8%8E%E5%85%A5%E9%97%A8/structure_detail.png" alt="structure_detail"></p>
+<h3 id="使用BeautifulSoup解析Html"><a href="#使用BeautifulSoup解析Html" class="headerlink" title="使用BeautifulSoup解析Html"></a>使用BeautifulSoup解析Html</h3><p>那么，我们如何从HTML中提取这些文本呢？这里可以使用HTML解析库解析HTML的内容，常见的有BeautifulSoup，HtmlParser、PyQuery等等。</p>
+<p>这里，我们选用BeautifulSoup，还是先用pip安装一下依赖。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install bs4</span><br></pre></td></tr></table></figure>
+<p>在使用requests下载html后，我们把html传给一个BeautifulSoup对象后，即可对html进行解析，使用find查找指定元素。</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">from</span> bs4 <span class="keyword">import</span> BeautifulSoup</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    resp = requests.get(<span class="string">&quot;http://nladuo.cn/scce_site/&quot;</span>)</span><br><span class="line">    <span class="comment"># print(resp.content)</span></span><br><span class="line">    soup = BeautifulSoup(resp.content)</span><br><span class="line">    items = soup.find_all(<span class="string">&quot;div&quot;</span>, &#123;<span class="string">&quot;class&quot;</span>: <span class="string">&quot;every_list&quot;</span>&#125;)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> item <span class="keyword">in</span> items:</span><br><span class="line">        title_div = item.find(<span class="string">&quot;div&quot;</span>, &#123;<span class="string">&quot;class&quot;</span>: <span class="string">&quot;list_title&quot;</span>&#125;)</span><br><span class="line">        title = title_div.a.get_text()</span><br><span class="line">        url = title_div.a[<span class="string">&quot;href&quot;</span>]</span><br><span class="line">        time = item.find(<span class="string">&quot;div&quot;</span>, &#123;<span class="string">&quot;class&quot;</span>: <span class="string">&quot;list_time&quot;</span>&#125;).get_text()</span><br><span class="line">        <span class="built_in">print</span>(time, title, url)</span><br></pre></td></tr></table></figure>
+<p>在上面代码中，使用find_all方法首先找到所有的class为every_list的div标签，然后对div进行遍历，逐个打印每个标签下面的list_title和list_time。（更详细的API，读者可以查阅BeautifulSoup的文档。）</p>
+<p>运行上述代码后，成功打印出了新闻的基本信息。<br><img src="/%E9%82%A3%E4%BA%9B%E5%B9%B4%EF%BC%8C%E6%88%91%E7%88%AC%E8%BF%87%E7%9A%84%E5%8C%97%E7%A7%91-%E4%B8%80-%E2%80%94%E2%80%94%E7%88%AC%E8%99%AB%E5%9F%BA%E7%A1%80%E4%B9%8B%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA%E4%B8%8E%E5%85%A5%E9%97%A8/out.png" alt="out"></p>
+<p>至此，我们的第一个爬虫也就完成了。</p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="../%E9%82%A3%E4%BA%9B%E5%B9%B4%EF%BC%8C%E6%88%91%E7%88%AC%E8%BF%87%E7%9A%84%E5%8C%97%E7%A7%91-%E5%BA%8F-%E2%80%94%E2%80%94%E6%88%91%E5%92%8C%E7%88%AC%E8%99%AB%E7%9A%84%E7%BC%98%E5%88%86/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>Prev</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
+              2017-09-18 16:09:22
+            </span>
+            
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="../%E9%82%A3%E4%BA%9B%E5%B9%B4%EF%BC%8C%E6%88%91%E7%88%AC%E8%BF%87%E7%9A%84%E5%8C%97%E7%A7%91-%E4%BA%8C-%E2%80%94%E2%80%94%E7%88%AC%E8%99%AB%E5%9F%BA%E7%A1%80%E4%B9%8Bsession%E7%99%BB%E9%99%86/" target="_self">
+                <span>Next</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">Contents</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA"><span class="toc-text">环境搭建</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B3%E4%BA%8E%E8%AF%AD%E8%A8%80"><span class="toc-text">关于语言</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B3%E4%BA%8E%E4%BB%A3%E7%A0%81%E7%BC%96%E8%BE%91%E5%99%A8"><span class="toc-text">关于代码编辑器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B3%E4%BA%8E%E6%B5%8F%E8%A7%88%E5%99%A8"><span class="toc-text">关于浏览器</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%94%A8Chrome%E6%8A%93%E5%8F%96%E7%BD%91%E7%BB%9C%E8%AF%B7%E6%B1%82"><span class="toc-text">用Chrome抓取网络请求</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%88%AC%E8%99%AB%E5%85%A5%E9%97%A8"><span class="toc-text">爬虫入门</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8requests%E4%B8%8B%E8%BD%BD%E7%BD%91%E9%A1%B5"><span class="toc-text">使用requests下载网页</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BD%91%E9%A1%B5%E7%BB%93%E6%9E%84"><span class="toc-text">网页结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8BeautifulSoup%E8%A7%A3%E6%9E%90Html"><span class="toc-text">使用BeautifulSoup解析Html</span></a></li></ol></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="../../../../js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="http://www.beian.miit.gov.cn/">http://www.beian.miit.gov.cn/  京ICP备17062395号</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="../../../../js/backtotop.js"></script>
+
+
+
+        
+  <div class="search-icon tools-bar-item" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="Search...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>First search, index file loading, please wait...<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>No result<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The search.xml file was not found, please refer to：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The request failed, Try to refresh the page or try again later.<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="../../../../js/colorscheme.js"></script>
+
+
+
+
+
+        
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + %E9%82%A3%E4%BA%9B%E5%B9%B4%EF%BC%8C%E6%88%91%E7%88%AC%E8%BF%87%E7%9A%84%E5%8C%97%E7%A7%91(%E4%B8%80)%E2%80%94%E2%80%94%E7%88%AC%E8%99%AB%E5%9F%BA%E7%A1%80%E4%B9%8B%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA%E4%B8%8E%E5%85%A5%E9%97%A8 + '&url=' + http%3A%2F%2Fnladuo.github.io%2F2017%2F09%2F18%2F%25E9%2582%25A3%25E4%25BA%259B%25E5%25B9%25B4%25EF%25BC%258C%25E6%2588%2591%25E7%2588%25AC%25E8%25BF%2587%25E7%259A%2584%25E5%258C%2597%25E7%25A7%2591-%25E4%25B8%2580-%25E2%2580%2594%25E2%2580%2594%25E7%2588%25AC%25E8%2599%25AB%25E5%259F%25BA%25E7%25A1%2580%25E4%25B9%258B%25E7%258E%25AF%25E5%25A2%2583%25E6%2590%25AD%25E5%25BB%25BA%25E4%25B8%258E%25E5%2585%25A5%25E9%2597%25A8%2F + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=http://nladuo.github.io/2017/09/18/%E9%82%A3%E4%BA%9B%E5%B9%B4%EF%BC%8C%E6%88%91%E7%88%AC%E8%BF%87%E7%9A%84%E5%8C%97%E7%A7%91-%E4%B8%80-%E2%80%94%E2%80%94%E7%88%AC%E8%99%AB%E5%9F%BA%E7%A1%80%E4%B9%8B%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA%E4%B8%8E%E5%85%A5%E9%97%A8/" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
+  
+  
+<script src="../../../../js/shares.js"></script>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="keywords" content="" />
+  <meta name="author" content="叁公子KCN" />
+  <meta name="description" content="" />
+  
+  
+  <title>
+    
+      那些年，我爬过的北科(序)——我和爬虫的缘分 
+      
+      
+      |
+    
+     叁公子的博客
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="../../../../js/fancybox.js"></script>
+
+
+  
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/"></a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="../../../../js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="../../../../js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">那些年，我爬过的北科(序)——我和爬虫的缘分</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
+          2017-09-18 15:27:51
+        </span>
+        
+      </div>
+      <div class="markdown-body">
+        <p>不止不觉中，已经大学毕业上了研究生了，其实这一系列教程很早就想开始写，由于一堆事情加上拖到了现在。</p>
+<h2 id="缘起"><a href="#缘起" class="headerlink" title="缘起"></a>缘起</h2><p>大概是大二下学期刚开学的时候，我开始接触了Web开发，那个时候跟着网上看视频，学习了HTTP Get与Post请求，了解了网站是怎么个工作的。我当时突然联想到了平时都在用的课程格子，想着十分有趣，想着能不能用这种技术去做这样一款查课表的东西。</p>
+<p>于是乎，网上寻找资料，了解了登陆的原理，以及如何获取到Cookie。当时，我最熟悉的语言是C#，从网上找了个解析HTML的dll，用着自带的HttpWebRequest就开始搞了。那时还不会用chrome，用的HttpWatch，也遇到了很多坑，不过也通过自己的努力把学校的课表搞下来了。</p>
+<p>不过，我发现单纯搞个课表也并没有什么卵用，于是我想到了当时正值学校抢课期间，我就做个抢课软件，那还不吊炸天。</p>
+<span id="more"></span>
+
+<p>于是我用那个只能在IE上跑起来的HttpWatch抓到了JSON的数据，当时也不知道JSON是什么，只知道XML，还网上问了一下这是什么格式的数据，后来就知道这是传说中的JSON，又去恶补了一遍JSON的知识。然后又找了个C#的解析JSON的dll，在我的电脑上把抢课的软件跑起来了，下面就是当时的软件截图。</p>
+<p><img src="/%E9%82%A3%E4%BA%9B%E5%B9%B4%EF%BC%8C%E6%88%91%E7%88%AC%E8%BF%87%E7%9A%84%E5%8C%97%E7%A7%91-%E5%BA%8F-%E2%80%94%E2%80%94%E6%88%91%E5%92%8C%E7%88%AC%E8%99%AB%E7%9A%84%E7%BC%98%E5%88%86/course_cli.jpeg" alt="course_cli">  </p>
+<p>就是通过这个自己编写的这个爬虫软件，我选上了当时的“英文记录片视听”这门课，不过后来听说这门课有点坑，我又给退了，o(╯□╰)o。</p>
+<h2 id="我都做过哪些？"><a href="#我都做过哪些？" class="headerlink" title="我都做过哪些？"></a>我都做过哪些？</h2><p>自从那以后，我开始对爬虫产生了浓厚的兴趣，没事儿就爬点东西玩儿，下面是我搞过的几个和爬虫相关的小应用。</p>
+<h4 id="USTB选课系统"><a href="#USTB选课系统" class="headerlink" title="USTB选课系统"></a>USTB选课系统</h4><p>练习客户端开发，把我校的选课系统移植到了Android、iOS、Mac、Ubuntu、Windows客户端上，见<a target="_blank" rel="noopener" href="https://github.com/nladuo/ustb_choose_course_system">https://github.com/nladuo/ustb_choose_course_system</a>。<br><img src="/%E9%82%A3%E4%BA%9B%E5%B9%B4%EF%BC%8C%E6%88%91%E7%88%AC%E8%BF%87%E7%9A%84%E5%8C%97%E7%A7%91-%E5%BA%8F-%E2%80%94%E2%80%94%E6%88%91%E5%92%8C%E7%88%AC%E8%99%AB%E7%9A%84%E7%BC%98%E5%88%86/course_ubuntu.jpeg" alt="course_ubuntu">  </p>
+<h4 id="教务信息服务号"><a href="#教务信息服务号" class="headerlink" title="教务信息服务号"></a>教务信息服务号</h4><p>查询教务系统的成绩、学分、课表等，用来练习微信开发的。<br><img src="/%E9%82%A3%E4%BA%9B%E5%B9%B4%EF%BC%8C%E6%88%91%E7%88%AC%E8%BF%87%E7%9A%84%E5%8C%97%E7%A7%91-%E5%BA%8F-%E2%80%94%E2%80%94%E6%88%91%E5%92%8C%E7%88%AC%E8%99%AB%E7%9A%84%E7%BC%98%E5%88%86/wechat.jpeg" alt="wechat">  </p>
+<h4 id="淘宝Bra爬虫"><a href="#淘宝Bra爬虫" class="headerlink" title="淘宝Bra爬虫"></a>淘宝Bra爬虫</h4><p>统计一下中国女性的胸围分布。</p>
+<p><a href="http://nladuo.github.io/bra/">http://nladuo.github.io/bra/</a></p>
+<h4 id="还书提醒"><a href="#还书提醒" class="headerlink" title="还书提醒"></a>还书提醒</h4><p>提醒自己别忘了还书。<br><img src="/%E9%82%A3%E4%BA%9B%E5%B9%B4%EF%BC%8C%E6%88%91%E7%88%AC%E8%BF%87%E7%9A%84%E5%8C%97%E7%A7%91-%E5%BA%8F-%E2%80%94%E2%80%94%E6%88%91%E5%92%8C%E7%88%AC%E8%99%AB%E7%9A%84%E7%BC%98%E5%88%86/book_reminder.png" alt="book_reminder">  </p>
+<h4 id="链家爬虫"><a href="#链家爬虫" class="headerlink" title="链家爬虫"></a>链家爬虫</h4><p>学习scrapy时候写的。<br><img src="/%E9%82%A3%E4%BA%9B%E5%B9%B4%EF%BC%8C%E6%88%91%E7%88%AC%E8%BF%87%E7%9A%84%E5%8C%97%E7%A7%91-%E5%BA%8F-%E2%80%94%E2%80%94%E6%88%91%E5%92%8C%E7%88%AC%E8%99%AB%E7%9A%84%E7%BC%98%E5%88%86/lianjia_crawler.png" alt="lianjia_crawler"></p>
+<h4 id="种子站"><a href="#种子站" class="headerlink" title="种子站"></a>种子站</h4><p>拿DHT爬虫+Sphinx做的种子搜索引擎，后来数据太多了，网站已经关了，只有图了。<br><img src="/%E9%82%A3%E4%BA%9B%E5%B9%B4%EF%BC%8C%E6%88%91%E7%88%AC%E8%BF%87%E7%9A%84%E5%8C%97%E7%A7%91-%E5%BA%8F-%E2%80%94%E2%80%94%E6%88%91%E5%92%8C%E7%88%AC%E8%99%AB%E7%9A%84%E7%BC%98%E5%88%86/seeds.jpeg" alt="seeds"></p>
+<h2 id="教程大纲"><a href="#教程大纲" class="headerlink" title="教程大纲"></a>教程大纲</h2><p>谈完了我和爬虫君的缘分后，便要开始进入正题了。在之后的几篇文章中，我将从基础的定向爬虫开始讲起，并结合多线程提高抓取速度，通过数据库来缓存数据。之后会聊一聊反反爬虫的技术，解决一些限制性的问题。因为爬虫最原始的功能其实是构建搜索引擎，最后，将会使用ElasticSearch构建一个搜索的案例。</p>
+<p><strong>1、爬虫介绍</strong></p>
+<ul>
+<li>①爬虫是什么？</li>
+<li>②环境搭建与入门</li>
+</ul>
+<p><strong>2、爬虫基础</strong></p>
+<ul>
+<li>①爬取网页新闻列表</li>
+<li>②Session登陆</li>
+<li>③多进程爬取</li>
+</ul>
+<p><strong>3、数据存储</strong></p>
+<ul>
+<li>mongodb的使用</li>
+</ul>
+<p><strong>4、反反爬虫</strong></p>
+<ul>
+<li>①JS渲染：selenium+phantomjs的使用</li>
+<li>②ip防禁：使用代理IP</li>
+<li>③简单验证码破解：使用KNN</li>
+</ul>
+<p><strong>5、案例——北科贴吧帖子搜索</strong></p>
+<ul>
+<li>①爬虫编写</li>
+<li>②使用ElasticSearch搜索帖子</li>
+</ul>
+<h2 id="项目地址"><a href="#项目地址" class="headerlink" title="项目地址"></a>项目地址</h2><p>相关代码都放在了:<a target="_blank" rel="noopener" href="https://github.com/nladuo/USTBCrawlers">https://github.com/nladuo/USTBCrawlers</a></p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="../../../04/10/%E4%BD%BF%E7%94%A8TensorFlow%E8%AE%AD%E7%BB%83Weibo-cn%E9%AA%8C%E8%AF%81%E7%A0%81/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>Prev</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
+              2017-09-18 15:27:51
+            </span>
+            
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="../%E9%82%A3%E4%BA%9B%E5%B9%B4%EF%BC%8C%E6%88%91%E7%88%AC%E8%BF%87%E7%9A%84%E5%8C%97%E7%A7%91-%E4%B8%80-%E2%80%94%E2%80%94%E7%88%AC%E8%99%AB%E5%9F%BA%E7%A1%80%E4%B9%8B%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA%E4%B8%8E%E5%85%A5%E9%97%A8/" target="_self">
+                <span>Next</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">Contents</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BC%98%E8%B5%B7"><span class="toc-text">缘起</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%88%91%E9%83%BD%E5%81%9A%E8%BF%87%E5%93%AA%E4%BA%9B%EF%BC%9F"><span class="toc-text">我都做过哪些？</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#USTB%E9%80%89%E8%AF%BE%E7%B3%BB%E7%BB%9F"><span class="toc-text">USTB选课系统</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%95%99%E5%8A%A1%E4%BF%A1%E6%81%AF%E6%9C%8D%E5%8A%A1%E5%8F%B7"><span class="toc-text">教务信息服务号</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%B7%98%E5%AE%9DBra%E7%88%AC%E8%99%AB"><span class="toc-text">淘宝Bra爬虫</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%BF%98%E4%B9%A6%E6%8F%90%E9%86%92"><span class="toc-text">还书提醒</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%93%BE%E5%AE%B6%E7%88%AC%E8%99%AB"><span class="toc-text">链家爬虫</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%A7%8D%E5%AD%90%E7%AB%99"><span class="toc-text">种子站</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%99%E7%A8%8B%E5%A4%A7%E7%BA%B2"><span class="toc-text">教程大纲</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A1%B9%E7%9B%AE%E5%9C%B0%E5%9D%80"><span class="toc-text">项目地址</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="../../../../js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="http://www.beian.miit.gov.cn/">http://www.beian.miit.gov.cn/  京ICP备17062395号</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="../../../../js/backtotop.js"></script>
+
+
+
+        
+  <div class="search-icon tools-bar-item" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="Search...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>First search, index file loading, please wait...<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>No result<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The search.xml file was not found, please refer to：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The request failed, Try to refresh the page or try again later.<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="../../../../js/colorscheme.js"></script>
+
+
+
+
+
+        
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + %E9%82%A3%E4%BA%9B%E5%B9%B4%EF%BC%8C%E6%88%91%E7%88%AC%E8%BF%87%E7%9A%84%E5%8C%97%E7%A7%91(%E5%BA%8F)%E2%80%94%E2%80%94%E6%88%91%E5%92%8C%E7%88%AC%E8%99%AB%E7%9A%84%E7%BC%98%E5%88%86 + '&url=' + http%3A%2F%2Fnladuo.github.io%2F2017%2F09%2F18%2F%25E9%2582%25A3%25E4%25BA%259B%25E5%25B9%25B4%25EF%25BC%258C%25E6%2588%2591%25E7%2588%25AC%25E8%25BF%2587%25E7%259A%2584%25E5%258C%2597%25E7%25A7%2591-%25E5%25BA%258F-%25E2%2580%2594%25E2%2580%2594%25E6%2588%2591%25E5%2592%258C%25E7%2588%25AC%25E8%2599%25AB%25E7%259A%2584%25E7%25BC%2598%25E5%2588%2586%2F + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=http://nladuo.github.io/2017/09/18/%E9%82%A3%E4%BA%9B%E5%B9%B4%EF%BC%8C%E6%88%91%E7%88%AC%E8%BF%87%E7%9A%84%E5%8C%97%E7%A7%91-%E5%BA%8F-%E2%80%94%E2%80%94%E6%88%91%E5%92%8C%E7%88%AC%E8%99%AB%E7%9A%84%E7%BC%98%E5%88%86/" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
+  
+  
+<script src="../../../../js/shares.js"></script>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>

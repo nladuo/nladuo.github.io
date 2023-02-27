@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="keywords" content="" />
+  <meta name="author" content="叁公子KCN" />
+  <meta name="description" content="" />
+  
+  
+  <title>
+    
+      信息检索基本概念知识笔记总结 
+      
+      
+      |
+    
+     叁公子的博客
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="../../../../js/fancybox.js"></script>
+
+
+  
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/"></a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="../../../../js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="../../../../js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">信息检索基本概念知识笔记总结</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
+          2018-11-27 18:24:51
+        </span>
+        
+      </div>
+      <div class="markdown-body">
+        <p>之前学过的信息检索都忘得差不多了，这篇文章用来总结和记录一些信息检索（IR）领域的概念和基础知识。</p>
+<h2 id="总览"><a href="#总览" class="headerlink" title="总览"></a>总览</h2><p>信息检索其实就是有一个查询和已有的文档数据集。给一个查询query，从数据库中的文档中找出相关的document文档来。</p>
+<p>笔记目录如下：</p>
+<ul>
+<li>布尔检索</li>
+<li>向量空间模型</li>
+<li>信息检索的评价</li>
+<li>排序学习</li>
+</ul>
+<span id="more"></span>
+<h2 id="布尔检索"><a href="#布尔检索" class="headerlink" title="布尔检索"></a>布尔检索</h2><p>布尔检索的查询，是指利用 AND, OR 或者 NOT操作符将词项连接起来的查询。</p>
+<p>比如说我们的目标是：在《莎士比亚全集》找出包含Brutus AND Caesar ，同时又不包含Calpurnia的章节（文档）来。</p>
+<h3 id="词项-文档关联矩阵"><a href="#词项-文档关联矩阵" class="headerlink" title="词项-文档关联矩阵"></a>词项-文档关联矩阵</h3><p>这里肯定不能将文档扫描一遍，而是可以通过一个一个词项文档关联矩阵来进行检索。<br><img src="/term-doc-matrix.png"></p>
+<p>给定查询Brutus AND Caesar AND NOT Calpurnia, 求解方法如下：</p>
+<ul>
+<li>取出三个词项对应的行向量 ，并对Calpurnia 的行向量求反，最后按位进行与操作</li>
+<li>110100 AND 110111 AND 101111 &#x3D; 100100.</li>
+</ul>
+<p>第一篇文档和第四篇文档是我们的查询结果。</p>
+<h3 id="倒排索引"><a href="#倒排索引" class="headerlink" title="倒排索引"></a>倒排索引</h3><p>随着词项的增多，会导致关联矩阵会变得非常稀疏。一般来说词表大小会有好几万甚至几十万，而一篇文章中一般也就几百几千个词，所以会有数据很多为0。</p>
+<p>倒排索引(inverted index)其实也就是词项-文档关联矩阵，但是进行了压缩，使用更少的空间进行存储。其形式如下：</p>
+<p><img src="/inverted-index.png"></p>
+<p>相当于原先的存储空间是：词项个数<em>文档个数。现在是：词项个数</em>文档平均长度。</p>
+<h2 id="向量空间模型"><a href="#向量空间模型" class="headerlink" title="向量空间模型"></a>向量空间模型</h2><p>在布尔模型中，只讨论了词是不是出现的问题，这里的假设是每个词都是同等重要的。但其实并不是每个词重要程度。所以这里需要对不同的词引入权重的概念。</p>
+<h3 id="TF-IDF"><a href="#TF-IDF" class="headerlink" title="TF-IDF"></a>TF-IDF</h3><p>TF：term frequency，词项t在文档中出现的次数。出现的越多就越重要。</p>
+<p>IDF：inverse document frequency。document frequency是指在整个文档集出现的次数，出现的越少，说明这个词在文档越重要，也就是“物以稀为贵”。</p>
+<p>所以TF-IDF其实就是：<br>$$ tf-idf_{t,d} &#x3D; tf_{t,d} \times idf_{t} $$</p>
+<h3 id="评分计算"><a href="#评分计算" class="headerlink" title="评分计算"></a>评分计算</h3><p>以上的TF-IDF是针对document的一个term进行的。</p>
+<p>对于一个文档来说，把每个term都计算tf-idf可以得到文档的向量表示$$\vec{V}(d)$$，同理也可以得到查询q的向量表示$$\vec{V}(q)$$，这也就是向量空间模型。</p>
+<p>我们在搜索中，其实目标就是找出查询向量$$\vec{V}(q)$$和每个文档向量$$\vec{V}(d)$$的相似度，然后得到一个排序，得分高的排在前面，得分低的在后面。</p>
+<p>$$ score(q,d)&#x3D;\frac{\vec{V}(q) \cdot \vec{V}(d)}{|\vec{V}(q)| \cdot |\vec{V}(d)|} $$</p>
+<h3 id="Okapi-BM25"><a href="#Okapi-BM25" class="headerlink" title="Okapi BM25"></a>Okapi BM25</h3><p>BM25是一种用来评价搜索词和文档之间相关性的算法，它是一种基于<strong>概率检索模型</strong>提出的算法，再用简单的话来描述下BM25算法：我们有一个query和一批文档Ds，现在要计算query和每篇文档D之间的相关性分数，我们的做法是，先对query进行切分，得到单词，然后单词的分数由3部分组成：</p>
+<ul>
+<li>单词和D之间的相关性</li>
+<li>单词和query之间的相关性</li>
+<li>每个单词的权重<br>最后对于每个单词的分数我们做一个求和，就得到了query和文档之间的分数。</li>
+</ul>
+<p><img src="/bm25.png"></p>
+<h2 id="信息检索的评价"><a href="#信息检索的评价" class="headerlink" title="信息检索的评价"></a>信息检索的评价</h2><h3 id="MAP"><a href="#MAP" class="headerlink" title="MAP"></a>MAP</h3><ul>
+<li>平均正确率(Average Precision, AP)：对不同召回率点上的正确率进行平均</li>
+<li>Mean Average Precision：对所有查询的AP求宏平均。（宏平均：对每个查询求出某个指标，然后对这些指标进行算术平均）<br>系统检索出来的相关文档越靠前(rank 越高)，MAP就可能越高。</li>
+</ul>
+<h3 id="NDCG"><a href="#NDCG" class="headerlink" title="NDCG"></a>NDCG</h3><p>每个文档不仅仅只有相关和不相关两种情况，而是有相关度级别，比如0,1,2,3,4（bad、fair、good、excellent、perfect）。我们可以假设，对于返回结果：</p>
+<ul>
+<li>相关度级别越高的结果越多越好</li>
+<li>相关度级别越高的结果越靠前越好</li>
+</ul>
+<p>Normalized Discounted Cumulative Gain：<br><img src="/ndcg.png"></p>
+<h2 id="排序学习（Learning-to-Rank）"><a href="#排序学习（Learning-to-Rank）" class="headerlink" title="排序学习（Learning to Rank）"></a>排序学习（Learning to Rank）</h2><p>排序问题就是使用一个模型 $$f(q,d)$$来对该query下的documents进行排序。传统的Learning to Rank（LTR）模型有三种方法：</p>
+<h3 id="Pointwise-approach"><a href="#Pointwise-approach" class="headerlink" title="Pointwise approach"></a>Pointwise approach</h3><p>通过ML的方法来学习查询-文档对的得分：f(query,document)。比如说不相关的document打1-10分，相关的document打10-50分。然后根据得分来排序。</p>
+<h3 id="Pairwise-approach"><a href="#Pairwise-approach" class="headerlink" title="Pairwise approach"></a>Pairwise approach</h3><p>在检索中，其实并不需要计算得分。我们只要知道两个文档的序就好了。所以只要知道f(query,doc1)和f(query, doc2)哪个排在哪个前面就好了。我们知道两两的排序关系，也可以得到最终的排序结果。</p>
+<h3 id="listwise-approach"><a href="#listwise-approach" class="headerlink" title="listwise approach"></a>listwise approach</h3><p>Listwise与上述两种方法不同，它是将每个查询对应的所有搜索结果列表作为一个训练样例。</p>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><ul>
+<li>ChristopherD.Manning, PrabhakarRaghavan, HinrichSchutze,等. 信息检索导论[J]. 2010.</li>
+<li><a target="_blank" rel="noopener" href="https://www.zybuluo.com/zhuanxu/note/974675">https://www.zybuluo.com/zhuanxu/note/974675</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/eyeszjwang/articles/2368087.html">https://www.cnblogs.com/eyeszjwang/articles/2368087.html</a></li>
+</ul>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="../../04/PyAndroidControl-%E4%BD%BF%E7%94%A8python%E8%84%9A%E6%9C%AC%E6%8E%A7%E5%88%B6%E4%BD%A0%E7%9A%84%E5%AE%89%E5%8D%93%E8%AE%BE%E5%A4%87/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>Prev</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
+              2018-11-27 18:24:51
+            </span>
+            
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="../../../12/08/%E9%82%A3%E4%BA%9B%E5%B9%B4%EF%BC%8C%E6%88%91%E7%88%AC%E8%BF%87%E7%9A%84%E5%8C%97%E7%A7%91-%E4%BA%94-%E2%80%94%E2%80%94%E6%95%B0%E6%8D%AE%E5%AD%98%E5%82%A8%E4%B9%8B%E4%BD%BF%E7%94%A8MongoDB/" target="_self">
+                <span>Next</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">Contents</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E8%A7%88"><span class="toc-text">总览</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%83%E5%B0%94%E6%A3%80%E7%B4%A2"><span class="toc-text">布尔检索</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%8D%E9%A1%B9-%E6%96%87%E6%A1%A3%E5%85%B3%E8%81%94%E7%9F%A9%E9%98%B5"><span class="toc-text">词项-文档关联矩阵</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%80%92%E6%8E%92%E7%B4%A2%E5%BC%95"><span class="toc-text">倒排索引</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%90%91%E9%87%8F%E7%A9%BA%E9%97%B4%E6%A8%A1%E5%9E%8B"><span class="toc-text">向量空间模型</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#TF-IDF"><span class="toc-text">TF-IDF</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%84%E5%88%86%E8%AE%A1%E7%AE%97"><span class="toc-text">评分计算</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Okapi-BM25"><span class="toc-text">Okapi BM25</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BF%A1%E6%81%AF%E6%A3%80%E7%B4%A2%E7%9A%84%E8%AF%84%E4%BB%B7"><span class="toc-text">信息检索的评价</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#MAP"><span class="toc-text">MAP</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#NDCG"><span class="toc-text">NDCG</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8E%92%E5%BA%8F%E5%AD%A6%E4%B9%A0%EF%BC%88Learning-to-Rank%EF%BC%89"><span class="toc-text">排序学习（Learning to Rank）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Pointwise-approach"><span class="toc-text">Pointwise approach</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Pairwise-approach"><span class="toc-text">Pairwise approach</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#listwise-approach"><span class="toc-text">listwise approach</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Reference"><span class="toc-text">Reference</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="../../../../js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="http://www.beian.miit.gov.cn/">http://www.beian.miit.gov.cn/  京ICP备17062395号</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="../../../../js/backtotop.js"></script>
+
+
+
+        
+  <div class="search-icon tools-bar-item" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="Search...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>First search, index file loading, please wait...<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>No result<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The search.xml file was not found, please refer to：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The request failed, Try to refresh the page or try again later.<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="../../../../js/colorscheme.js"></script>
+
+
+
+
+
+        
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + %E4%BF%A1%E6%81%AF%E6%A3%80%E7%B4%A2%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E7%9F%A5%E8%AF%86%E7%AC%94%E8%AE%B0%E6%80%BB%E7%BB%93 + '&url=' + http%3A%2F%2Fnladuo.github.io%2F2018%2F11%2F27%2F%25E4%25BF%25A1%25E6%2581%25AF%25E6%25A3%2580%25E7%25B4%25A2%25E5%259F%25BA%25E6%259C%25AC%25E6%25A6%2582%25E5%25BF%25B5%25E7%259F%25A5%25E8%25AF%2586%25E7%25AC%2594%25E8%25AE%25B0%25E6%2580%25BB%25E7%25BB%2593%2F + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=http://nladuo.github.io/2018/11/27/%E4%BF%A1%E6%81%AF%E6%A3%80%E7%B4%A2%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E7%9F%A5%E8%AF%86%E7%AC%94%E8%AE%B0%E6%80%BB%E7%BB%93/" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
+  
+  
+<script src="../../../../js/shares.js"></script>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>

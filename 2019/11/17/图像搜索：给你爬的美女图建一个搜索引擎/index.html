@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="keywords" content="" />
+  <meta name="author" content="叁公子KCN" />
+  <meta name="description" content="" />
+  
+  
+  <title>
+    
+      图像搜索：给你爬的美女图建一个搜索引擎 
+      
+      
+      |
+    
+     叁公子的博客
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="../../../../js/fancybox.js"></script>
+
+
+  
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/"></a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="../../../../js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="../../../../js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">图像搜索：给你爬的美女图建一个搜索引擎</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
+          2019-11-17 20:56:35
+        </span>
+        
+      </div>
+      <div class="markdown-body">
+        <h2 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h2><p>最近测了一下SPTAG这个近似最近邻搜索工具，打算拿一个东西先测测练练手，于是就想到了可以把之前的美女图建一个索引，看看能不能搜到想要的美女图。</p>
+<p>需要用到的环境有以下：</p>
+<ul>
+<li>python3.7</li>
+<li>SPTAG(Docker版)</li>
+<li>MongoDB</li>
+</ul>
+<p>代码见：<a target="_blank" rel="noopener" href="https://github.com/nladuo/MMFinder">https://github.com/nladuo/MMFinder</a></p>
+<span id="more"></span>
+<h2 id="准备图片"><a href="#准备图片" class="headerlink" title="准备图片"></a>准备图片</h2><p>首先是准备好美女图，这里是我很久以前爬的一些图，一共接近1万张。<br><img src="/meizitu.png"></p>
+<p>如果没有的话，这里提供一下Google Drive下载链接：<a target="_blank" rel="noopener" href="https://drive.google.com/file/d/1shZ3gx9nHPHUgylsZIrvWliwCh9TucAo/view?usp=sharing">https://drive.google.com/file/d/1shZ3gx9nHPHUgylsZIrvWliwCh9TucAo/view?usp=sharing</a>。解压密码：nladuo。</p>
+<h2 id="图片过滤"><a href="#图片过滤" class="headerlink" title="图片过滤"></a>图片过滤</h2><p>然后接下来是对图片做一些预处理，这里我主要打算做的并不是整个的图片搜索，整个图片的搜索会比较麻烦。我这里只做人脸的搜索。</p>
+<p>这里通过<code>face_recognition</code>这个库，把只有一张人脸的图片保存下来，并提取人脸，然后放到mongodb里面。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> MMFinder/data_preprocess</span><br><span class="line">python3 filter_images.py</span><br></pre></td></tr></table></figure>
+<p>这里过滤出来<code>9477</code>张图片<br><img src="/image_count.png"></p>
+<h2 id="特征工程"><a href="#特征工程" class="headerlink" title="特征工程"></a>特征工程</h2><p>接下来是要把图片转换成一个向量了，也就是特征工程。因为我本身也不做图像，所以不是很了解具体方法，大概查了一下，传统的方法有<code>SIFT</code>，现在的话就是<code>神经网络</code>了。</p>
+<p>如果是一般的图，就用ImageNet训练好的提取最后一层的vector作为特征就好了。这里我找到了一个专门做人脸识别的一个预训练模型：<a target="_blank" rel="noopener" href="https://sefiks.com/2018/08/06/deep-face-recognition-with-keras/">https://sefiks.com/2018/08/06/deep-face-recognition-with-keras/</a>，准确度应该会更高一些。</p>
+<p>模型的话就是VGG，最后一层是一个维度为2622的向量。通过处理，这里将所有的人脸转换成一个2622长度的vector，然后保存到mongodb中。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> MMFinder/data_preprocess</span><br><span class="line">python3 feature_extraction.py</span><br></pre></td></tr></table></figure>
+<p><img src="/mongo_show_vector.png"></p>
+<h2 id="建立索引"><a href="#建立索引" class="headerlink" title="建立索引"></a>建立索引</h2><p>接下来是建立最近邻的索引，也叫dense-index，在文本搜索引擎中，我们一般用的是TF-IDF，属于sparse-index，也就是倒排索引。而dense-index一般是图结构的索引。</p>
+<p>为什么要建索引呢？</p>
+<p>其实就是加快搜索速度，如果正常情况下，我们搜索一张图，其实需要和数据库中的9477个向量都算一遍相似度，才能得到精确的相似度排序。这个时间复杂度是O(N)的，看起来不高，但是每次搜索，都是O(N)，假设有1亿张图片，那不知道要等到哪年。</p>
+<p>有了索引之后，可以保证搜索结果在固定的时间O(C)内返回，如果还慢，加机器就好了。</p>
+<h3 id="索引系统的安装"><a href="#索引系统的安装" class="headerlink" title="索引系统的安装"></a>索引系统的安装</h3><p>关于索引的选择，我这里使用的是SPTAG，因为这是一个高效可扩展的最近邻搜索系统。类似的系统还有facebook的faiss。安装步骤可以见我上一篇文章：<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/fcedf00eac32">Docker下SPTAG的安装与测试</a></p>
+<p>这个安装起来其实还是比较麻烦的，如果想跑着玩儿，也可以看看scikit-learn里面的KDTree，LSH等做近似最近邻搜索的方法。</p>
+<h3 id="建立索引-1"><a href="#建立索引-1" class="headerlink" title="建立索引"></a>建立索引</h3><p>安装好Docker下的SPTAG之后，这里先将所有的图片数据导出成SPTAG规定的输入格式。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> MMFinder/index_construction</span><br><span class="line">python3 export_SPTAG_indexbuilder_input.py</span><br><span class="line">docker <span class="built_in">cp</span> mm_index_input.txt （你的容器ID）:/app/Release/</span><br></pre></td></tr></table></figure>
+
+<p>然后将导出的数据放到SPTAG-Docker容器里，通过<code>indexbuilder</code>建立索引。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker attach （你的容器ID）</span><br><span class="line">./indexbuilder -d 2622 -v Float  -i ./mm_index_input.txt -o data/mm_index -a BKT -t 2</span><br></pre></td></tr></table></figure>
+
+<p>建立好索引之后，启动搜索的rpc服务。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 SPTAG_rpc_search_service.py</span><br></pre></td></tr></table></figure>
+
+<h3 id="查询测试"><a href="#查询测试" class="headerlink" title="查询测试"></a>查询测试</h3><p>接下来可以进入查询测试了，如果是mac用户可以安装<code>imgcat</code>工具，在命令行就能查看图片。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 search_test.py</span><br></pre></td></tr></table></figure>
+<p>效果如下，感觉还是可以的<br><img src="/search_test_result.jpg"></p>
+<h2 id="前端Demo展示"><a href="#前端Demo展示" class="headerlink" title="前端Demo展示"></a>前端Demo展示</h2><p>最后是把各个模块整合一下，编写上传，搜索接口，形成一个完整的应用的Demo。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> web_demo</span><br><span class="line">python3 main.py</span><br></pre></td></tr></table></figure>
+<p>效果如下：<br><img src="/demo_result.png"></p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="../../../08/31/%E4%BD%BF%E7%94%A8Python%E5%AF%B9%E9%9F%B3%E9%A2%91%E8%BF%9B%E8%A1%8C%E7%89%B9%E5%BE%81%E6%8F%90%E5%8F%96/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>Prev</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
+              2019-11-17 20:56:35
+            </span>
+            
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="../../../../2020/01/08/tmux1-8%E4%B8%8B%E5%BC%80%E5%90%AF%E9%BC%A0%E6%A0%87%E6%BB%91%E5%8A%A8/" target="_self">
+                <span>Next</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">Contents</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%86%99%E5%9C%A8%E5%89%8D%E9%9D%A2"><span class="toc-text">写在前面</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%87%86%E5%A4%87%E5%9B%BE%E7%89%87"><span class="toc-text">准备图片</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%BE%E7%89%87%E8%BF%87%E6%BB%A4"><span class="toc-text">图片过滤</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%89%B9%E5%BE%81%E5%B7%A5%E7%A8%8B"><span class="toc-text">特征工程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BB%BA%E7%AB%8B%E7%B4%A2%E5%BC%95"><span class="toc-text">建立索引</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%B4%A2%E5%BC%95%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%AE%89%E8%A3%85"><span class="toc-text">索引系统的安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BB%BA%E7%AB%8B%E7%B4%A2%E5%BC%95-1"><span class="toc-text">建立索引</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9F%A5%E8%AF%A2%E6%B5%8B%E8%AF%95"><span class="toc-text">查询测试</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E7%AB%AFDemo%E5%B1%95%E7%A4%BA"><span class="toc-text">前端Demo展示</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="../../../../js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="http://www.beian.miit.gov.cn/">http://www.beian.miit.gov.cn/  京ICP备17062395号</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="../../../../js/backtotop.js"></script>
+
+
+
+        
+  <div class="search-icon tools-bar-item" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="Search...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>First search, index file loading, please wait...<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>No result<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The search.xml file was not found, please refer to：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The request failed, Try to refresh the page or try again later.<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="../../../../js/colorscheme.js"></script>
+
+
+
+
+
+        
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + %E5%9B%BE%E5%83%8F%E6%90%9C%E7%B4%A2%EF%BC%9A%E7%BB%99%E4%BD%A0%E7%88%AC%E7%9A%84%E7%BE%8E%E5%A5%B3%E5%9B%BE%E5%BB%BA%E4%B8%80%E4%B8%AA%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E + '&url=' + http%3A%2F%2Fnladuo.github.io%2F2019%2F11%2F17%2F%25E5%259B%25BE%25E5%2583%258F%25E6%2590%259C%25E7%25B4%25A2%25EF%25BC%259A%25E7%25BB%2599%25E4%25BD%25A0%25E7%2588%25AC%25E7%259A%2584%25E7%25BE%258E%25E5%25A5%25B3%25E5%259B%25BE%25E5%25BB%25BA%25E4%25B8%2580%25E4%25B8%25AA%25E6%2590%259C%25E7%25B4%25A2%25E5%25BC%2595%25E6%2593%258E%2F + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=http://nladuo.github.io/2019/11/17/%E5%9B%BE%E5%83%8F%E6%90%9C%E7%B4%A2%EF%BC%9A%E7%BB%99%E4%BD%A0%E7%88%AC%E7%9A%84%E7%BE%8E%E5%A5%B3%E5%9B%BE%E5%BB%BA%E4%B8%80%E4%B8%AA%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E/" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
+  
+  
+<script src="../../../../js/shares.js"></script>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>

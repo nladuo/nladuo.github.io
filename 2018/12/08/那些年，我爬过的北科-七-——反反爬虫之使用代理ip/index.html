@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="keywords" content="" />
+  <meta name="author" content="叁公子KCN" />
+  <meta name="description" content="" />
+  
+  
+  <title>
+    
+      那些年，我爬过的北科(七)——反反爬虫之使用代理ip 
+      
+      
+      |
+    
+     叁公子的博客
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="../../../../js/fancybox.js"></script>
+
+
+  
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/"></a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="../../../../js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="../../../../js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">那些年，我爬过的北科(七)——反反爬虫之使用代理ip</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
+          2018-12-08 20:03:22
+        </span>
+        
+      </div>
+      <div class="markdown-body">
+        <h2 id="内容介绍"><a href="#内容介绍" class="headerlink" title="内容介绍"></a>内容介绍</h2><p>本章将要介绍一下如何使用代理ip解决反爬虫的<strong>禁ip</strong>的问题，并扩展了解一下代理ip池的构建与adsl服务器的使用。</p>
+<h2 id="代理ip初探"><a href="#代理ip初探" class="headerlink" title="代理ip初探"></a>代理ip初探</h2><h3 id="如何获取自己的ip"><a href="#如何获取自己的ip" class="headerlink" title="如何获取自己的ip"></a>如何获取自己的ip</h3><p>下面，我们先来看一下如何获取自己的ip地址。我们直接在百度上搜索ip，或者通过<a target="_blank" rel="noopener" href="http://www.ip138.com/">http://www.ip138.com/</a>这个网站就可以。比如说我现在的ip如下：</p>
+<p><img src="/ip138.png"></p>
+<span id="more"></span>
+<p>ip作为一个身份信息，一般是不会变的，想要改变自己的ip的方法就是找代理了。</p>
+<p>所谓代理，其实就是比如说我们要访问一个网页，但这个时候我们不自己去访问，而是告诉代理我们想要访问什么，然后代理用自己的ip去访问，再返回给我们。这样网站其实拿到的不是我们的真实ip，而是代理的ip。</p>
+<h3 id="python中使用代理ip"><a href="#python中使用代理ip" class="headerlink" title="python中使用代理ip"></a>python中使用代理ip</h3><p>免费的代理ip有很多，虽然这种网站都不会提供太多的代理ip。我们这里以西刺代理的免费ip为例，看看在python中如何使用代理ip。</p>
+<p>首先打开<a target="_blank" rel="noopener" href="http://www.xicidaili.com/nn/">http://www.xicidaili.com/nn/</a>，可以看到这里有很多代理ip。</p>
+<p><img src="/xici.png"></p>
+<p>这里可以根据当日的情况挑选一个ip，我这里选择了<code>139.129.207.72:808</code>这个代理。然后我们编写代码，调用ip138的接口，查看一下自己使用代理后的ip是否改变。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">from</span> bs4 <span class="keyword">import</span> BeautifulSoup</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">parse_ip</span>(<span class="params">content</span>):</span><br><span class="line">    soup = BeautifulSoup(content, <span class="string">&quot;html.parser&quot;</span>)</span><br><span class="line">    <span class="built_in">print</span>(soup.body.get_text())</span><br><span class="line"></span><br><span class="line">resp = requests.get(<span class="string">&quot;http://2018.ip138.com/ic.asp&quot;</span>)</span><br><span class="line">parse_ip(resp.content.decode(<span class="string">&quot;gbk&quot;</span>))</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;\n改变ip后:&quot;</span>)</span><br><span class="line">proxies = &#123;<span class="string">&quot;http&quot;</span>: <span class="string">&quot;http://139.129.207.72:808&quot;</span>&#125;  <span class="comment"># 需要改成在西刺代理上看到的可用代理ip</span></span><br><span class="line">resp2 = requests.get(<span class="string">&quot;http://2018.ip138.com/ic.asp&quot;</span>, proxies=proxies)</span><br><span class="line">parse_ip(resp2.content.decode(<span class="string">&quot;gbk&quot;</span>))</span><br></pre></td></tr></table></figure>
+<p>可以看到使用前，我的ip还是北京的ip，使用后变成了山东的ip了。<br><img src="/proxy.png"></p>
+<h2 id="构建代理ip池"><a href="#构建代理ip池" class="headerlink" title="构建代理ip池"></a>构建代理ip池</h2><p>在使用代理ip时，我们一般都会去花钱买一些可用的ip或者是购买包月服务。但实际上，买来的ip并不是都能用的，而且大多时候是很多都不能用，不能用比例非常之高。</p>
+<p>代理ip池的目标其实就是要验证那些能用，哪些不能用，如果可用，就把可用的ip放到一个“池子”里。等我们爬虫程序需要ip的时候，从“池子”里拿就好了。</p>
+<p>这里我们不会去自己写一个代理ip池子，而是举一个例子：比如说我们想要爬取链家网的房价数据。</p>
+<h3 id="Validator编写"><a href="#Validator编写" class="headerlink" title="Validator编写"></a>Validator编写</h3><p>我们需要首先写一个验证器validator来验证ip是否可用。比如说在之前爬链家的时候，如果ip被禁了之后，就会跳转到一个验证的页面，让我们点击倒着的房子进行验证，其实也就是验证码了。这种ip的话就是算不可用的。</p>
+<p>当然，还有超时、不可连接等等的情况。</p>
+<p>validator的代码类似下面这样:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">validate_lianjia</span>(<span class="params">proxy_url</span>):</span><br><span class="line">    proxies = &#123;<span class="string">&quot;http&quot;</span>: proxy_url&#125; </span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        resp = requests.get(<span class="string">&quot;http://bj.lianjia.com/&quot;</span>, proxies=proxies, timeout=<span class="number">20</span>) <span class="comment"># 20秒超时</span></span><br><span class="line">        content = resp.decode(<span class="string">&quot;utf-8&quot;</span>)</span><br><span class="line">        <span class="keyword">if</span> <span class="string">&quot;请点击倒着的房屋&quot;</span> <span class="keyword">in</span> content:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line">    <span class="keyword">except</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">False</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="代理ip池运行流程"><a href="#代理ip池运行流程" class="headerlink" title="代理ip池运行流程"></a>代理ip池运行流程</h3><p>有了validator，我们就可以拿买来或者爬来的代理ip去验证了。如果validator返回为true，就是可用的。我们把可用的ip放到“池子”里，这个“池子”可以是数据库，也可以是本地文件。只要爬虫程序能拿到就好了。</p>
+<p>当然，我们会有一些更新策略，比如说多久判断一次池子里面的代理。是否要剔除池子里的数据。</p>
+<p>这块我们就不深入展开了。</p>
+<h3 id="开源代理ip池"><a href="#开源代理ip池" class="headerlink" title="开源代理ip池"></a>开源代理ip池</h3><p>当然也有开发者开发的免费代理ip池，其实就是先去各大代理ip网站爬一些代理来，然后再验证，提供一个Http的接口。</p>
+<p>比如说这个：<a target="_blank" rel="noopener" href="https://github.com/awolfly9/IPProxyTool">https://github.com/awolfly9/IPProxyTool</a>。当时笔者在大学的时候想爬链家，但是不舍得买代理ip，然后就用的这个库搞的代理ip爬的链接网的房价数据。</p>
+<h2 id="一个简单粗暴的方法：adsl服务器"><a href="#一个简单粗暴的方法：adsl服务器" class="headerlink" title="一个简单粗暴的方法：adsl服务器"></a>一个简单粗暴的方法：adsl服务器</h2><p>自我感觉代理ip还是一种比较麻烦的方法，下面介绍的adsl服务器就会很简单粗暴了。</p>
+<p>adsl服务器其实就是拨号上网服务器，它每拨一次号，就获取一个新的IP。</p>
+<p>所以，在adsl服务器上换ip的话，就像下面一样，两行代码搞定。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line">os.system(<span class="string">&quot;ifdown ppp0&quot;</span>)  <span class="comment"># 先断网</span></span><br><span class="line">os.system(<span class="string">&quot;ifup ppp0&quot;</span>)    <span class="comment"># 再联网</span></span><br></pre></td></tr></table></figure>
+
+<p>因为每次换ip都需要断网然后再联网。所以如果是并发的爬虫，在adsl服务器上会变得很难管理。如果我们的爬虫是单线程爬取的，adsl服务器的体验还是不错的。</p>
+<p>如果想体验adsl服务器，最好自己租一个月练练手就知道怎么用了，一般价格在100以内&#x2F;每月。</p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="../%E9%82%A3%E4%BA%9B%E5%B9%B4%EF%BC%8C%E6%88%91%E7%88%AC%E8%BF%87%E7%9A%84%E5%8C%97%E7%A7%91-%E5%85%AD-%E2%80%94%E2%80%94%E5%8F%8D%E5%8F%8D%E7%88%AC%E8%99%AB%E4%B9%8Bjs%E6%B8%B2%E6%9F%93/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>Prev</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
+              2018-12-08 20:03:22
+            </span>
+            
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="../%E9%82%A3%E4%BA%9B%E5%B9%B4%EF%BC%8C%E6%88%91%E7%88%AC%E8%BF%87%E7%9A%84%E5%8C%97%E7%A7%91-%E5%85%AB-%E2%80%94%E2%80%94%E5%8F%8D%E5%8F%8D%E7%88%AC%E8%99%AB%E4%B9%8B%E9%AA%8C%E8%AF%81%E7%A0%81%E8%AF%86%E5%88%AB/" target="_self">
+                <span>Next</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">Contents</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%86%85%E5%AE%B9%E4%BB%8B%E7%BB%8D"><span class="toc-text">内容介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%A3%E7%90%86ip%E5%88%9D%E6%8E%A2"><span class="toc-text">代理ip初探</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E8%8E%B7%E5%8F%96%E8%87%AA%E5%B7%B1%E7%9A%84ip"><span class="toc-text">如何获取自己的ip</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#python%E4%B8%AD%E4%BD%BF%E7%94%A8%E4%BB%A3%E7%90%86ip"><span class="toc-text">python中使用代理ip</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9E%84%E5%BB%BA%E4%BB%A3%E7%90%86ip%E6%B1%A0"><span class="toc-text">构建代理ip池</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Validator%E7%BC%96%E5%86%99"><span class="toc-text">Validator编写</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%A3%E7%90%86ip%E6%B1%A0%E8%BF%90%E8%A1%8C%E6%B5%81%E7%A8%8B"><span class="toc-text">代理ip池运行流程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BC%80%E6%BA%90%E4%BB%A3%E7%90%86ip%E6%B1%A0"><span class="toc-text">开源代理ip池</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%B2%97%E6%9A%B4%E7%9A%84%E6%96%B9%E6%B3%95%EF%BC%9Aadsl%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="toc-text">一个简单粗暴的方法：adsl服务器</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="../../../../js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="http://www.beian.miit.gov.cn/">http://www.beian.miit.gov.cn/  京ICP备17062395号</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="../../../../js/backtotop.js"></script>
+
+
+
+        
+  <div class="search-icon tools-bar-item" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="Search...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>First search, index file loading, please wait...<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>No result<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The search.xml file was not found, please refer to：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The request failed, Try to refresh the page or try again later.<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="../../../../js/colorscheme.js"></script>
+
+
+
+
+
+        
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + %E9%82%A3%E4%BA%9B%E5%B9%B4%EF%BC%8C%E6%88%91%E7%88%AC%E8%BF%87%E7%9A%84%E5%8C%97%E7%A7%91(%E4%B8%83)%E2%80%94%E2%80%94%E5%8F%8D%E5%8F%8D%E7%88%AC%E8%99%AB%E4%B9%8B%E4%BD%BF%E7%94%A8%E4%BB%A3%E7%90%86ip + '&url=' + http%3A%2F%2Fnladuo.github.io%2F2018%2F12%2F08%2F%25E9%2582%25A3%25E4%25BA%259B%25E5%25B9%25B4%25EF%25BC%258C%25E6%2588%2591%25E7%2588%25AC%25E8%25BF%2587%25E7%259A%2584%25E5%258C%2597%25E7%25A7%2591-%25E4%25B8%2583-%25E2%2580%2594%25E2%2580%2594%25E5%258F%258D%25E5%258F%258D%25E7%2588%25AC%25E8%2599%25AB%25E4%25B9%258B%25E4%25BD%25BF%25E7%2594%25A8%25E4%25BB%25A3%25E7%2590%2586ip%2F + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=http://nladuo.github.io/2018/12/08/%E9%82%A3%E4%BA%9B%E5%B9%B4%EF%BC%8C%E6%88%91%E7%88%AC%E8%BF%87%E7%9A%84%E5%8C%97%E7%A7%91-%E4%B8%83-%E2%80%94%E2%80%94%E5%8F%8D%E5%8F%8D%E7%88%AC%E8%99%AB%E4%B9%8B%E4%BD%BF%E7%94%A8%E4%BB%A3%E7%90%86ip/" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
+  
+  
+<script src="../../../../js/shares.js"></script>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>

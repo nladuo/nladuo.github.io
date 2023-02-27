@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="keywords" content="" />
+  <meta name="author" content="叁公子KCN" />
+  <meta name="description" content="" />
+  
+  
+  <title>
+    
+      验证码破解技术四部曲之使用K近邻算法（三） 
+      
+      
+      |
+    
+     叁公子的博客
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="../../../../js/fancybox.js"></script>
+
+
+  
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/"></a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="../../../../js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="../../../../js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">验证码破解技术四部曲之使用K近邻算法（三）</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
+          2016-09-22 16:55:42
+        </span>
+        
+      </div>
+      <div class="markdown-body">
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>在上一节中，我们使用了google的开源OCR库来对字符进行识别，这一节以及下一节我们将要使用机器学习算法来识别验证码。本节的代码都在<a target="_blank" rel="noopener" href="https://github.com/nladuo/captcha-break/tree/master/csdn">https://github.com/nladuo/captcha-break/tree/master/csdn</a>可以找到。</p>
+<h2 id="下载验证码"><a href="#下载验证码" class="headerlink" title="下载验证码"></a>下载验证码</h2><p>在这一节中，将要对CSDN下载的验证码进行破解，就是在<a target="_blank" rel="noopener" href="http://download.csdn.net/">http://download.csdn.net/</a>下载东西的时候，短时间内下载次数过多弹出来的验证码。<br><br></p>
+<span id="more"></span>
+
+<p>做机器学习的第一个步骤就是采集数据，构建训练样本。首先，来看一下CSDN下载中出现的验证码。<br><br><img src="/%E9%AA%8C%E8%AF%81%E7%A0%81%E7%A0%B4%E8%A7%A3%E6%8A%80%E6%9C%AF%E5%9B%9B%E9%83%A8%E6%9B%B2%E4%B9%8B%E4%BD%BF%E7%94%A8K%E8%BF%91%E9%82%BB%E7%AE%97%E6%B3%95/captcha1.png" alt="captcha1">  <img src="/%E9%AA%8C%E8%AF%81%E7%A0%81%E7%A0%B4%E8%A7%A3%E6%8A%80%E6%9C%AF%E5%9B%9B%E9%83%A8%E6%9B%B2%E4%B9%8B%E4%BD%BF%E7%94%A8K%E8%BF%91%E9%82%BB%E7%AE%97%E6%B3%95/captcha2.png" alt="captcha2"><br><br></p>
+<p>在每次刷新的时候，会有以上这两种验证码出现。在本节中，为了方便学习K近邻算法（简称为：KNN），选择第二种来进行破解，因为第二种的字母分割十分容易，每个字母的位置都是固定的。<br><br></p>
+<p>由于两种验证码的图片大小不一样，所以可以使用图片大小来判断哪个是第一种验证码，哪个是第二种验证码，这里使用python进行验证码下载。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># coding:utf-8</span></span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> uuid</span><br><span class="line"><span class="keyword">from</span> PIL <span class="keyword">import</span> Image</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line">url = <span class="string">&quot;http://download.csdn.net/index.php/rest/tools/validcode/source_ip_validate/10.5711163911089325&quot;</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">100</span>):</span><br><span class="line">    resp = requests.get(url)</span><br><span class="line">    filename = <span class="string">&quot;./captchas/&quot;</span> + <span class="built_in">str</span>(uuid.uuid4()) + <span class="string">&quot;.png&quot;</span></span><br><span class="line">    <span class="keyword">with</span> <span class="built_in">open</span>(filename, <span class="string">&#x27;wb&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">        <span class="keyword">for</span> chunk <span class="keyword">in</span> resp.iter_content(chunk_size=<span class="number">1024</span>):</span><br><span class="line">            <span class="keyword">if</span> chunk:  <span class="comment"># filter out keep-alive new chunks</span></span><br><span class="line">                f.write(chunk)</span><br><span class="line">                f.flush()</span><br><span class="line">        f.close()</span><br><span class="line">    im = Image.<span class="built_in">open</span>(filename)</span><br><span class="line">    <span class="keyword">if</span> im.size != (<span class="number">48</span>, <span class="number">20</span>):</span><br><span class="line">        os.remove(filename)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="built_in">print</span> filename</span><br></pre></td></tr></table></figure>
+<h2 id="分割字符"><a href="#分割字符" class="headerlink" title="分割字符"></a>分割字符</h2><p>下载过后，就需要对字母进行分割。机器学习虽然牛逼，但是也需要对样本进行预处理，这里的预处理就是把字母分割出来，并且分割成同样的尺寸。分割的方式可以使用代码分割，当然也可以通过人用PS等工具进行手动分割。<br></p>
+<p>我这里使用代码分割，字母分割的代码在spliter文件夹下，我使用了boost库来来读取所有下载的验证码，对图片进行二值化后，进行定点分割，可以看到分割好的字母如下。<br><br><img src="/%E9%AA%8C%E8%AF%81%E7%A0%81%E7%A0%B4%E8%A7%A3%E6%8A%80%E6%9C%AF%E5%9B%9B%E9%83%A8%E6%9B%B2%E4%B9%8B%E4%BD%BF%E7%94%A8K%E8%BF%91%E9%82%BB%E7%AE%97%E6%B3%95/letters.png" alt="letters"><br><br></p>
+<p>之后，需要人工对字母进行分类，分类好的图片见recognizer&#x2F;dataset，我这里每个字母需要6个样本，10个字母，总共60个样本。<br><br><img src="/%E9%AA%8C%E8%AF%81%E7%A0%81%E7%A0%B4%E8%A7%A3%E6%8A%80%E6%9C%AF%E5%9B%9B%E9%83%A8%E6%9B%B2%E4%B9%8B%E4%BD%BF%E7%94%A8K%E8%BF%91%E9%82%BB%E7%AE%97%E6%B3%95/dataset.png" alt="dataset"><br><br></p>
+<h2 id="算法原理"><a href="#算法原理" class="headerlink" title="算法原理"></a>算法原理</h2><p>K近邻算法的定义十分简单，在百度百科上有这样的解释：如果一个样本在特征空间中的k个最相似(即特征空间中最邻近)的样本中的大多数属于某一个类别，则该样本也属于这个类别。<br><br></p>
+<p>也就是说，需要找到要识别的字母在训练样本中K个最近的字母，然后找出这K个字母中最多的是某个类的？要识别的图片也就是该类的。</p>
+<h2 id="实现KNN"><a href="#实现KNN" class="headerlink" title="实现KNN"></a>实现KNN</h2><h4 id="计算距离"><a href="#计算距离" class="headerlink" title="计算距离"></a>计算距离</h4><p>首先，先定义一下距离如何计算，这里可以用各种数学上的距离，欧式距离、马氏距离等等。。<br><br></p>
+<p>由于我们的图片已经进行了二值化，为了简便起见，这里把两张图片的距离定义为：两张图片灰度不同的像素点个数。也就是逐个比较图片的相对位置上的灰度值，如果不相同，距离就加一。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">count_distance</span><span class="params">(Mat mat1, Mat mat2)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">assert</span>(mat1.<span class="built_in">size</span>().height == mat2.<span class="built_in">size</span>().height);</span><br><span class="line">    <span class="built_in">assert</span>(mat1.<span class="built_in">size</span>().width == mat2.<span class="built_in">size</span>().width);</span><br><span class="line">    <span class="built_in">assert</span>(mat1.<span class="built_in">channels</span>() == <span class="number">1</span> &amp;&amp; mat2.<span class="built_in">channels</span>() == <span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">    <span class="type">int</span> distance = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i &lt; mat1.<span class="built_in">size</span>().width; i++)&#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> j = <span class="number">0</span>; j &lt; mat1.<span class="built_in">size</span>().height; j++)&#123;</span><br><span class="line">            <span class="keyword">if</span>(mat1.<span class="built_in">at</span>&lt;uchar&gt;(j, i) != mat2.<span class="built_in">at</span>&lt;uchar&gt;(j, i))&#123;<span class="comment">//不相等就加1</span></span><br><span class="line">                distance++;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> distance;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="加载数据"><a href="#加载数据" class="headerlink" title="加载数据"></a>加载数据</h4><p>数据的加载需要一个图片数组和一个标签数组，来记录图片数组相应位置的类别。<br><br>加载样本数据：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">load_dataset</span><span class="params">(Mat dataset[])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    string dataset_dir = <span class="string">&quot;../recognizer/dataset/&quot;</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="number">6</span>*<span class="number">10</span>; i++)&#123;</span><br><span class="line">        <span class="type">char</span> buffer[<span class="number">255</span>];</span><br><span class="line">        <span class="built_in">sprintf</span>(buffer, <span class="string">&quot;%d&quot;</span>, i/<span class="number">6</span>);</span><br><span class="line">        string image_path = dataset_dir + <span class="built_in">string</span>(buffer);</span><br><span class="line">        <span class="built_in">sprintf</span>(buffer, <span class="string">&quot;%d&quot;</span>, i%<span class="number">6</span> + <span class="number">1</span>);</span><br><span class="line">        image_path += <span class="built_in">string</span>(buffer) + <span class="string">&quot;.png&quot;</span>;</span><br><span class="line">        dataset[i] = <span class="built_in">imread</span>(image_path, CV_LOAD_IMAGE_GRAYSCALE);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>加载样本数据标签：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">create_labels</span><span class="params">(<span class="type">int</span> labels[])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="number">6</span>*<span class="number">10</span>; i++)&#123;</span><br><span class="line">        labels[i] = i/<span class="number">6</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="算法实现"><a href="#算法实现" class="headerlink" title="算法实现"></a>算法实现</h4><p>加载完数据后，就可以开始实现KNN分类了。<br><br>1、计算输入图片和所有其他图片的距离</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> distances[<span class="number">6</span>*<span class="number">10</span>];</span><br><span class="line"><span class="type">int</span> sorted_distances[<span class="number">6</span>*<span class="number">10</span>];</span><br><span class="line"><span class="comment">//count distances</span></span><br><span class="line"><span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="number">6</span>*<span class="number">10</span> ;i++)&#123;</span><br><span class="line">    distances[i] = <span class="built_in">count_distance</span>(letter, dataset[i]);</span><br><span class="line">    sorted_distances[i] = distances[i];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>2、对距离进行排序</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sort</span>(sorted_distances, sorted_distances+<span class="number">6</span>*<span class="number">10</span>);</span><br></pre></td></tr></table></figure>
+<p>3、获取K个距离最近的图片的类别</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span>* k_nearest = <span class="keyword">new</span> <span class="type">int</span>[k];</span><br><span class="line"><span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i &lt; k; i++)&#123;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> j = <span class="number">0</span>; j &lt; <span class="number">6</span>*<span class="number">10</span> ; j++)&#123;</span><br><span class="line">        <span class="keyword">if</span>(distances[j] == sorted_distances[i])&#123;</span><br><span class="line">            k_nearest[i] = labels[j];</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>4、利用map记录所有类别中出现k_nearest的次数</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">map&lt;<span class="type">int</span>, <span class="type">int</span>&gt; labels_map;</span><br><span class="line"><span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i &lt; k; i++)&#123;</span><br><span class="line">    <span class="keyword">if</span>(labels_map.<span class="built_in">find</span>(k_nearest[i]) == labels_map.<span class="built_in">end</span>())</span><br><span class="line">        labels_map[k_nearest[i]] = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        labels_map[k_nearest[i]]++;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>5、得到出现最多的类别</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> max_label = <span class="number">-1</span>;</span><br><span class="line">labels_map[max_label] = <span class="number">-1</span>;</span><br><span class="line">map&lt;<span class="type">int</span>,<span class="type">int</span>&gt;::iterator it;</span><br><span class="line"><span class="keyword">for</span>(it=labels_map.<span class="built_in">begin</span>();it!=labels_map.<span class="built_in">end</span>();++it)&#123;</span><br><span class="line">    <span class="keyword">if</span>(it-&gt;second &gt; labels_map[max_label])&#123;</span><br><span class="line">        max_label = it-&gt;first;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">delete</span>[] k_nearest;</span><br><span class="line"><span class="keyword">return</span> max_label;</span><br></pre></td></tr></table></figure>
+<h2 id="识别验证码"><a href="#识别验证码" class="headerlink" title="识别验证码"></a>识别验证码</h2><p>最后，我们把验证码的4个字母分割出来，再进行K近邻分类，就可以得到识别结果了。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">recognize</span><span class="params">(string path, Mat dataset[], <span class="type">int</span> labels[])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Mat test_image = <span class="built_in">imread</span>(path, CV_LOAD_IMAGE_GRAYSCALE);</span><br><span class="line">    <span class="built_in">threshold</span>(test_image, test_image, <span class="number">100</span>, <span class="number">255</span>, cv::THRESH_BINARY);</span><br><span class="line">    Range col_ranges[<span class="number">4</span>] = &#123;</span><br><span class="line">        <span class="built_in">Range</span>(<span class="number">5</span>, <span class="number">5</span>+<span class="number">8</span>),</span><br><span class="line">        <span class="built_in">Range</span>(<span class="number">14</span>, <span class="number">14</span>+<span class="number">8</span>),</span><br><span class="line">        <span class="built_in">Range</span>(<span class="number">23</span>, <span class="number">23</span>+<span class="number">8</span>),</span><br><span class="line">        <span class="built_in">Range</span>(<span class="number">32</span>, <span class="number">32</span>+<span class="number">8</span>)</span><br><span class="line">    &#125;;</span><br><span class="line">    cout&lt;&lt;<span class="string">&quot;Result:&quot;</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="number">4</span>; i++)&#123;</span><br><span class="line">        Mat letter = test_image.<span class="built_in">colRange</span>(col_ranges[i]);</span><br><span class="line">        cout &lt;&lt; <span class="built_in">knn_classify</span>(letter, dataset, labels, <span class="number">5</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    cout&lt;&lt;endl;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="效果"><a href="#效果" class="headerlink" title="效果"></a>效果</h2><p>识别图片：<br><br><img src="/%E9%AA%8C%E8%AF%81%E7%A0%81%E7%A0%B4%E8%A7%A3%E6%8A%80%E6%9C%AF%E5%9B%9B%E9%83%A8%E6%9B%B2%E4%B9%8B%E4%BD%BF%E7%94%A8K%E8%BF%91%E9%82%BB%E7%AE%97%E6%B3%95/captchas.png" alt="captchas"><br><br><br>识别结果：<br><br><img src="/%E9%AA%8C%E8%AF%81%E7%A0%81%E7%A0%B4%E8%A7%A3%E6%8A%80%E6%9C%AF%E5%9B%9B%E9%83%A8%E6%9B%B2%E4%B9%8B%E4%BD%BF%E7%94%A8K%E8%BF%91%E9%82%BB%E7%AE%97%E6%B3%95/captchas_result.png" alt="captchas_result"><br><br></p>
+<h2 id="练习"><a href="#练习" class="headerlink" title="练习"></a>练习</h2><p>通过以上，我们破解了CSDN下载的第二种验证码，第一种验证码的识别过程也是可以使用KNN的，但是第一种和第二种的分割字母的方式不同，读者可以尝试使用opencv的findCountours函数对字母进行分割，或者使用垂直投影的方式进行分割，需要注意的是第一种验证码有一个黑色的边框，如果不处理会影响findCountours函数的效果。</p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="../../20/%E9%AA%8C%E8%AF%81%E7%A0%81%E7%A0%B4%E8%A7%A3%E6%8A%80%E6%9C%AF%E5%9B%9B%E9%83%A8%E6%9B%B2%E4%B9%8B%E4%BD%BF%E7%94%A8Tesseract/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>Prev</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
+              2016-09-22 16:55:42
+            </span>
+            
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="../../23/%E9%AA%8C%E8%AF%81%E7%A0%81%E7%A0%B4%E8%A7%A3%E6%8A%80%E6%9C%AF%E5%9B%9B%E9%83%A8%E6%9B%B2%E4%B9%8B%E4%BD%BF%E7%94%A8%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/" target="_self">
+                <span>Next</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">Contents</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%8B%E8%BD%BD%E9%AA%8C%E8%AF%81%E7%A0%81"><span class="toc-text">下载验证码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%86%E5%89%B2%E5%AD%97%E7%AC%A6"><span class="toc-text">分割字符</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%97%E6%B3%95%E5%8E%9F%E7%90%86"><span class="toc-text">算法原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0KNN"><span class="toc-text">实现KNN</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%AE%A1%E7%AE%97%E8%B7%9D%E7%A6%BB"><span class="toc-text">计算距离</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8A%A0%E8%BD%BD%E6%95%B0%E6%8D%AE"><span class="toc-text">加载数据</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%AE%97%E6%B3%95%E5%AE%9E%E7%8E%B0"><span class="toc-text">算法实现</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AF%86%E5%88%AB%E9%AA%8C%E8%AF%81%E7%A0%81"><span class="toc-text">识别验证码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%88%E6%9E%9C"><span class="toc-text">效果</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%83%E4%B9%A0"><span class="toc-text">练习</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="../../../../js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="http://www.beian.miit.gov.cn/">http://www.beian.miit.gov.cn/  京ICP备17062395号</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="../../../../js/backtotop.js"></script>
+
+
+
+        
+  <div class="search-icon tools-bar-item" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="Search...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>First search, index file loading, please wait...<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>No result<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The search.xml file was not found, please refer to：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The request failed, Try to refresh the page or try again later.<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="../../../../js/colorscheme.js"></script>
+
+
+
+
+
+        
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + %E9%AA%8C%E8%AF%81%E7%A0%81%E7%A0%B4%E8%A7%A3%E6%8A%80%E6%9C%AF%E5%9B%9B%E9%83%A8%E6%9B%B2%E4%B9%8B%E4%BD%BF%E7%94%A8K%E8%BF%91%E9%82%BB%E7%AE%97%E6%B3%95%EF%BC%88%E4%B8%89%EF%BC%89 + '&url=' + http%3A%2F%2Fnladuo.github.io%2F2016%2F09%2F22%2F%25E9%25AA%258C%25E8%25AF%2581%25E7%25A0%2581%25E7%25A0%25B4%25E8%25A7%25A3%25E6%258A%2580%25E6%259C%25AF%25E5%259B%259B%25E9%2583%25A8%25E6%259B%25B2%25E4%25B9%258B%25E4%25BD%25BF%25E7%2594%25A8K%25E8%25BF%2591%25E9%2582%25BB%25E7%25AE%2597%25E6%25B3%2595%2F + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=http://nladuo.github.io/2016/09/22/%E9%AA%8C%E8%AF%81%E7%A0%81%E7%A0%B4%E8%A7%A3%E6%8A%80%E6%9C%AF%E5%9B%9B%E9%83%A8%E6%9B%B2%E4%B9%8B%E4%BD%BF%E7%94%A8K%E8%BF%91%E9%82%BB%E7%AE%97%E6%B3%95/" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
+  
+  
+<script src="../../../../js/shares.js"></script>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>

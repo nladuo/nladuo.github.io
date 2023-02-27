@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="keywords" content="" />
+  <meta name="author" content="叁公子KCN" />
+  <meta name="description" content="" />
+  
+  
+  <title>
+    
+      教你DIY一个PM2.5检测仪 
+      
+      
+      |
+    
+     叁公子的博客
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="../../../../js/fancybox.js"></script>
+
+
+  
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/"></a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="../../../../js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="../../../../js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">教你DIY一个PM2.5检测仪</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
+          2015-12-09 14:37:12
+        </span>
+        
+      </div>
+      <div class="markdown-body">
+        <h2 id="预热"><a href="#预热" class="headerlink" title="预热"></a>预热</h2><h4 id="基础要求："><a href="#基础要求：" class="headerlink" title="基础要求："></a>基础要求：</h4><ul>
+<li>大概了解串口通信，会电焊技术</li>
+</ul>
+<h4 id="需要的硬件材料："><a href="#需要的硬件材料：" class="headerlink" title="需要的硬件材料："></a>需要的硬件材料：</h4><ul>
+<li>PM2.5传感器（淘宝搜：攀藤 G5）</li>
+<li>蓝牙4.0模块（直接买的蓝牙转串口，芯片是TI公司的CC2541，其它的蓝牙4.0和本文程序的service和characteristics的uuid可能对不上）</li>
+<li>USB转TTL模块（PC与传感器连接测试数据）</li>
+<li>洞洞板一块</li>
+<li>导线、杜邦线、排针等等若干</li>
+<li>USB转接板（为传感器和蓝牙4.0供电）</li>
+</ul>
+<span id="more"></span>
+<h4 id="本文涉及的软件开发技术："><a href="#本文涉及的软件开发技术：" class="headerlink" title="本文涉及的软件开发技术："></a>本文涉及的软件开发技术：</p></h4><ul>
+<li>Windows .Net平台下的winform开发（c#语言，主要用来测试传感器）</li>
+<li>Android原生应用开发</li>
+<li>iOS原生应用开发（使用objective-c语言）</li>
+</ul>
+<p>（注：无需深入了解这些技术，我会再后面提供源码，会安装应用就可以。）</p>
+<h2 id="开始DIY"><a href="#开始DIY" class="headerlink" title="开始DIY"></a>开始DIY</h2><h4 id="PC端测试"><a href="#PC端测试" class="headerlink" title="PC端测试"></a>PC端测试</h4><p>Okay，DIY开始！！！首先，拆两个母头的杜邦线，把传感器的导线焊接上去，这里只需要焊接三根线，也就是电源、地还有TXD。<br><img src="/%E6%95%99%E4%BD%A0DIY%E4%B8%80%E4%B8%AAPM2.5%E6%A3%80%E6%B5%8B%E4%BB%AA/1208_2.jpg" alt="传感器"><br>焊接好之后，就可以把USB转TTL模块（我这里直接用的是一个51单片机的下载器）通过杜邦线与传感器相连接，这里需要接三根线，电源和地就不用说了，注意传感器的数据线（TXD）一定要接TTL模块的RXD那个口上。<br><img src="/%E6%95%99%E4%BD%A0DIY%E4%B8%80%E4%B8%AAPM2.5%E6%A3%80%E6%B5%8B%E4%BB%AA/1208_3.jpg" alt="ttl与传感器连接"><br>接好之后，就可以通过PC测试一下传感器了。我是根据一个别人写的串口助手程序改的，开发环境是VS2013。<br>下载链接：  </p>
+<ul>
+<li>串口助手，在此下载：<a href="serial_port.zip">serial_port.zip</a></li>
+<li>我改的程序，在此下载：<a href="%E4%B8%B2%E5%8F%A3%E7%A9%BA%E6%B0%94%E8%B4%A8%E9%87%8F%E6%A3%80%E6%B5%8B.zip">串口空气质量检测.zip</a><br>PC测试程序的效果：<br><img src="/%E6%95%99%E4%BD%A0DIY%E4%B8%80%E4%B8%AAPM2.5%E6%A3%80%E6%B5%8B%E4%BB%AA/1208_1.png" alt="串口效果展示"><br>这个传感器分了两个标准检测了PM1.0、PM2.5、以及PM10的浓度，这些我都在软件里显示出来了，当然这个传感器还有一些颗粒物的测量，我这里没有做。（吐槽一句：这是在室内测出来的污染情况，感觉要被毒死了）</li>
+</ul>
+<h4 id="手机端测试"><a href="#手机端测试" class="headerlink" title="手机端测试"></a>手机端测试</h4><p>PC端的测试就到这儿，之后我们可以连接蓝牙测试一下手机APP了，这里也给一个样例程序，一个简易版的串口调试助手，是我根据官方给的源码修改的（看的不爽的都改了，嘿嘿）  </p>
+<ul>
+<li>iOS样例程序：<a target="_blank" rel="noopener" href="https://github.com/nladuo/IoT-Firstep/tree/master/code/6.6/BLECom">https://github.com/nladuo/IoT-Firstep/tree/master/code/6.6/BLECom</a></li>
+<li>Android样例程序：<a target="_blank" rel="noopener" href="https://github.com/nladuo/IoT-Firstep/tree/master/code/6.4/BLECom">https://github.com/nladuo/IoT-Firstep/tree/master/code/6.4/BLECom</a><br>蓝牙的使用其实非常简单，和串口几乎一样的，把传感器的TXD接到蓝牙的RXD上，传感器就会给蓝牙发数据包了。我们的手机连接蓝牙后，蓝牙就会把传感器发送的数据包再传给手机上。我们的手机也就是类似一个“蓝牙串口助手”。这是连接后的效果，USB转TTL模块用来给蓝牙和传感器供电。<br><img src="/%E6%95%99%E4%BD%A0DIY%E4%B8%80%E4%B8%AAPM2.5%E6%A3%80%E6%B5%8B%E4%BB%AA/1208_1-1.jpg" alt="蓝牙连接传感器"><br>下面通过修改上面给的示例安卓APP，真机调试之后就可以看到以下的效果，我这里只输出了按照我国标的空气污染指数。（源码下载链接：<a href="BLEAirPolluteDetector-Android.zip">BLEAirPolluteDetector-Android.zip</a>，有基础的话可以看下这个源码，把我的UI改的漂亮一些，直接用也Okay，另外，如果看源码的话，用eclipse导入之后，可能遇到乱码问题，我是在linux环境下开发的，用的是UTF-8编码，把eclipse的编码设置成UTF-8就可以了）<br><img src="/%E6%95%99%E4%BD%A0DIY%E4%B8%80%E4%B8%AAPM2.5%E6%A3%80%E6%B5%8B%E4%BB%AA/1209_2.jpg" alt="安卓端展示"><br>安卓就测试到这儿，还有iOS版的，和安卓同样，附上源码下载链接：<a href="BLEAirPollutionDetector-iOS.zip">BLEAirPollutionDetector-iOS.zip</a>，这里如果用的话必须有苹果电脑还要装上能真机调试的Xcode才能下载到手机上。<br>iOS效果展示：<br><img src="/%E6%95%99%E4%BD%A0DIY%E4%B8%80%E4%B8%AAPM2.5%E6%A3%80%E6%B5%8B%E4%BB%AA/1209_1.jpg" alt="iOS端展示"></li>
+</ul>
+<h4 id="简陋包装"><a href="#简陋包装" class="headerlink" title="简陋包装"></a>简陋包装</h4><p>最后再把我们的蓝牙和传感器稍微的包装一下，通过USB转接板把蓝牙和传感器的电源和地焊接好，下面是我做的，虽然有点丑，但是显得蛮小巧的。<br><img src="/%E6%95%99%E4%BD%A0DIY%E4%B8%80%E4%B8%AAPM2.5%E6%A3%80%E6%B5%8B%E4%BB%AA/1209_11.jpg" alt="效果"><br>插上移动电源之后：<br /><br><img src="/%E6%95%99%E4%BD%A0DIY%E4%B8%80%E4%B8%AAPM2.5%E6%A3%80%E6%B5%8B%E4%BB%AA/1209_21.jpg" alt="插电效果"><br>到这里，就全部做完了，以后只要有一个移动电源，只要手机安装了之APP，就可以随时检测周围的空气质量了。</p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="../../../11/10/go%E8%AF%AD%E8%A8%80%E5%AE%9E%E7%8E%B0%E6%A8%A1%E6%8B%9F%E7%99%BB%E9%99%86%E6%9E%81%E5%AE%A2%E5%AD%A6%E9%99%A2/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>Prev</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
+              2015-12-09 14:37:12
+            </span>
+            
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="../../../../2016/06/28/%E9%AA%8C%E8%AF%81%E7%A0%81%E7%A0%B4%E8%A7%A3%E5%9B%9B%E9%83%A8%E6%9B%B2%E4%B9%8B%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA%E7%AF%87/" target="_self">
+                <span>Next</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">Contents</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A2%84%E7%83%AD"><span class="toc-text">预热</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%9F%BA%E7%A1%80%E8%A6%81%E6%B1%82%EF%BC%9A"><span class="toc-text">基础要求：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%9C%80%E8%A6%81%E7%9A%84%E7%A1%AC%E4%BB%B6%E6%9D%90%E6%96%99%EF%BC%9A"><span class="toc-text">需要的硬件材料：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9C%AC%E6%96%87%E6%B6%89%E5%8F%8A%E7%9A%84%E8%BD%AF%E4%BB%B6%E5%BC%80%E5%8F%91%E6%8A%80%E6%9C%AF%EF%BC%9A"><span class="toc-text">本文涉及的软件开发技术：</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%80%E5%A7%8BDIY"><span class="toc-text">开始DIY</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#PC%E7%AB%AF%E6%B5%8B%E8%AF%95"><span class="toc-text">PC端测试</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%89%8B%E6%9C%BA%E7%AB%AF%E6%B5%8B%E8%AF%95"><span class="toc-text">手机端测试</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%AE%80%E9%99%8B%E5%8C%85%E8%A3%85"><span class="toc-text">简陋包装</span></a></li></ol></li></ol></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="../../../../js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="http://www.beian.miit.gov.cn/">http://www.beian.miit.gov.cn/  京ICP备17062395号</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="../../../../js/backtotop.js"></script>
+
+
+
+        
+  <div class="search-icon tools-bar-item" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="Search...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>First search, index file loading, please wait...<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>No result<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The search.xml file was not found, please refer to：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The request failed, Try to refresh the page or try again later.<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="../../../../js/colorscheme.js"></script>
+
+
+
+
+
+        
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + %E6%95%99%E4%BD%A0DIY%E4%B8%80%E4%B8%AAPM2.5%E6%A3%80%E6%B5%8B%E4%BB%AA + '&url=' + http%3A%2F%2Fnladuo.github.io%2F2015%2F12%2F09%2F%25E6%2595%2599%25E4%25BD%25A0DIY%25E4%25B8%2580%25E4%25B8%25AAPM2.5%25E6%25A3%2580%25E6%25B5%258B%25E4%25BB%25AA%2F + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=http://nladuo.github.io/2015/12/09/%E6%95%99%E4%BD%A0DIY%E4%B8%80%E4%B8%AAPM2.5%E6%A3%80%E6%B5%8B%E4%BB%AA/" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
+  
+  
+<script src="../../../../js/shares.js"></script>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>

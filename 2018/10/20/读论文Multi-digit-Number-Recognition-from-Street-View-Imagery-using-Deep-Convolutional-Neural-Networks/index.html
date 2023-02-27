@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="keywords" content="" />
+  <meta name="author" content="叁公子KCN" />
+  <meta name="description" content="" />
+  
+  
+  <title>
+    
+      读论文Multi-digit Number Recognition from Street View Imagery using Deep Convolutional Neural Networks 
+      
+      
+      |
+    
+     叁公子的博客
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="../../../../js/fancybox.js"></script>
+
+
+  
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/"></a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="../../../../js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="../../../../js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">读论文Multi-digit Number Recognition from Street View Imagery using Deep Convolutional Neural Networks</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
+          2018-10-20 11:11:10
+        </span>
+        
+      </div>
+      <div class="markdown-body">
+        <h2 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h2><p>本篇博客将简要的总结**”Multi-digit Number Recognition from Street View Imagery using Deep Convolutional Neural Networks”** 这篇论文，并使用该作者的模型利用Keras训练SVHN数据集。</p>
+<p>这篇文章的方法主要作为训练SVHN数据集的一个baseline。作者说他的方法能达到百分之96以上的准确率。</p>
+<h2 id="任务要求"><a href="#任务要求" class="headerlink" title="任务要求"></a>任务要求</h2><p>这里先看一下数据集的样子，其实也就是Number from Street View(街景数字)。</p>
+<p><img src="/example.png"></p>
+<span id="more"></span>
+
+<h2 id="过去的做法"><a href="#过去的做法" class="headerlink" title="过去的做法"></a>过去的做法</h2><p>Traditional approaches to solve this problem typically separate out the localization, segmentation, and recognition steps.（过去的做法要经历三步：定位，分割，然后识别）</p>
+<h2 id="作者的做法"><a href="#作者的做法" class="headerlink" title="作者的做法"></a>作者的做法</h2><p>Propose a unified approach that integrates these three steps via the use of a deep convolutional neural network that operates directly on the image pixels.（作者把这三个步骤通过一个深度的卷积网络就能完成）</p>
+<h2 id="作者的贡献"><a href="#作者的贡献" class="headerlink" title="作者的贡献"></a>作者的贡献</h2><ul>
+<li>(a) A unified model to localize, segment, and recognize multi-digit numbers from street level photographs</li>
+<li>(b) A new kind of output layer, providing a conditional probabilistic model of sequences</li>
+<li>(c) Empirical results that show this model performing best with a deep architecture</li>
+<li>(d) Reaching human level performance at specific operating thresholds.</li>
+</ul>
+<h2 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h2><p>图片中的数字：每张图片的数字是一个字符串序列: \(s &#x3D; s_1 , s_2 , . . . , s_n\)，如上面的第一张图片结果为”379”，\(s_1&#x3D;3, s_2&#x3D;7, s_3&#x3D;9\)。</p>
+<p>字符的长度：定义为n，绝大多数的长度小于5。作者这里假设字符的长度最大为5。</p>
+<h2 id="实现方法"><a href="#实现方法" class="headerlink" title="实现方法"></a>实现方法</h2><p>作者的方法是对于图片的label，训练一个概率模型。这里作者定义：</p>
+<ul>
+<li>S：输出序列，也就是训练数据的label。</li>
+<li>X：输入的图片。</li>
+</ul>
+<p>这里的目标也就是通过最大化\( log P (S | X )  \)，来学习模型\( P (S | X ) \)。</p>
+<p>X其实就是输入的图片，这里看一下S，S是：图片的数字序列\(S_1,…,S_N \) + 数字序列的长度\(L\)的一个集合。比如上面的”379”是图片的数字序列，序列的长度len(“379”)为3。那么S就是”3”+”379”，也就是”3379”。</p>
+<p>这里\( P (S | X ) \)可以定义为：字符长度的概率再乘以每个字符取值的概率。（每个字符取值是独立的）。</p>
+<p>$$ P(S&#x3D;s|X)&#x3D;P(L&#x3D;n|X)\prod_{i&#x3D;1}^nP(S_i &#x3D;s_i |X) $$</p>
+<p>上面的变量都是离散的，\(L\)的取值有七种：0,1,2,….,5,比5大；\(S_i\)有10种：10个数字。</p>
+<p>训练这个模型，就是在训练集上最大化\(log P (S | X )\)，作者这里每个参数都使用一个Softmax层。<br>$$s &#x3D; (l,s_1,…,s_l) &#x3D; \arg\max_{L,S_1,…,S_L}logP(S | X).$$</p>
+<h2 id="模型结构"><a href="#模型结构" class="headerlink" title="模型结构"></a>模型结构</h2><p>下面，看下作者在论文里面发表的模型。<br><img src="/model.png"></p>
+<ul>
+<li>输入图片\(X\)是一个128x128x3的图片。</li>
+<li>然后经过一系列的CNN层进行特征提取，变成了一个含有4096个特征的向量。</li>
+<li>之后根据这4096个特征，分别让\(L\)、\(S_1\)、\(S_2\)、\(S_3\)、\(S_4\)、\(S_5\)分别经过一个Softmax层\(P(S_i|H)&#x3D;softmax(W_{S_i}H+b_{S_i})\)。</li>
+<li>对于每个变量，\(s_i &#x3D; \arg\max_{S_i}logP(S_i | H). \)</li>
+</ul>
+<h2 id="Keras的实现"><a href="#Keras的实现" class="headerlink" title="Keras的实现"></a>Keras的实现</h2><p>代码见：<a target="_blank" rel="noopener" href="https://github.com/nladuo/ml-study-stuff/blob/master/udacity-deep-learning/7_Project-Build-a-Live-Camera-App/SVHN.ipynb">https://github.com/nladuo/ml-study-stuff/blob/master/udacity-deep-learning/7_Project-Build-a-Live-Camera-App&#x2F;SVHN.ipynb</a></p>
+<h3 id="环境依赖"><a href="#环境依赖" class="headerlink" title="环境依赖"></a>环境依赖</h3><ul>
+<li>python 3.x</li>
+<li>TensorFlow 1.11</li>
+<li>Keras 2.x</li>
+<li>Pillow</li>
+<li>h5py</li>
+</ul>
+<h3 id="数据下载"><a href="#数据下载" class="headerlink" title="数据下载"></a>数据下载</h3><p>首先去<a target="_blank" rel="noopener" href="http://ufldl.stanford.edu/housenumbers/">http://ufldl.stanford.edu/housenumbers/</a>下载<strong>Format 1</strong>的数据。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">wget http://ufldl.stanford.edu/housenumbers/test.tar.gz</span><br><span class="line">wget http://ufldl.stanford.edu/housenumbers/train.tar.gz</span><br></pre></td></tr></table></figure>
+<p>然后对数据进行解压，解压后发现会多两个文件夹：test和train。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">tar zvxf test.tar.gz</span><br><span class="line">tar zvxf train.tar.gz</span><br></pre></td></tr></table></figure>
+<h3 id="构建数据集"><a href="#构建数据集" class="headerlink" title="构建数据集"></a>构建数据集</h3><p>这个数据集可以使用h5py读取。<br><img src="/dataset1.png"><br>其中bbox存了图片数字的框，而name则是图片的文件名。比如说读取出来是下面这样的图片：<br><img src="/dataset2.png"><br>然后通过框框把图片裁剪一下。<br><img src="/dataset3.png"></p>
+<h3 id="网络模型"><a href="#网络模型" class="headerlink" title="网络模型"></a>网络模型</h3><p>网络模型这里分为卷积层+全连接层部分，代码如下。<br><img src="/nn.png"></p>
+<h4 id="卷积层"><a href="#卷积层" class="headerlink" title="卷积层"></a>卷积层</h4><p>这里就是三个卷积层。为了让神经网络接受了参数符合同一分布，这里使用了Batch Normalization层，对ConvNet的输入进行<strong>批归一化</strong>。</p>
+<h4 id="全连接层"><a href="#全连接层" class="headerlink" title="全连接层"></a>全连接层</h4><p>卷积层最后经过Flatten之后，进入了全连接层。全连接层最后，输出了到6个softmax层中，分别代表：字符的长度、第一个字符、第二个字符、第三个字符、第四个字符、第四个字符。</p>
+<p>注意：这里字符的类别是0-10，一共11种，10代表不存在。</p>
+<h3 id="训练与测试"><a href="#训练与测试" class="headerlink" title="训练与测试"></a>训练与测试</h3><p>接下来调用fit方法训练就好了，这里一共有7个loss和6个accuracy。loss的话是每个softmax输出层都有一个，还有个总的。accuracy就是6个softmax层的accuracy了。<br><img src="/fit.png"><br>最后我们evaluate一下，可以6个accuracy都达到了85%以上的准确率了。如果想提高的话，可以使用VGG16等结构，网上说可以提升到百分之97，不过训练的话估计就要很慢了。<br><img src="/evaluate.png"></p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/potterhsu/SVHNClassifier">https://github.com/potterhsu/SVHNClassifier</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/RyannnG/Capstone-Google-SVHN-Digits-Recognition">https://github.com/RyannnG/Capstone-Google-SVHN-Digits-Recognition</a></li>
+</ul>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="../../../05/07/wxpy%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%8F%91%E9%80%81%E4%B8%AD%E6%96%87%E6%96%87%E4%BB%B6%E9%97%AE%E9%A2%98%E5%B0%8F%E8%AE%B0/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>Prev</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
+              2018-10-20 11:11:10
+            </span>
+            
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="../../25/Flask-Pymongo%E7%99%BB%E9%99%86%E9%AA%8C%E8%AF%81%E9%97%AE%E9%A2%98%E5%B0%8F%E8%AE%B0/" target="_self">
+                <span>Next</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">Contents</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Abstract"><span class="toc-text">Abstract</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%BB%E5%8A%A1%E8%A6%81%E6%B1%82"><span class="toc-text">任务要求</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%87%E5%8E%BB%E7%9A%84%E5%81%9A%E6%B3%95"><span class="toc-text">过去的做法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%9C%E8%80%85%E7%9A%84%E5%81%9A%E6%B3%95"><span class="toc-text">作者的做法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%9C%E8%80%85%E7%9A%84%E8%B4%A1%E7%8C%AE"><span class="toc-text">作者的贡献</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0"><span class="toc-text">问题描述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0%E6%96%B9%E6%B3%95"><span class="toc-text">实现方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A8%A1%E5%9E%8B%E7%BB%93%E6%9E%84"><span class="toc-text">模型结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Keras%E7%9A%84%E5%AE%9E%E7%8E%B0"><span class="toc-text">Keras的实现</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%8E%AF%E5%A2%83%E4%BE%9D%E8%B5%96"><span class="toc-text">环境依赖</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E4%B8%8B%E8%BD%BD"><span class="toc-text">数据下载</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9E%84%E5%BB%BA%E6%95%B0%E6%8D%AE%E9%9B%86"><span class="toc-text">构建数据集</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B"><span class="toc-text">网络模型</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8D%B7%E7%A7%AF%E5%B1%82"><span class="toc-text">卷积层</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%85%A8%E8%BF%9E%E6%8E%A5%E5%B1%82"><span class="toc-text">全连接层</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%AD%E7%BB%83%E4%B8%8E%E6%B5%8B%E8%AF%95"><span class="toc-text">训练与测试</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-text">参考</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="../../../../js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="http://www.beian.miit.gov.cn/">http://www.beian.miit.gov.cn/  京ICP备17062395号</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="../../../../js/backtotop.js"></script>
+
+
+
+        
+  <div class="search-icon tools-bar-item" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="Search...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>First search, index file loading, please wait...<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>No result<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The search.xml file was not found, please refer to：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The request failed, Try to refresh the page or try again later.<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="../../../../js/colorscheme.js"></script>
+
+
+
+
+
+        
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + %E8%AF%BB%E8%AE%BA%E6%96%87Multi-digit%20Number%20Recognition%20from%20Street%20View%20Imagery%20using%20Deep%20Convolutional%20Neural%20Networks + '&url=' + http%3A%2F%2Fnladuo.github.io%2F2018%2F10%2F20%2F%25E8%25AF%25BB%25E8%25AE%25BA%25E6%2596%2587Multi-digit-Number-Recognition-from-Street-View-Imagery-using-Deep-Convolutional-Neural-Networks%2F + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=http://nladuo.github.io/2018/10/20/%E8%AF%BB%E8%AE%BA%E6%96%87Multi-digit-Number-Recognition-from-Street-View-Imagery-using-Deep-Convolutional-Neural-Networks/" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
+  
+  
+<script src="../../../../js/shares.js"></script>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>

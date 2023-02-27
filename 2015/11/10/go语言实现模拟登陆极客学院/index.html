@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="keywords" content="" />
+  <meta name="author" content="叁公子KCN" />
+  <meta name="description" content="" />
+  
+  
+  <title>
+    
+      go语言实现模拟登陆极客学院 
+      
+      
+      |
+    
+     叁公子的博客
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="../../../../js/fancybox.js"></script>
+
+
+  
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/"></a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="../../../../js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="../../../../js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">go语言实现模拟登陆极客学院</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
+          2015-11-10 20:23:49
+        </span>
+        
+      </div>
+      <div class="markdown-body">
+        <h2 id="登陆原理"><a href="#登陆原理" class="headerlink" title="登陆原理"></a>登陆原理</h2><p>因为http协议是无状态、短连接的，即浏览器发一个请求给目标服务器，然后服务器把数据传回来， 然后浏览器会服务器之间的交互就结束了。  </p>
+<p>所有需要一种机制来保证让服务器确定用户的身份（比如用户是否登陆），这个机制就是session和cookie， 其中session是服务端保存你的数据，而cookie则是保存在浏览器里面。  </p>
+<p>那么登陆是一个什么过程？其实就是比如说，先输入用户名和密码，把数据post给服务器，服务器会对填写的数据进行校验， 如果校验通过，服务器会生成一段session信息，返回给你的浏览器，你的浏览器会把服务器返回来的session保存在本地， 到了浏览器上，也就变成cookie了。比如说登陆一个网站成功了， 服务器在对应用户对应的session里面添加了一个is_login&#x3D;true的字段。 浏览器在下次访问这个域名的网站下的其他页面时候，会把存的cookie发送给服务器。  </p>
+<span id="more"></span>
+
+<h2 id="如何模拟登陆带验证码的网站"><a href="#如何模拟登陆带验证码的网站" class="headerlink" title="如何模拟登陆带验证码的网站"></a>如何模拟登陆带验证码的网站</h2><p>其实在打开带验证码的页面的时候，我们就相当于有一次“登陆”，不过这个登陆不是为我们的cookie添加 一个is_login字段，而是添加一个verify-code或者叫captcha字段，服务器会把验证码存在里面，这样它 才知道它生成的每个验证码，是为了那个用户生成的。  </p>
+<p>所以模拟登陆待验证码的网站需要有以下几个步骤：</p>
+<ul>
+<li>1、访问需要登陆的页面，并获取cookie</li>
+<li>2、带着cookie，下载验证码图片</li>
+<li>3、带着cookie，把用户数据（用户名，密码，验证码）通过post方式发给服务器，并且拿到cookie。<br>经过以上几个步骤后，就可以拿到登陆的cookie了，可以带着这个cookie去访问需要权限的页面。 以下是实现代码，go语言编写。(这段代码会首先模拟登陆极客学院，然后爬取职业路径中docker的视频下载链接， 然后生成一堆wget组成的shell脚本，运行脚本就可以下载视频，不过仅对课程少的视频管用， 极客的视频播放的地址会时时刻刻变更)</li>
+</ul>
+<h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">&quot;fmt&quot;</span></span><br><span class="line">	<span class="string">&quot;github.com/PuerkitoBio/goquery&quot;</span></span><br><span class="line">	<span class="string">&quot;io&quot;</span></span><br><span class="line">	<span class="string">&quot;io/ioutil&quot;</span></span><br><span class="line">	<span class="string">&quot;net/http&quot;</span></span><br><span class="line">	<span class="string">&quot;net/http/cookiejar&quot;</span></span><br><span class="line">	<span class="string">&quot;net/url&quot;</span></span><br><span class="line">	<span class="string">&quot;os&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> cookies []*http.Cookie</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> (</span><br><span class="line">	spider_base_url     <span class="type">string</span> = <span class="string">&quot;http://www.jikexueyuan.com/path/docker/&quot;</span></span><br><span class="line">	login_url           <span class="type">string</span> = <span class="string">&quot;http://passport.jikexueyuan.com/sso/login&quot;</span></span><br><span class="line">	verify_code_url     <span class="type">string</span> = <span class="string">&quot;http://passport.jikexueyuan.com/sso/verify&quot;</span></span><br><span class="line">	post_login_info_url <span class="type">string</span> = <span class="string">&quot;http://passport.jikexueyuan.com/submit/login?is_ajax=1&quot;</span></span><br><span class="line">	username            <span class="type">string</span> = <span class="string">&quot;用户名&quot;</span></span><br><span class="line">	password            <span class="type">string</span> = <span class="string">&quot;密码&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">getResultHtml</span><span class="params">(get_url <span class="type">string</span>)</span></span> *http.Response &#123;</span><br><span class="line">	c := &amp;http.Client&#123;&#125;</span><br><span class="line">	Jar, _ := cookiejar.New(<span class="literal">nil</span>)</span><br><span class="line">	getURL, _ := url.Parse(get_url)</span><br><span class="line">	Jar.SetCookies(getURL, cookies)</span><br><span class="line">	c.Jar = Jar</span><br><span class="line">	res, _ := c.Get(get_url)</span><br><span class="line">	<span class="keyword">return</span> res</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">login</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="comment">//获取登陆界面的cookie</span></span><br><span class="line">	c := &amp;http.Client&#123;&#125;</span><br><span class="line">	req, _ := http.NewRequest(<span class="string">&quot;GET&quot;</span>, login_url, <span class="literal">nil</span>)</span><br><span class="line">	res, _ := c.Do(req)</span><br><span class="line"></span><br><span class="line">	req.URL, _ = url.Parse(verify_code_url)</span><br><span class="line">	<span class="keyword">var</span> temp_cookies = res.Cookies()</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span> _, v := <span class="keyword">range</span> res.Cookies() &#123;</span><br><span class="line">		req.AddCookie(v)</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">// 获取验证码</span></span><br><span class="line">	<span class="keyword">var</span> verify_code <span class="type">string</span></span><br><span class="line">	<span class="keyword">for</span> &#123;</span><br><span class="line">		res, _ = c.Do(req)</span><br><span class="line">		file, _ := os.Create(<span class="string">&quot;verify.gif&quot;</span>)</span><br><span class="line">		io.Copy(file, res.Body)</span><br><span class="line">        <span class="comment">//最开始测试没问题，现在好像改了，</span></span><br><span class="line">        <span class="comment">//最好一次输入正确，然后10秒以内输入，</span></span><br><span class="line">        <span class="comment">//否则，会报出connection reset by peer</span></span><br><span class="line">		fmt.Println(<span class="string">&quot;请查看verify.gif， 然后输入验证码， 看不清输入0重新获取验证码&quot;</span>)</span><br><span class="line">		fmt.Scanf(<span class="string">&quot;%s&quot;</span>, &amp;verify_code)</span><br><span class="line">		<span class="keyword">if</span> verify_code != <span class="string">&quot;0&quot;</span> &#123;</span><br><span class="line">			<span class="keyword">break</span></span><br><span class="line">		&#125;</span><br><span class="line">		res.Body.Close()</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">//post数据</span></span><br><span class="line">	postValues := url.Values&#123;&#125;</span><br><span class="line">	postValues.Add(<span class="string">&quot;expire&quot;</span>, <span class="string">&quot;7&quot;</span>)</span><br><span class="line">	postValues.Add(<span class="string">&quot;referer&quot;</span>, <span class="string">&quot;http%3A%2F%2Fwww.jikexueyuan.com%2F&quot;</span>)</span><br><span class="line">	postValues.Add(<span class="string">&quot;uname&quot;</span>, username)</span><br><span class="line">	postValues.Add(<span class="string">&quot;password&quot;</span>, password)</span><br><span class="line">	postValues.Add(<span class="string">&quot;verify&quot;</span>, verify_code)</span><br><span class="line"></span><br><span class="line">	postURL, _ := url.Parse(post_login_info_url)</span><br><span class="line">	Jar, _ := cookiejar.New(<span class="literal">nil</span>)</span><br><span class="line">	Jar.SetCookies(postURL, temp_cookies)</span><br><span class="line">	c.Jar = Jar</span><br><span class="line">	res, _ = c.PostForm(post_login_info_url,</span><br><span class="line">		postValues)</span><br><span class="line"></span><br><span class="line">	cookies = res.Cookies()</span><br><span class="line">	data, _ := ioutil.ReadAll(res.Body)</span><br><span class="line">	res.Body.Close()</span><br><span class="line">	fmt.Println(<span class="type">string</span>(data))</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> DownloadBean <span class="keyword">struct</span> &#123;</span><br><span class="line">	dirname  <span class="type">string</span></span><br><span class="line">	filename <span class="type">string</span></span><br><span class="line">	href     <span class="type">string</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line"></span><br><span class="line">	login()</span><br><span class="line">	<span class="keyword">for</span> _, v := <span class="keyword">range</span> cookies &#123;</span><br><span class="line">		fmt.Println(v)</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">var</span> bash_str <span class="type">string</span> = <span class="string">&quot;#!/bin/bash \n&quot;</span></span><br><span class="line">	baseMap := <span class="keyword">map</span>[<span class="type">string</span>]<span class="type">string</span>&#123;&#125;</span><br><span class="line">	doc, _ := goquery.NewDocumentFromResponse(getResultHtml(spider_base_url))</span><br><span class="line">	doc.Find(<span class="string">&quot;.lesson-info-h2&quot;</span>).Each(<span class="function"><span class="keyword">func</span><span class="params">(i <span class="type">int</span>, contentSelection *goquery.Selection)</span></span> &#123;</span><br><span class="line">		selection := contentSelection.Find(<span class="string">&quot;a&quot;</span>)</span><br><span class="line">		base_href, _ := selection.Attr(<span class="string">&quot;href&quot;</span>)</span><br><span class="line">		dir_name := selection.Text()</span><br><span class="line">		bash_str += <span class="string">&quot;mkdir \&quot;&quot;</span> + dir_name + <span class="string">&quot;\&quot;\n&quot;</span></span><br><span class="line">		baseMap[dir_name] = base_href</span><br><span class="line">		fmt.Println(dir_name, <span class="string">&quot;--&gt;&quot;</span>, base_href)</span><br><span class="line"></span><br><span class="line">	&#125;)</span><br><span class="line">	downloadList := []DownloadBean&#123;&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span> k, v := <span class="keyword">range</span> baseMap &#123;</span><br><span class="line">		doc, _ := goquery.NewDocumentFromResponse(getResultHtml(v))</span><br><span class="line">		doc.Find(<span class="string">&quot;.lessonvideo-list dd h2&quot;</span>).Each(<span class="function"><span class="keyword">func</span><span class="params">(i <span class="type">int</span>, contentSelection *goquery.Selection)</span></span> &#123;</span><br><span class="line">			selection := contentSelection.Find(<span class="string">&quot;a&quot;</span>)</span><br><span class="line">			href, _ := selection.Attr(<span class="string">&quot;href&quot;</span>)</span><br><span class="line">			filename := selection.Text()</span><br><span class="line">			fmt.Println(k, <span class="string">&quot;--&gt;&quot;</span>, filename, <span class="string">&quot;--&gt;&quot;</span>, href)</span><br><span class="line">			bean := DownloadBean&#123;dirname: k, href: href, filename: filename&#125;</span><br><span class="line">			downloadList = <span class="built_in">append</span>(downloadList, bean)</span><br><span class="line">		&#125;)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span> _, v := <span class="keyword">range</span> downloadList &#123;</span><br><span class="line">		doc, _ := goquery.NewDocumentFromResponse(getResultHtml(v.href))</span><br><span class="line">		doc.Find(<span class="string">&quot;source&quot;</span>).Each(<span class="function"><span class="keyword">func</span><span class="params">(i <span class="type">int</span>, contentSelection *goquery.Selection)</span></span> &#123;</span><br><span class="line">			download_url, _ := contentSelection.Attr(<span class="string">&quot;src&quot;</span>)</span><br><span class="line">			one_file := <span class="string">&quot;wget &quot;</span> + download_url + <span class="string">&quot;  -O \&quot;./&quot;</span> + v.dirname + <span class="string">&quot;/&quot;</span> + v.filename + <span class="string">&quot;.mp4\&quot;\n&quot;</span></span><br><span class="line">			bash_str += one_file</span><br><span class="line">			fmt.Println(one_file)</span><br><span class="line">		&#125;)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	err := ioutil.WriteFile(<span class="string">&quot;./download.sh&quot;</span>, []<span class="type">byte</span>(bash_str), <span class="number">0x777</span>)</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		<span class="built_in">panic</span>(err.Error())</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	fmt.Println(<span class="string">&quot;写入脚本完成&quot;</span>)</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><p>上述代码不遵循robots协议，仅供参考。</p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="../../../05/03/%E7%94%A8csharp%E7%BC%96%E5%86%998x8%E6%A8%AA%E5%90%91%E5%8F%96%E6%A8%A1%E8%BD%AF%E4%BB%B6/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>Prev</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
+              2015-11-10 20:23:49
+            </span>
+            
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="../../../12/09/%E6%95%99%E4%BD%A0DIY%E4%B8%80%E4%B8%AAPM2.5%E6%A3%80%E6%B5%8B%E4%BB%AA/" target="_self">
+                <span>Next</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">Contents</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%99%BB%E9%99%86%E5%8E%9F%E7%90%86"><span class="toc-text">登陆原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E6%A8%A1%E6%8B%9F%E7%99%BB%E9%99%86%E5%B8%A6%E9%AA%8C%E8%AF%81%E7%A0%81%E7%9A%84%E7%BD%91%E7%AB%99"><span class="toc-text">如何模拟登陆带验证码的网站</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81"><span class="toc-text">代码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AF%B4%E6%98%8E"><span class="toc-text">说明</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="../../../../js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="http://www.beian.miit.gov.cn/">http://www.beian.miit.gov.cn/  京ICP备17062395号</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="../../../../js/backtotop.js"></script>
+
+
+
+        
+  <div class="search-icon tools-bar-item" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="Search...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>First search, index file loading, please wait...<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>No result<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The search.xml file was not found, please refer to：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The request failed, Try to refresh the page or try again later.<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="../../../../js/colorscheme.js"></script>
+
+
+
+
+
+        
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + go%E8%AF%AD%E8%A8%80%E5%AE%9E%E7%8E%B0%E6%A8%A1%E6%8B%9F%E7%99%BB%E9%99%86%E6%9E%81%E5%AE%A2%E5%AD%A6%E9%99%A2 + '&url=' + http%3A%2F%2Fnladuo.github.io%2F2015%2F11%2F10%2Fgo%25E8%25AF%25AD%25E8%25A8%2580%25E5%25AE%259E%25E7%258E%25B0%25E6%25A8%25A1%25E6%258B%259F%25E7%2599%25BB%25E9%2599%2586%25E6%259E%2581%25E5%25AE%25A2%25E5%25AD%25A6%25E9%2599%25A2%2F + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=http://nladuo.github.io/2015/11/10/go%E8%AF%AD%E8%A8%80%E5%AE%9E%E7%8E%B0%E6%A8%A1%E6%8B%9F%E7%99%BB%E9%99%86%E6%9E%81%E5%AE%A2%E5%AD%A6%E9%99%A2/" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
+  
+  
+<script src="../../../../js/shares.js"></script>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>

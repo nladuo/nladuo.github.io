@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="keywords" content="" />
+  <meta name="author" content="叁公子KCN" />
+  <meta name="description" content="" />
+  
+  
+  <title>
+    
+      那些年，我爬过的北科(五)——数据存储之使用MongoDB 
+      
+      
+      |
+    
+     叁公子的博客
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="../../../../js/fancybox.js"></script>
+
+
+  
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/"></a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="../../../../js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="../../../../js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">那些年，我爬过的北科(五)——数据存储之使用MongoDB</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
+          2018-12-08 11:44:37
+        </span>
+        
+      </div>
+      <div class="markdown-body">
+        <h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>在前面我们介绍了如何编写爬虫，但是我们的爬虫并没有把数据保存下来，只是简单的显示在控制台中。在本节，我们将简单学习一下数据库，以及如何在python中操作数据库。</p>
+<p>最后，我们将修改上一节的爬虫框架，使其支持数据库插入。</p>
+<span id="more"></span>
+
+<p>注：如果读者已经了解mongodb，可以直接跳到最后一个部分：<a href="#%E4%BF%AE%E6%94%B9%E6%88%91%E4%BB%AC%E7%9A%84%E7%88%AC%E8%99%AB%E6%A1%86%E6%9E%B6">修改我们的爬虫框架</a>。</p>
+<h2 id="MongoDB数据库介绍"><a href="#MongoDB数据库介绍" class="headerlink" title="MongoDB数据库介绍"></a>MongoDB数据库介绍</h2><p>数据库其实也就是数据仓库，用来存储数据的地方。以下是数据库在维基百科中的解释：</p>
+<blockquote>
+<p>数据库，简而言之可视为电子化的文件柜——存储电子文件的处所，用户可以对文件中的数据运行新增、截取、更新、删除等操作。</p>
+</blockquote>
+<p>没有数据库，我们可能会把爬取的数据存成一个json文件，插入的时候可能要先把整个json序列化成python的列表，然后再进行增删改查，而且数据操作的效率可能会比较低。有了数据库，数据库会给我们提供方便的API接口，可以很容易对数据进行增删改查操作，并且高效。</p>
+<p>MongoDB是一种文档型数据库，它属于非关系型数据库。</p>
+<h2 id="MongoDB安装"><a href="#MongoDB安装" class="headerlink" title="MongoDB安装"></a>MongoDB安装</h2><p>如果没有安装过MongoDB，需要先对mongodb进行一下安装。</p>
+<h3 id="下载MongoDB"><a href="#下载MongoDB" class="headerlink" title="下载MongoDB"></a>下载MongoDB</h3><p>MongoDB有商业版也有社区版本，我们下载免费的社区版本就好了。可以在此处<a target="_blank" rel="noopener" href="https://www.mongodb.com/download-center/community">https://www.mongodb.com/download-center/community</a>看到各种操作系统的MongoDB安装包。</p>
+<p>我们可以选择一款适合自己的操作系统的进行下载安装。下面我们分别以Mac和Windows系统举例来进行MongoDB的安装。</p>
+<h3 id="Mac版本安装与启动"><a href="#Mac版本安装与启动" class="headerlink" title="Mac版本安装与启动"></a>Mac版本安装与启动</h3><h4 id="下载安装包"><a href="#下载安装包" class="headerlink" title="下载安装包"></a>下载安装包</h4><p>首先我们下载最新版本（4.0.4版本）的mongodb的包，可以看到下载下来是一个tgz的解压文件。<br><img src="/install_mac.png"></p>
+<p>然后我们对tgz文件进行解压, 并进入到解压后的目录</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">tar zvxf mongodb-osx-ssl-x86_64-4.0.4.tgz</span><br><span class="line"><span class="built_in">cd</span> mongodb-osx-x86_64-4.0.4</span><br></pre></td></tr></table></figure>
+<p>进入目录后，我们可以看到有一个bin目录文件，这里面就是mongodb的各种脚本了。<br><img src="/install_mac2.png"></p>
+<h4 id="启动MongoDB服务器"><a href="#启动MongoDB服务器" class="headerlink" title="启动MongoDB服务器"></a>启动MongoDB服务器</h4><p>然后我们需要创建数据存放的目录，mongodb数据默认存放的路径是<code>/data/db</code>，如果这个目录不存在的话，需要自己创建。确保数据创建后，通过<code>mongod</code>命令即可启动mongodb服务。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./bin/mongod  <span class="comment"># 启动mongodb服务</span></span><br></pre></td></tr></table></figure>
+<p>如果不想用<code>/data/db</code>这个路径的话，可以通过<code>--dbpath</code>参数设置想要存放的位置。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> <span class="built_in">test</span></span><br><span class="line">./bin/mongod --dbpath ./test  <span class="comment"># 数据存放在当前路径的test目录下</span></span><br></pre></td></tr></table></figure>
+<p><img src="/install_mac3.png"></p>
+<h4 id="使用MongoDB客户端"><a href="#使用MongoDB客户端" class="headerlink" title="使用MongoDB客户端"></a>使用MongoDB客户端</h4><p>接下来我们测测能不能连上服务器，这里可以用mongodb自带的客户端：<code>mongo</code>命令。在终端中输入以下命令，尝试连接mongodb服务。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./bin/mongo</span><br></pre></td></tr></table></figure>
+<p>如果输入命令后，成功看到左下角有个代输入的光标，就说明安装成功了。<br><img src="/install_mac4.png"></p>
+<h3 id="Windows安装与启动"><a href="#Windows安装与启动" class="headerlink" title="Windows安装与启动"></a>Windows安装与启动</h3><h4 id="下载安装包-1"><a href="#下载安装包-1" class="headerlink" title="下载安装包"></a>下载安装包</h4><p>首先我们下载最新版本（4.0.4版本）的mongodb的包，我们这个选择zip安装包。<br><img src="/install_windows1.png"></p>
+<p>下载后进行解压，然后进入解压后的目录，可以看到有一个bin文件夹，这里面就是mongodb的各种脚本。<br><img src="/install_windows2.png"></p>
+<h4 id="启动MongoDB服务器-1"><a href="#启动MongoDB服务器-1" class="headerlink" title="启动MongoDB服务器"></a>启动MongoDB服务器</h4><p>然后我们需要创建数据存放的目录，mongodb数据默认存放的路径是<code>C:\data\db</code>，如果这个目录不存在的话，需要自己创建。<br><img src="/install_windows3.png"></p>
+<p>确保数据创建后，通过<code>mongod.exe</code>命令即可启动mongodb服务。<br><img src="/install_windows4.png"></p>
+<p>如果不想用<code>C:\data\db</code>这个路径的话，可以通过<code>--dbpath</code>参数设置想要存放的位置。</p>
+<h4 id="使用MongoDB客户端-1"><a href="#使用MongoDB客户端-1" class="headerlink" title="使用MongoDB客户端"></a>使用MongoDB客户端</h4><p>接下来我们测测能不能连上服务器，这里可以用mongodb自带的客户端。在终端中运行<code>mongo.exe</code>，尝试连接mongodb服务。</p>
+<p>如果运行后，成功看到左下角有个代输入的光标，就说明安装成功了。<br><img src="/install_windows5.png"></p>
+<h2 id="MongoDB的一些概念"><a href="#MongoDB的一些概念" class="headerlink" title="MongoDB的一些概念"></a>MongoDB的一些概念</h2><p>MongoDB以BSON格式的文档（Documents）形式存储。Databases中包含集合（Collections），集合（Collections）中存储文档（Documents）。接下来我们简单了解一下这几个概念。</p>
+<h3 id="Databases-数据库"><a href="#Databases-数据库" class="headerlink" title="Databases: 数据库"></a>Databases: 数据库</h3><p>Databases是数据库，我们一般会把不同的项目划分成不同的数据库。</p>
+<p>我们可以使用<code>show dbs</code>查看已有的数据库，使用<code>use db_name</code>进入某个数据库。下面是我们进入test数据库的截图。</p>
+<p><img src="/show_db.png"></p>
+<h3 id="Collections-集合"><a href="#Collections-集合" class="headerlink" title="Collections: 集合"></a>Collections: 集合</h3><p>Collections是集合，一个项目中，也会有不同格式的数据。我们一般会将同一种类型的数据放在一个集合里面。比如说我们开发网站有新闻，可能会创建一个news集合；也需要有用户，再创建一个user集合。</p>
+<p>集合的概念就如同关系型数据库里面的表一样。</p>
+<h3 id="Documents-文档"><a href="#Documents-文档" class="headerlink" title="Documents: 文档"></a>Documents: 文档</h3><p>Documents是文档，文档是由field和value对的结构组成，如下结构。</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">   field1<span class="punctuation">:</span> value1<span class="punctuation">,</span></span><br><span class="line">   field2<span class="punctuation">:</span> value2<span class="punctuation">,</span></span><br><span class="line">   field3<span class="punctuation">:</span> value3<span class="punctuation">,</span></span><br><span class="line">   ...</span><br><span class="line">   fieldN<span class="punctuation">:</span> valueN</span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+<p>其中field名是个字符串，而value值可以是任何BSON数据类型，包括：其他document，数字，和document数组。</p>
+<p>在MongoDB中集合不需要创建，直接使用就可以，同理数据库也不需要创建，直接使用use就可以。</p>
+<p>下面我们在test数据库下面的news集合中插入一条数据看看。</p>
+<p><img src="/insert_doc.png"></p>
+<p>这里可以看到我们的数据如下：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span> </span><br><span class="line">    <span class="attr">&quot;_id&quot;</span> <span class="punctuation">:</span> ObjectId(<span class="string">&quot;5c0aa0b51b0eb2e557167a5b&quot;</span>)<span class="punctuation">,</span> </span><br><span class="line">    <span class="attr">&quot;title&quot;</span> <span class="punctuation">:</span> <span class="string">&quot;hello world&quot;</span> </span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+<p>除了我们插入的title字段外，还有一个_id字段，这是一个索引字段，作为一个文档的唯一标识。我们可以通过_id对某一个文档进行查找。</p>
+<h2 id="pymongo的使用"><a href="#pymongo的使用" class="headerlink" title="pymongo的使用"></a>pymongo的使用</h2><p>我们这里是一个python的教程，所以主要要学习一下如何在python中操作mongodb。在了解前，先安装一下mongodb的python包：pymongo。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install pymongo</span><br></pre></td></tr></table></figure>
+
+<h3 id="连接数据库"><a href="#连接数据库" class="headerlink" title="连接数据库"></a>连接数据库</h3><p>在数据库操作前，我们首先要连接数据库。这里连接数据库的代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pymongo</span><br><span class="line"></span><br><span class="line">client = pymongo.MongoClient(host=<span class="string">&quot;localhost&quot;</span>, port=<span class="number">27017</span>)</span><br></pre></td></tr></table></figure>
+<p>上面我们连接了我们本地的mongodb数据库，mongodb默认使用的端口是27017。当我们不使用数据库的时候，记得要把数据库的连接关闭掉。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">client.close()  <span class="comment"># 关闭数据库</span></span><br></pre></td></tr></table></figure>
+
+<p>接下来，我们就可以选择我们需要操作的数据库和集合了。可以使用字典或者点的方式拿到数据库和集合的实例。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 使用字典的方式</span></span><br><span class="line">db = client[<span class="string">&#x27;test&#x27;</span>]</span><br><span class="line">items = db[<span class="string">&quot;items&quot;</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用点的方式</span></span><br><span class="line">db = client.test</span><br><span class="line">items = db.items</span><br></pre></td></tr></table></figure>
+<p>这里我们使用<code>test</code>数据库下面的<code>items</code>集合进行示意。</p>
+<h3 id="插入数据"><a href="#插入数据" class="headerlink" title="插入数据"></a>插入数据</h3><p>接下来，我们先来插入几条数据到啊items集合。这里我们先定义一个<code>list_items</code>函数用来列出items集合中所有的数据来。其实就是调用<code>find</code>方法，就可以直接找出所有items下的数据了，返回对象是个迭代器，可以通过<code>for...in...</code>拿到里面所有的元素。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">list_items</span>():</span><br><span class="line">    <span class="string">&quot;&quot;&quot; 列出所有数据 &quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">for</span> item <span class="keyword">in</span> items.find():</span><br><span class="line">        <span class="built_in">print</span>(item)</span><br></pre></td></tr></table></figure>
+
+<p>插入数据也很简单，和在<code>mongo</code>命令使用的基本上是一样的。就是一个insert方法，插入一个字典即可。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 增</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;添加数据&quot;</span>)</span><br><span class="line">items.insert(&#123;<span class="string">&quot;id&quot;</span>: <span class="number">1</span>, <span class="string">&quot;name&quot;</span>: <span class="string">&quot;test1&quot;</span>&#125;)</span><br><span class="line">items.insert(&#123;<span class="string">&quot;id&quot;</span>: <span class="number">2</span>, <span class="string">&quot;name&quot;</span>: <span class="string">&quot;test2&quot;</span>&#125;)</span><br><span class="line">items.insert(&#123;<span class="string">&quot;id&quot;</span>: <span class="number">3</span>, <span class="string">&quot;name&quot;</span>: <span class="string">&quot;test3&quot;</span>&#125;)</span><br><span class="line">list_items()</span><br></pre></td></tr></table></figure>
+<p>mongodb一个集合中的数据可以不完全一样，比如说可能有的文档有name字段，而有的文档没有name字段。不过我们最好不要这么做，虽然mongodb允许，因为这样可能会让自己容易混乱。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">items.insert(&#123;<span class="string">&quot;id&quot;</span>: <span class="number">4</span>, <span class="string">&quot;no_name&quot;</span>: <span class="string">&quot;test4&quot;</span>&#125;)</span><br><span class="line">list_items()</span><br></pre></td></tr></table></figure>
+<p><img src="/insert_data.png"></p>
+<h3 id="删除数据"><a href="#删除数据" class="headerlink" title="删除数据"></a>删除数据</h3><p>在mongodb中删除数据直接使用<code>remove</code>方法就好了，remove的参数就是要删除元素的条件，比如下面是删除id为1的数据。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">print</span>(<span class="string">&quot;删除id为1&quot;</span>)</span><br><span class="line">items.remove(&#123;<span class="string">&quot;id&quot;</span>: <span class="number">1</span>&#125;)</span><br><span class="line">list_items()</span><br></pre></td></tr></table></figure>
+<p>不过上面演示的id其实是假的id，因为它可以不是唯一的。在mongodb中使用的<code>_id</code>字段作为索引，这个索引是自动创建的，它是一个ObjectId类型。我们可以通过下面的代码操作一个唯一的文档。<br><img src="/remove_data.png"></p>
+<h3 id="更新数据"><a href="#更新数据" class="headerlink" title="更新数据"></a>更新数据</h3><p>更新数据的话是用的<code>update</code>方法，update方法接受多个参数，主要有三个。</p>
+<ul>
+<li>第一个参数：spec，指定要更新的数据。</li>
+<li>第二个参数：document，要修改的数据。</li>
+<li>第三个参数：multi，是否要更新多条数据，默认为False，也就是说默认只更新一条数据。</li>
+</ul>
+<p>我们先来看看更新一条数据。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">print</span>(<span class="string">&quot;修改id为2的name&quot;</span>)</span><br><span class="line">items.update(&#123;<span class="string">&quot;id&quot;</span>: <span class="number">2</span>&#125;, &#123;</span><br><span class="line">    <span class="string">&#x27;$set&#x27;</span>: &#123;<span class="string">&#x27;name&#x27;</span>: <span class="string">&quot;test2_modified&quot;</span>&#125;</span><br><span class="line">&#125;)</span><br><span class="line">list_items()</span><br></pre></td></tr></table></figure>
+<p>这里第二个参数如下：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    &#x27;$set&#x27;<span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        &#x27;field1&#x27;<span class="punctuation">:</span> value1<span class="punctuation">,</span></span><br><span class="line">        &#x27;field2&#x27;<span class="punctuation">:</span> value2<span class="punctuation">,</span></span><br><span class="line">        &#x27;field3&#x27;<span class="punctuation">:</span> value3<span class="punctuation">,</span></span><br><span class="line">        ...</span><br><span class="line">        &#x27;fieldN&#x27;<span class="punctuation">:</span> valueN</span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+<p>这里可以看到我们修改了id为2的name字段。<br><img src="/update_data.png"></p>
+<p>接下来再来试试更新多条数据。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">print</span>(<span class="string">&quot;修改所有数据,添加一个title字段&quot;</span>)</span><br><span class="line">items.update(&#123;&#125;, &#123;</span><br><span class="line">    <span class="string">&#x27;$set&#x27;</span>: &#123;<span class="string">&#x27;title&#x27;</span>: <span class="string">&quot;update title&quot;</span>&#125;</span><br><span class="line">&#125;, multi=<span class="literal">True</span>)</span><br><span class="line">list_items()</span><br></pre></td></tr></table></figure>
+<p><img src="/update_data2.png"></p>
+<h3 id="查找数据"><a href="#查找数据" class="headerlink" title="查找数据"></a>查找数据</h3><p>最后是查找数据了，这里可以通过<code>find</code>方法找到多条数据，<code>find_one</code>方法找到一条数据。对于<code>find_one</code>方法，如果没有找到的话，会返回None。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">print</span>(<span class="string">&quot;查找id为2&quot;</span>)</span><br><span class="line"><span class="built_in">print</span>(items.find_one(&#123;<span class="string">&quot;id&quot;</span>: <span class="number">2</span>&#125;))</span><br></pre></td></tr></table></figure>
+<p><img src="/find_one.png"></p>
+<h2 id="修改我们的爬虫框架"><a href="#修改我们的爬虫框架" class="headerlink" title="修改我们的爬虫框架"></a>修改我们的爬虫框架</h2><p>关于数据库的介绍就到这里了，如果读者对mongodb操作感兴趣可以查阅更多相关资料。</p>
+<p>下面，我们把mongodb数据融入到我们的爬虫框架中，并通过框架把上一节的爬虫爬取的内容存入数据库中。这里其实在框架里面添加一行代码即可。</p>
+<h3 id="进程间锁"><a href="#进程间锁" class="headerlink" title="进程间锁"></a>进程间锁</h3><p>考虑一个场景，我们在爬取数据的时候，肯定不希望有重复的数据添加到数据库里面，所以我们可能需要在插入数据库之前，判断一下这条数据有没有插入过。判断插入再插入的代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">insert_id = <span class="number">2</span></span><br><span class="line"><span class="keyword">if</span> items.find_one(&#123;<span class="string">&quot;id&quot;</span>: insert_id&#125;) <span class="keyword">is</span> <span class="literal">None</span>:  <span class="comment"># 步骤①：判断</span></span><br><span class="line">    items.insert(&#123;&#123;<span class="string">&quot;id&quot;</span>: insert_id&#125;&#125;)  <span class="comment"># 步骤②：插入</span></span><br></pre></td></tr></table></figure>
+<p>但是，这里考虑一个场景，在多进程操作时候，我们两个进程：进程1和进程2，同时使得<code>insert_id为2</code>。这个时候数据都还没有插入，所以find_one之后得到的都是None。但是下一时刻，进程1先插入了数据，这个时候进程2因为先前进行find_one也得到的是None，所以就会插入两条id为2的数据。</p>
+<p>虽然这个可能性非常低，但是不能排除。这里我们使用锁就好了。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">lock = Manager().Lock()</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> lock:</span><br><span class="line">    <span class="keyword">if</span> items.find_one(&#123;<span class="string">&quot;id&quot;</span>: insert_id&#125;) <span class="keyword">is</span> <span class="literal">None</span>:  <span class="comment"># 步骤①：判断</span></span><br><span class="line">        items.insert(&#123;&#123;<span class="string">&quot;id&quot;</span>: insert_id&#125;&#125;)  <span class="comment"># 步骤②：插入</span></span><br></pre></td></tr></table></figure>
+<p>在操作插入代码块的时候，进程1和进程2要获取锁，才能执行。比如说这个时候进程1拿到锁了，进程2没有拿到，那么进程2就会等待。进程1把步骤①和步骤②都完成之后，才会释放锁。进程②拿到锁，再进行步骤①和步骤②。</p>
+<p>这样就不会出现上面的那种情况了。</p>
+<p>所以，我们可以在我们的框架中也添加一个这样的锁。我们需要再我们的框架中添加这个锁，然后把这个锁传给worker，worker在需要数据库操作的时候再使用这个锁就好了。</p>
+<p><img src="/framework_update.png"></p>
+<h3 id="爬虫实践"><a href="#爬虫实践" class="headerlink" title="爬虫实践"></a>爬虫实践</h3><p>接下来我们需要对上一节的worker进行稍微修改，首先添加lock参数。然后再把数据插入到数据库中。</p>
+<p><img src="/crawler_update.png"></p>
+<p>之后运行爬虫，使用<code>mongo</code>客户端检验一下爬取的数据是否存入数据库。<br><img src="/data_saved.png"></p>
+<p>在MongoDB自带的客户端中写代码查看有的时候有些麻烦，读者也可以装一个MongoDB的可视化客户端，我这里用的是<a target="_blank" rel="noopener" href="https://robomongo.org/">Robo 3T</a>，也是有免费版本的。<br><img src="/data_saved2.png"></p>
+<h3 id="补充说明"><a href="#补充说明" class="headerlink" title="补充说明"></a>补充说明</h3><p>我们上面的操作其实相当于同一时间只会操作一条数据，方式比较简单粗暴。实际上，mongodb是可以支持多连接的，也就是说可以并发操作。</p>
+<p>读者感兴趣的话，可以考虑在框架中添加一个pipeline，在pipeline中构建多个mongodb数据库的连接，用于专门操作数据库数据。</p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="../../../11/27/%E4%BF%A1%E6%81%AF%E6%A3%80%E7%B4%A2%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E7%9F%A5%E8%AF%86%E7%AC%94%E8%AE%B0%E6%80%BB%E7%BB%93/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>Prev</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
+              2018-12-08 11:44:37
+            </span>
+            
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="../%E9%82%A3%E4%BA%9B%E5%B9%B4%EF%BC%8C%E6%88%91%E7%88%AC%E8%BF%87%E7%9A%84%E5%8C%97%E7%A7%91-%E5%85%AD-%E2%80%94%E2%80%94%E5%8F%8D%E5%8F%8D%E7%88%AC%E8%99%AB%E4%B9%8Bjs%E6%B8%B2%E6%9F%93/" target="_self">
+                <span>Next</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">Contents</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%8B%E7%BB%8D"><span class="toc-text">介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#MongoDB%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BB%8B%E7%BB%8D"><span class="toc-text">MongoDB数据库介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#MongoDB%E5%AE%89%E8%A3%85"><span class="toc-text">MongoDB安装</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%8B%E8%BD%BDMongoDB"><span class="toc-text">下载MongoDB</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Mac%E7%89%88%E6%9C%AC%E5%AE%89%E8%A3%85%E4%B8%8E%E5%90%AF%E5%8A%A8"><span class="toc-text">Mac版本安装与启动</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%8B%E8%BD%BD%E5%AE%89%E8%A3%85%E5%8C%85"><span class="toc-text">下载安装包</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%90%AF%E5%8A%A8MongoDB%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="toc-text">启动MongoDB服务器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8MongoDB%E5%AE%A2%E6%88%B7%E7%AB%AF"><span class="toc-text">使用MongoDB客户端</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Windows%E5%AE%89%E8%A3%85%E4%B8%8E%E5%90%AF%E5%8A%A8"><span class="toc-text">Windows安装与启动</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%8B%E8%BD%BD%E5%AE%89%E8%A3%85%E5%8C%85-1"><span class="toc-text">下载安装包</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%90%AF%E5%8A%A8MongoDB%E6%9C%8D%E5%8A%A1%E5%99%A8-1"><span class="toc-text">启动MongoDB服务器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8MongoDB%E5%AE%A2%E6%88%B7%E7%AB%AF-1"><span class="toc-text">使用MongoDB客户端</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#MongoDB%E7%9A%84%E4%B8%80%E4%BA%9B%E6%A6%82%E5%BF%B5"><span class="toc-text">MongoDB的一些概念</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Databases-%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="toc-text">Databases: 数据库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Collections-%E9%9B%86%E5%90%88"><span class="toc-text">Collections: 集合</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Documents-%E6%96%87%E6%A1%A3"><span class="toc-text">Documents: 文档</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#pymongo%E7%9A%84%E4%BD%BF%E7%94%A8"><span class="toc-text">pymongo的使用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%9E%E6%8E%A5%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="toc-text">连接数据库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8F%92%E5%85%A5%E6%95%B0%E6%8D%AE"><span class="toc-text">插入数据</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%A0%E9%99%A4%E6%95%B0%E6%8D%AE"><span class="toc-text">删除数据</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9B%B4%E6%96%B0%E6%95%B0%E6%8D%AE"><span class="toc-text">更新数据</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9F%A5%E6%89%BE%E6%95%B0%E6%8D%AE"><span class="toc-text">查找数据</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9%E6%88%91%E4%BB%AC%E7%9A%84%E7%88%AC%E8%99%AB%E6%A1%86%E6%9E%B6"><span class="toc-text">修改我们的爬虫框架</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%94%81"><span class="toc-text">进程间锁</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%88%AC%E8%99%AB%E5%AE%9E%E8%B7%B5"><span class="toc-text">爬虫实践</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A1%A5%E5%85%85%E8%AF%B4%E6%98%8E"><span class="toc-text">补充说明</span></a></li></ol></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="../../../../js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="http://www.beian.miit.gov.cn/">http://www.beian.miit.gov.cn/  京ICP备17062395号</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="../../../../js/backtotop.js"></script>
+
+
+
+        
+  <div class="search-icon tools-bar-item" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="Search...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>First search, index file loading, please wait...<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>No result<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The search.xml file was not found, please refer to：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The request failed, Try to refresh the page or try again later.<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="../../../../js/colorscheme.js"></script>
+
+
+
+
+
+        
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + %E9%82%A3%E4%BA%9B%E5%B9%B4%EF%BC%8C%E6%88%91%E7%88%AC%E8%BF%87%E7%9A%84%E5%8C%97%E7%A7%91(%E4%BA%94)%E2%80%94%E2%80%94%E6%95%B0%E6%8D%AE%E5%AD%98%E5%82%A8%E4%B9%8B%E4%BD%BF%E7%94%A8MongoDB + '&url=' + http%3A%2F%2Fnladuo.github.io%2F2018%2F12%2F08%2F%25E9%2582%25A3%25E4%25BA%259B%25E5%25B9%25B4%25EF%25BC%258C%25E6%2588%2591%25E7%2588%25AC%25E8%25BF%2587%25E7%259A%2584%25E5%258C%2597%25E7%25A7%2591-%25E4%25BA%2594-%25E2%2580%2594%25E2%2580%2594%25E6%2595%25B0%25E6%258D%25AE%25E5%25AD%2598%25E5%2582%25A8%25E4%25B9%258B%25E4%25BD%25BF%25E7%2594%25A8MongoDB%2F + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=http://nladuo.github.io/2018/12/08/%E9%82%A3%E4%BA%9B%E5%B9%B4%EF%BC%8C%E6%88%91%E7%88%AC%E8%BF%87%E7%9A%84%E5%8C%97%E7%A7%91-%E4%BA%94-%E2%80%94%E2%80%94%E6%95%B0%E6%8D%AE%E5%AD%98%E5%82%A8%E4%B9%8B%E4%BD%BF%E7%94%A8MongoDB/" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
+  
+  
+<script src="../../../../js/shares.js"></script>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>

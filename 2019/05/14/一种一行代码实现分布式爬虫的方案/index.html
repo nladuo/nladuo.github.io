@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="keywords" content="" />
+  <meta name="author" content="叁公子KCN" />
+  <meta name="description" content="" />
+  
+  
+  <title>
+    
+      一种一行代码实现分布式爬虫的方案 
+      
+      
+      |
+    
+     叁公子的博客
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="../../../../js/fancybox.js"></script>
+
+
+  
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/"></a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="../../../../js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="../../../../js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">一种一行代码实现分布式爬虫的方案</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
+          2019-05-14 15:45:51
+        </span>
+        
+      </div>
+      <div class="markdown-body">
+        <h2 id="业务场景"><a href="#业务场景" class="headerlink" title="业务场景"></a>业务场景</h2><p>我在写爬虫的时候就经常喜欢造轮子，不太喜欢用框架写。所以一般用的就是requests+解析库+mongodb。写起来的话灵活性非常强。</p>
+<p>这里介绍一种爬虫的场景，就是我们要爬去的数据量是已知的，或者页面数目是已知的，先爬取前10页，或者先更新后10页没有区别。</p>
+<p>这里假如说我想爬链家北京房价，我可以先跑一遍最基本的链接找出来，可能东城区有10万页要更新（肯定没有这么多举例子），海淀区有8万页，西城区有12万页，玄武区5万页，等等。。。。，假如说加起来是100万页。</p>
+<p>然后这个时候我可能有10台服务器，如何将这100页分配给10台或者不同台的服务器呢，这里其实我想到的最简单的一个方法就是通过一个分类器。</p>
+<span id="more"></span>
+<h2 id="一行代码怎么加"><a href="#一行代码怎么加" class="headerlink" title="一行代码怎么加"></a>一行代码怎么加</h2><p>这里假如这100万页放在mongodb的lianjia数据库的tasks表里面，我们可以通过以下的方式完成一个分布式爬取功能。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pymongo</span><br><span class="line"></span><br><span class="line">client = pymongo.MongoClient()</span><br><span class="line">db = client.lianjia</span><br><span class="line">tasks_coll = db.tasks</span><br><span class="line"></span><br><span class="line">machine_id = <span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> task <span class="keyword">in</span> tasks_coll.find(&#123;<span class="string">&quot;crawled&quot;</span>: <span class="literal">False</span>&#125;):</span><br><span class="line">    <span class="keyword">if</span> get_class_num(<span class="built_in">str</span>(task[<span class="string">&quot;_id&quot;</span>])) == machine_id:  <span class="comment"># 根据机器编号判断是不是自己的任务</span></span><br><span class="line">        crawl_func(task)  <span class="comment"># 爬数据</span></span><br><span class="line">        tasks_coll.update(&#123;<span class="string">&quot;_id&quot;</span>: task[<span class="string">&quot;_id&quot;</span>]&#125;, &#123;  <span class="comment"># 更新任务状态</span></span><br><span class="line">            <span class="string">&quot;$set&quot;</span>: &#123;</span><br><span class="line">                <span class="string">&quot;crawled&quot;</span>: <span class="literal">True</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;)</span><br></pre></td></tr></table></figure>
+
+<p>这里最主要的是通过这个<code>get_class_num</code>函数的实现，它接受一个字符串，并把这个字符串映射成一个唯一的一个数字。</p>
+<h2 id="一个简单的分类函数的实现"><a href="#一个简单的分类函数的实现" class="headerlink" title="一个简单的分类函数的实现"></a>一个简单的分类函数的实现</h2><p>说到映射成唯一的一个数字，那么就可以想到md5了。我这里用的办法也就是md5。这里一个简单的方案实现如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> hashlib</span><br><span class="line"><span class="keyword">import</span> string</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">get_md5</span>(<span class="params">_<span class="built_in">str</span></span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot; 对一个字符串进行md5 &quot;&quot;&quot;</span></span><br><span class="line">    hl = hashlib.md5()</span><br><span class="line">    _<span class="built_in">bytes</span> = _<span class="built_in">str</span>.encode(<span class="string">&quot;utf-8&quot;</span>)</span><br><span class="line">    hl.update(_<span class="built_in">bytes</span>)</span><br><span class="line">    <span class="keyword">return</span> hl.hexdigest()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">get_class_num</span>(<span class="params">_<span class="built_in">str</span></span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot; 取字符串的最后一个字母的ascii码之和 &quot;&quot;&quot;</span></span><br><span class="line">    _<span class="built_in">str</span> = <span class="built_in">str</span>(_<span class="built_in">str</span>)</span><br><span class="line">    md5_str = get_md5(_<span class="built_in">str</span>)</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">ord</span>(md5_str[-<span class="number">1</span>])</span><br></pre></td></tr></table></figure>
+<p>上面的代码也就是先把字符串转成md5串，然后取md5串的最后一个字母的ascii码作为分类的id。然后就可以通过取模的方法分类了。</p>
+<h3 id="分成2类"><a href="#分成2类" class="headerlink" title="分成2类"></a>分成2类</h3><p>我们这里测试一下分成2类的分布如何，我们随机生成10万个任务，看看能不能将这10万个分成两半。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> random</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">generate_random_string</span>():</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&#x27;&#x27;</span>.join(random.sample(string.ascii_letters + string.digits, <span class="number">20</span>))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class_map = &#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">100000</span>):</span><br><span class="line">    class_id = get_class_num(generate_random_string()) % <span class="number">2</span>  <span class="comment"># 分成两类</span></span><br><span class="line">    <span class="keyword">if</span> class_id <span class="keyword">not</span> <span class="keyword">in</span> class_map.keys():</span><br><span class="line">        class_map[class_id] = <span class="number">1</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        class_map[class_id] += <span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(class_map)</span><br></pre></td></tr></table></figure>
+<p>运行之后可以看到两个类别的数量差100多，基本不差什么。<br><img src="/class2.png"></p>
+<h3 id="分成3类"><a href="#分成3类" class="headerlink" title="分成3类"></a>分成3类</h3><p>然后再测一下三类的。<br><img src="/class3.png"></p>
+<p>这里一个是3.75万，两个是3.12万。可以发现差了很多。</p>
+<h2 id="分类器的完善"><a href="#分类器的完善" class="headerlink" title="分类器的完善"></a>分类器的完善</h2><p>这里其实是因为我们的id分布不均匀的缘故。md5输出的结果是26个小写字母+10个数字，一共36种字母。数字的ascii码从48到57，小写字母的ascii码从97到122。除了二分类，其实很难保证分配很均匀。</p>
+<p>这里其实有一个简单的方法，就是多加几个字母，我们不只是取最后面一个字母的ascii码，而是把最后面好几个的ascii码加起来。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">get_class_num</span>(<span class="params">_<span class="built_in">str</span></span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot; 取字符串的最后五个字母的ascii码之和 &quot;&quot;&quot;</span></span><br><span class="line">    _<span class="built_in">str</span> = <span class="built_in">str</span>(_<span class="built_in">str</span>)</span><br><span class="line">    md5_str = get_md5(_<span class="built_in">str</span>)</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">ord</span>(md5_str[-<span class="number">1</span>]) + <span class="built_in">ord</span>(md5_str[-<span class="number">2</span>]) + <span class="built_in">ord</span>(md5_str[-<span class="number">3</span>]) + <span class="built_in">ord</span>(md5_str[-<span class="number">4</span>]) + <span class="built_in">ord</span>(md5_str[-<span class="number">5</span>])</span><br></pre></td></tr></table></figure>
+
+<p>然后在测试一下三个类的。<br><img src="/class3_2.png"></p>
+<p>这里就好了，我们再测一下7个类。<br><img src="/class7.png"></p>
+<p>看着也很均匀。</p>
+<p>我测了一下五个字符相加20个类都很okay，不过再多的比如说100个类这种肯定是不行。如果类别特别多，可以再多加几个字符的ascii码提高随机性。</p>
+<h2 id="添加id重置服务"><a href="#添加id重置服务" class="headerlink" title="添加id重置服务"></a>添加id重置服务</h2><p>以上的办法虽然解决了一定的分布式爬虫问题。但是实际中，服务器处理任务的能力不一样，每个任务的难度也不一样。还是会出现分配不均匀的情况。</p>
+<p>这里可以添加一个id重置服务，我们有一个进程每隔一段时间，比如说1天或者几个小时，生成一个随机字符串，然后通过<code>get_class_num(task[&quot;id&quot;] + random_string)</code>的方式，重新设置一遍id。</p>
+<p>这样可以保证不会出现一直空机器的情况。</p>
+<h2 id="自我总结"><a href="#自我总结" class="headerlink" title="自我总结"></a>自我总结</h2><p>爬虫的设计除了爬取之后，我觉得就是处理任务分配的逻辑，每个任务都十分的隔离。</p>
+<p>这种方法可以保证没有额外的代码编写的情况下，完成相对高效的分布式爬虫。主要还是懒得写别的代码，所以想出了这种方法把。</p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="../../../01/04/Ubuntu-VPS%E5%85%89%E9%80%9F%E6%90%AD%E5%BB%BAShadowsocks%E6%9C%8D%E5%8A%A1/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>Prev</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
+              2019-05-14 15:45:51
+            </span>
+            
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="../../20/ElasticSearch-Connection-Timeout%E9%97%AE%E9%A2%98%E7%9A%84%E4%B8%80%E4%B8%AA%E7%A5%9E%E5%A5%87%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95/" target="_self">
+                <span>Next</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">Contents</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%9A%E5%8A%A1%E5%9C%BA%E6%99%AF"><span class="toc-text">业务场景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E8%A1%8C%E4%BB%A3%E7%A0%81%E6%80%8E%E4%B9%88%E5%8A%A0"><span class="toc-text">一行代码怎么加</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84%E5%88%86%E7%B1%BB%E5%87%BD%E6%95%B0%E7%9A%84%E5%AE%9E%E7%8E%B0"><span class="toc-text">一个简单的分类函数的实现</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%86%E6%88%902%E7%B1%BB"><span class="toc-text">分成2类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%86%E6%88%903%E7%B1%BB"><span class="toc-text">分成3类</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%86%E7%B1%BB%E5%99%A8%E7%9A%84%E5%AE%8C%E5%96%84"><span class="toc-text">分类器的完善</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B7%BB%E5%8A%A0id%E9%87%8D%E7%BD%AE%E6%9C%8D%E5%8A%A1"><span class="toc-text">添加id重置服务</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%87%AA%E6%88%91%E6%80%BB%E7%BB%93"><span class="toc-text">自我总结</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="../../../../js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="http://www.beian.miit.gov.cn/">http://www.beian.miit.gov.cn/  京ICP备17062395号</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="../../../../js/backtotop.js"></script>
+
+
+
+        
+  <div class="search-icon tools-bar-item" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="Search...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>First search, index file loading, please wait...<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>No result<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The search.xml file was not found, please refer to：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The request failed, Try to refresh the page or try again later.<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="../../../../js/colorscheme.js"></script>
+
+
+
+
+
+        
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + %E4%B8%80%E7%A7%8D%E4%B8%80%E8%A1%8C%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0%E5%88%86%E5%B8%83%E5%BC%8F%E7%88%AC%E8%99%AB%E7%9A%84%E6%96%B9%E6%A1%88 + '&url=' + http%3A%2F%2Fnladuo.github.io%2F2019%2F05%2F14%2F%25E4%25B8%2580%25E7%25A7%258D%25E4%25B8%2580%25E8%25A1%258C%25E4%25BB%25A3%25E7%25A0%2581%25E5%25AE%259E%25E7%258E%25B0%25E5%2588%2586%25E5%25B8%2583%25E5%25BC%258F%25E7%2588%25AC%25E8%2599%25AB%25E7%259A%2584%25E6%2596%25B9%25E6%25A1%2588%2F + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=http://nladuo.github.io/2019/05/14/%E4%B8%80%E7%A7%8D%E4%B8%80%E8%A1%8C%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0%E5%88%86%E5%B8%83%E5%BC%8F%E7%88%AC%E8%99%AB%E7%9A%84%E6%96%B9%E6%A1%88/" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
+  
+  
+<script src="../../../../js/shares.js"></script>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>

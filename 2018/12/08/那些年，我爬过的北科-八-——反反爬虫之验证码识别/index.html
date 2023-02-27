@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="keywords" content="" />
+  <meta name="author" content="叁公子KCN" />
+  <meta name="description" content="" />
+  
+  
+  <title>
+    
+      那些年，我爬过的北科(八)——反反爬虫之验证码识别 
+      
+      
+      |
+    
+     叁公子的博客
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="../../../../js/fancybox.js"></script>
+
+
+  
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/"></a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="../../../../js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="../../../../js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">那些年，我爬过的北科(八)——反反爬虫之验证码识别</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
+          2018-12-08 21:53:36
+        </span>
+        
+      </div>
+      <div class="markdown-body">
+        <h2 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h2><p>本章将要介绍一下如何识别简单的验证码。会涉及到一些图像的概念以及机器学习的知识。</p>
+<p>我们本次识别的验证码来自csdn，长相如下：<br><img src="/csdn.png"></p>
+<p>在学习之前，我们先安装本章需要的三个库：图像库Pillow、机器学习库Scikit-Learn、科学计算库Numpy。通过pip命令就可以进行安装。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install pillow scikit-learn numpy</span><br></pre></td></tr></table></figure>
+<span id="more"></span>
+<h2 id="源码介绍"><a href="#源码介绍" class="headerlink" title="源码介绍"></a>源码介绍</h2><p>本章节的案例稍微复杂，见：<a target="_blank" rel="noopener" href="https://github.com/nladuo/USTBCrawlers/tree/master/lesson8">USTBCrawlers&#x2F;lesson8</a></p>
+<p><img src="/code_lesson8.png"></p>
+<p>这里主要有三个部分：下载器、分割器、与识别器。我们可以先把代码clone下来，然后进入到lesson8这个目录下。</p>
+<h2 id="图像基本概念"><a href="#图像基本概念" class="headerlink" title="图像基本概念"></a>图像基本概念</h2><p>下面我们先来对图像有个基本的介绍。图像是由一个一个像素点构成的，其内部结构是一个二维的矩阵，或者理解成一个二维数组。</p>
+<p>例如，一个 M x N 的图像，可以表示成以下的格式:<br><img src="/image_matrix.png"><br>图像的坐标和我们平时学的直角坐标并不相同，直角坐标的原点是在左下角；而图像的坐标 起点是在左上角，如下图所示。</p>
+<p><img src="/image_coordinate.png"></p>
+<p>在python中，我们可以使用PIL（Pillow）对图像进行操作。如下，我们打开了我们的验证码，并调用<code>convert(&quot;L&quot;)</code>方法把图片转为灰度图像。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> PIL <span class="keyword">import</span> Image</span><br><span class="line"></span><br><span class="line">im = Image.<span class="built_in">open</span>(<span class="string">&quot;csdn.png&quot;</span>).convert(<span class="string">&quot;L&quot;</span>)</span><br><span class="line">im.show()  <span class="comment"># 显示图像</span></span><br></pre></td></tr></table></figure>
+<p><img src="/read_img.png"></p>
+<p>然而我们真正操作并不是图像对象，而是一个矩阵，或者说是二维数组，我们可以把图像转成numpy数组。<br><img src="/pil_numpy.png"></p>
+<p>可以看到我们的验证码是20*48的。</p>
+<h2 id="图像直方图"><a href="#图像直方图" class="headerlink" title="图像直方图"></a>图像直方图</h2><p>图像是由一个个的像素构成的，像素有灰度值，从0-255，一共256个灰度级。直方图的作用是观察每个灰度级所占像素的多少。</p>
+<p>可以调用<code>Image.histogram()</code>获取Image对象的直方图。<br><img src="/img_histogram.png"></p>
+<p>比如说对于我们的验证码图片，一共有20*48&#x3D;960个像素点，其中灰度级为94的像素有754个，而灰度级为255的有129个。</p>
+<p>再次观察一下我们灰度化的验证码，可以看到验证码的字母是白色的，也就是灰度级为255。周围的背景是灰色的，灰度级为94。<br><img src="/vcode1.png"></p>
+<h2 id="图像二值化"><a href="#图像二值化" class="headerlink" title="图像二值化"></a>图像二值化</h2><p>在处理验证码的时候，背景很多时候并不是同一个灰度级的，为了减少背景对数据的影响。一般都会讲验证码进行二值化。</p>
+<p>所谓二值化，其实就是把灰度图像变成只由纯黑、或纯白两种像素组成的图像。</p>
+<p>方法很简单，我们可以设定一个阈值，灰度大于100的像素都变成纯白(255)，而灰度小于100的像素都变成纯黑(0)。<br><img src="/image_binary.png"></p>
+<h2 id="验证码字符分割"><a href="#验证码字符分割" class="headerlink" title="验证码字符分割"></a>验证码字符分割</h2><p>因为验证码包含四个数字，所以需要把每个字母分割开。笔者为读者准备的验证码是很好分割的类型，只需要对指定区域进行筛选即可。</p>
+<p>这里的图片数字的宽度都是8，起点分别位于5、14、23、32。分割代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">split_and_save</span>(<span class="params">path</span>):</span><br><span class="line">    path = <span class="string">&quot;../downloader/captchas/&quot;</span> + path</span><br><span class="line">    pix = np.array(Image.<span class="built_in">open</span>(path).convert(<span class="string">&quot;L&quot;</span>))</span><br><span class="line">    <span class="comment"># threshold image</span></span><br><span class="line">    pix = (pix &gt; <span class="number">100</span>) * <span class="number">255</span></span><br><span class="line"></span><br><span class="line">    col_ranges = [</span><br><span class="line">        [<span class="number">5</span>, <span class="number">5</span> + <span class="number">8</span>],</span><br><span class="line">        [<span class="number">14</span>, <span class="number">14</span> + <span class="number">8</span>],</span><br><span class="line">        [<span class="number">23</span>, <span class="number">23</span> + <span class="number">8</span>],</span><br><span class="line">        [<span class="number">32</span>, <span class="number">32</span> + <span class="number">8</span>]</span><br><span class="line">    ]</span><br><span class="line">    <span class="comment"># split and save</span></span><br><span class="line">    <span class="keyword">for</span> col_range <span class="keyword">in</span> col_ranges:</span><br><span class="line">        letter = pix[:, col_range[<span class="number">0</span>]: col_range[<span class="number">1</span>]]</span><br><span class="line">        im = Image.fromarray(np.uint8(letter))</span><br><span class="line">        save_path = <span class="string">&quot;./letters/&quot;</span> + <span class="built_in">str</span>(uuid.uuid4()) + <span class="string">&quot;.png&quot;</span></span><br><span class="line">        im.save(save_path)</span><br></pre></td></tr></table></figure>
+<p>我们每个验证码字符的大小为：20*8。</p>
+<h3 id="创建数据集"><a href="#创建数据集" class="headerlink" title="创建数据集"></a>创建数据集</h3><p>对验证码分割后，我们就会得到一堆字母的图片了。<br><img src="/split_letters.png"></p>
+<p>但是这些图片都没有标注，下面我们使用的机器学习算法是数据驱动的，所以需要一些已经标注好的验证码数据。我这里标注的方法比较简单，因为毕竟只有0-9十种字母，我就每种数据标注6个。直接通过文件名称进行标识。<br><img src="/dataset.png"></p>
+<h2 id="机器学习之KNN算法"><a href="#机器学习之KNN算法" class="headerlink" title="机器学习之KNN算法"></a>机器学习之KNN算法</h2><h3 id="算法描述"><a href="#算法描述" class="headerlink" title="算法描述"></a>算法描述</h3><p>K近邻算法的定义十分简单，在百度百科上有这样的解释：如果一个样本在特征空间中的k个最相似(即特征空间中最邻近)的样本中的大多数属于某一个类别，则该样本也属于这个类别。</p>
+<p>也就是说，需要找到要识别的字母在训练样本中K个最近的字母，然后找出这K个字母中最多的是某个类的？要识别的图片也就是该类的。</p>
+<h3 id="算法举例"><a href="#算法举例" class="headerlink" title="算法举例"></a>算法举例</h3><p>上面那么描述可能稍微有点儿晦涩，那我们举个例子。</p>
+<p>这里以电影分类作为例子，电影题材可分为爱情片，动作片等。这里假定将电影分为爱情片和动作片两类，直观感受的话，如果一部电影中接吻镜头很多，打斗镜头较少，显然是属于爱情片，反之为动作片。</p>
+<p>这里我们的数据有两个特征：一个是接吻镜头的数目，一个是打斗镜头的数目。下面我们有一组已知的数据。<br><img src="/knn.png"></p>
+<p>我们这里的目标是利用已知的四个电影数据，预测未知电影的类型。</p>
+<p>我们把爱情电影定义为红色的叉子，动作电影定义为绿色的圆圈，未知电影为问号。这里可以画个图直观感受一下。<br><img src="/knn2.png"></p>
+<p>假设我们K取3的话，那么从图中可以很清晰的看到，离未知电影最近的三个电影分别是：爱情电影、爱情电影、动作电影。爱情电影占比大，所以我们未知的电影是爱情片。</p>
+<h3 id="scikit-learn中使用KNN"><a href="#scikit-learn中使用KNN" class="headerlink" title="scikit-learn中使用KNN"></a>scikit-learn中使用KNN</h3><p>我们将使用scikit-learn来实现KNN，所以不需要关注算法的实现（虽然实现也很简单），只要有数据和标签就好了。我们来看看怎么实现上面的预测电影类型的功能。</p>
+<p><img src="/knn3.png"></p>
+<p>这里X是我们已知类型的四部电影，y是四部电影的标签。0代表爱情电影，1代表动作电影。然后调用scikit-learn中的<code>KNeighborsClassifier</code>先通过<code>fit</code>拟合数据，再调用<code>predict</code>预测就好了。</p>
+<p>可以看到我们最后预测出未知电影的标签为0，也就是爱情电影，和想法一致。</p>
+<h2 id="验证码识别"><a href="#验证码识别" class="headerlink" title="验证码识别"></a>验证码识别</h2><p>了解了以上知识后，我们可以编写验证码识别脚本了。</p>
+<p>我们这里首先编写加载数据的函数，加载之前标注好的验证码字母数据。我们验证码字母数据是20*8的，也就是相当于有160个特征。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">load_dataset</span>():</span><br><span class="line">    X = []</span><br><span class="line">    y = []</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">60</span>):</span><br><span class="line">        path = <span class="string">&quot;./dataset/%d%d.png&quot;</span> % (i / <span class="number">6</span>, i % <span class="number">6</span> + <span class="number">1</span>)</span><br><span class="line">        pix = np.array(Image.<span class="built_in">open</span>(path).convert(<span class="string">&quot;L&quot;</span>))</span><br><span class="line">        X.append(pix.reshape(<span class="number">8</span>*<span class="number">20</span>))</span><br><span class="line">        y.append(i/<span class="number">6</span>)</span><br><span class="line">    <span class="keyword">return</span> np.array(X), np.array(y)</span><br></pre></td></tr></table></figure>
+
+<p>然后对数据进行拟合：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">X, y = load_dataset()</span><br><span class="line">knn = KNeighborsClassifier(n_neighbors=<span class="number">5</span>)</span><br><span class="line">knn.fit(X, y.astype(<span class="string">&#x27;uint8&#x27;</span>))</span><br></pre></td></tr></table></figure>
+
+<p>最后先分割图片，再使用拟合好数据的knn进行预测。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">split_letters</span>(<span class="params">path</span>):</span><br><span class="line">    pix = np.array(Image.<span class="built_in">open</span>(path).convert(<span class="string">&quot;L&quot;</span>))</span><br><span class="line">    <span class="comment"># threshold image</span></span><br><span class="line">    pix = (pix &gt; <span class="number">100</span>) * <span class="number">255</span></span><br><span class="line"></span><br><span class="line">    col_ranges = [</span><br><span class="line">        [<span class="number">5</span>, <span class="number">5</span> + <span class="number">8</span>],</span><br><span class="line">        [<span class="number">14</span>, <span class="number">14</span> + <span class="number">8</span>],</span><br><span class="line">        [<span class="number">23</span>, <span class="number">23</span> + <span class="number">8</span>],</span><br><span class="line">        [<span class="number">32</span>, <span class="number">32</span> + <span class="number">8</span>]</span><br><span class="line">    ]</span><br><span class="line">    letters = []</span><br><span class="line">    <span class="keyword">for</span> col_range <span class="keyword">in</span> col_ranges:</span><br><span class="line">        letter = pix[:, col_range[<span class="number">0</span>]: col_range[<span class="number">1</span>]]</span><br><span class="line">        letters.append(letter.reshape(<span class="number">8</span>*<span class="number">20</span>))</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> letters</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">len</span>(sys.argv) != <span class="number">2</span>:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;Usage: python recognizer.py &lt;image_filename&gt;&quot;</span>)</span><br><span class="line"></span><br><span class="line">    letters = split_letters(sys.argv[<span class="number">1</span>])</span><br><span class="line">    <span class="built_in">print</span>(knn.predict(letters))</span><br></pre></td></tr></table></figure>
+<p>我们运行一下，可以看到以下识别的结果，都识别出来了。<br><img src="/result.png"></p>
+<h2 id="内容补充"><a href="#内容补充" class="headerlink" title="内容补充"></a>内容补充</h2><p>以上的验证码识别只是一个基本的操作流程。现在只要有足够多的数据，利用深度学习基本上所有的验证码都能识别出来。</p>
+<p>深度学习由于需要读者有数学基础以及相关的背景知识，这里笔者就提供一些我自己写过的验证码相关的资料，如果感兴趣可以自己去学习。</p>
+<p>如果读者感兴趣可以进行深入学习。<br><strong>笔者的验证码相关的一个项目：</strong></p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/nladuo/captcha-break">https://github.com/nladuo/captcha-break</a></li>
+</ul>
+<p><strong>笔者的验证码相关的博客：</strong></p>
+<ul>
+<li><a href="http://nladuo.github.io/2016/09/23/%E9%AA%8C%E8%AF%81%E7%A0%81%E7%A0%B4%E8%A7%A3%E6%8A%80%E6%9C%AF%E5%9B%9B%E9%83%A8%E6%9B%B2%E4%B9%8B%E4%BD%BF%E7%94%A8%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/">验证码破解技术四部曲之使用卷积神经网络（四）</a></li>
+<li><a href="http://nladuo.github.io/2017/04/10/%E4%BD%BF%E7%94%A8TensorFlow%E8%AE%AD%E7%BB%83Weibo-cn%E9%AA%8C%E8%AF%81%E7%A0%81/">使用TensorFlow训练Weibo.cn验证码</a></li>
+<li><a href="http://nladuo.github.io/2018/10/20/%E8%AF%BB%E8%AE%BA%E6%96%87Multi-digit-Number-Recognition-from-Street-View-Imagery-using-Deep-Convolutional-Neural-Networks/">读论文Multi-digit Number Recognition from Street View Imagery using Deep Convolutional Neural Networks</a></li>
+</ul>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="../%E9%82%A3%E4%BA%9B%E5%B9%B4%EF%BC%8C%E6%88%91%E7%88%AC%E8%BF%87%E7%9A%84%E5%8C%97%E7%A7%91-%E4%B8%83-%E2%80%94%E2%80%94%E5%8F%8D%E5%8F%8D%E7%88%AC%E8%99%AB%E4%B9%8B%E4%BD%BF%E7%94%A8%E4%BB%A3%E7%90%86ip/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>Prev</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
+              2018-12-08 21:53:36
+            </span>
+            
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="../../13/%E9%82%A3%E4%BA%9B%E5%B9%B4%EF%BC%8C%E6%88%91%E7%88%AC%E8%BF%87%E7%9A%84%E5%8C%97%E7%A7%91-%E4%B9%9D-%E2%80%94%E2%80%94%E6%90%9C%E7%B4%A2%E6%A1%88%E4%BE%8B%E4%B9%8B%E7%88%AC%E8%99%AB%E7%BC%96%E5%86%99/" target="_self">
+                <span>Next</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">Contents</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%86%99%E5%9C%A8%E5%89%8D%E9%9D%A2"><span class="toc-text">写在前面</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%BA%90%E7%A0%81%E4%BB%8B%E7%BB%8D"><span class="toc-text">源码介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%BE%E5%83%8F%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="toc-text">图像基本概念</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%BE%E5%83%8F%E7%9B%B4%E6%96%B9%E5%9B%BE"><span class="toc-text">图像直方图</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%BE%E5%83%8F%E4%BA%8C%E5%80%BC%E5%8C%96"><span class="toc-text">图像二值化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%AA%8C%E8%AF%81%E7%A0%81%E5%AD%97%E7%AC%A6%E5%88%86%E5%89%B2"><span class="toc-text">验证码字符分割</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E6%95%B0%E6%8D%AE%E9%9B%86"><span class="toc-text">创建数据集</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B9%8BKNN%E7%AE%97%E6%B3%95"><span class="toc-text">机器学习之KNN算法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AE%97%E6%B3%95%E6%8F%8F%E8%BF%B0"><span class="toc-text">算法描述</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AE%97%E6%B3%95%E4%B8%BE%E4%BE%8B"><span class="toc-text">算法举例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#scikit-learn%E4%B8%AD%E4%BD%BF%E7%94%A8KNN"><span class="toc-text">scikit-learn中使用KNN</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%AA%8C%E8%AF%81%E7%A0%81%E8%AF%86%E5%88%AB"><span class="toc-text">验证码识别</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%86%85%E5%AE%B9%E8%A1%A5%E5%85%85"><span class="toc-text">内容补充</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="../../../../js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="http://www.beian.miit.gov.cn/">http://www.beian.miit.gov.cn/  京ICP备17062395号</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="../../../../js/backtotop.js"></script>
+
+
+
+        
+  <div class="search-icon tools-bar-item" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="Search...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>First search, index file loading, please wait...<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>No result<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The search.xml file was not found, please refer to：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The request failed, Try to refresh the page or try again later.<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="../../../../js/colorscheme.js"></script>
+
+
+
+
+
+        
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + %E9%82%A3%E4%BA%9B%E5%B9%B4%EF%BC%8C%E6%88%91%E7%88%AC%E8%BF%87%E7%9A%84%E5%8C%97%E7%A7%91(%E5%85%AB)%E2%80%94%E2%80%94%E5%8F%8D%E5%8F%8D%E7%88%AC%E8%99%AB%E4%B9%8B%E9%AA%8C%E8%AF%81%E7%A0%81%E8%AF%86%E5%88%AB + '&url=' + http%3A%2F%2Fnladuo.github.io%2F2018%2F12%2F08%2F%25E9%2582%25A3%25E4%25BA%259B%25E5%25B9%25B4%25EF%25BC%258C%25E6%2588%2591%25E7%2588%25AC%25E8%25BF%2587%25E7%259A%2584%25E5%258C%2597%25E7%25A7%2591-%25E5%2585%25AB-%25E2%2580%2594%25E2%2580%2594%25E5%258F%258D%25E5%258F%258D%25E7%2588%25AC%25E8%2599%25AB%25E4%25B9%258B%25E9%25AA%258C%25E8%25AF%2581%25E7%25A0%2581%25E8%25AF%2586%25E5%2588%25AB%2F + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=http://nladuo.github.io/2018/12/08/%E9%82%A3%E4%BA%9B%E5%B9%B4%EF%BC%8C%E6%88%91%E7%88%AC%E8%BF%87%E7%9A%84%E5%8C%97%E7%A7%91-%E5%85%AB-%E2%80%94%E2%80%94%E5%8F%8D%E5%8F%8D%E7%88%AC%E8%99%AB%E4%B9%8B%E9%AA%8C%E8%AF%81%E7%A0%81%E8%AF%86%E5%88%AB/" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
+  
+  
+<script src="../../../../js/shares.js"></script>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="keywords" content="" />
+  <meta name="author" content="叁公子KCN" />
+  <meta name="description" content="" />
+  
+  
+  <title>
+    
+      Echarts绘制北京摩拜单车分布热力图 
+      
+      
+      |
+    
+     叁公子的博客
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="../../../../js/fancybox.js"></script>
+
+
+  
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/"></a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="../../../../js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="../../../../js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">Echarts绘制北京摩拜单车分布热力图</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
+          2018-02-07 22:30:26
+        </span>
+        
+      </div>
+      <div class="markdown-body">
+        <h2 id="爬虫"><a href="#爬虫" class="headerlink" title="爬虫"></a>爬虫</h2><p>最近在爬一些数据，看到了知乎上这篇<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/31171275">爬虫爬取摩拜单车位置生成热力图</a>文章还挺有意思。</p>
+<p>把那篇文章的java代码转成python如下，通过以下代码就可以抓取到指定地理位置附近的摩拜单车数量。</p>
+<span id="more"></span>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> __future__ <span class="keyword">import</span> print_function</span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">crawl_mobike</span>(<span class="params">longitude, latitude</span>):</span><br><span class="line">    headers = &#123;</span><br><span class="line">        <span class="string">&quot;Content-Type&quot;</span>: <span class="string">&quot;application/x-www-form-urlencoded&quot;</span>,</span><br><span class="line">        <span class="string">&quot;mainSource&quot;</span>: <span class="string">&quot;4003&quot;</span>,</span><br><span class="line">        <span class="string">&quot;Accept&quot;</span>: <span class="string">&quot;*/*&quot;</span>,</span><br><span class="line">        <span class="string">&quot;eption&quot;</span>: <span class="string">&quot;4f906&quot;</span>,</span><br><span class="line">        <span class="string">&quot;opensrc&quot;</span>: <span class="string">&quot;list&quot;</span>,</span><br><span class="line">        <span class="string">&quot;wxcode&quot;</span>: <span class="string">&quot;xxx&quot;</span>,</span><br><span class="line">        <span class="string">&quot;platform&quot;</span>: <span class="string">&quot;3&quot;</span>,</span><br><span class="line">        <span class="string">&quot;Accept-Language&quot;</span>: <span class="string">&quot;zh-cn&quot;</span>,</span><br><span class="line">        <span class="string">&quot;citycode&quot;</span>: <span class="string">&quot;010&quot;</span>,</span><br><span class="line">        <span class="string">&quot;lang&quot;</span>: <span class="string">&quot;zh&quot;</span>,</span><br><span class="line">        <span class="string">&quot;User-Agent&quot;</span>: <span class="string">&quot;Mozilla/5.0 (iPhone; CPU iPhone OS 11_1_1 like Mac OS X) &quot;</span></span><br><span class="line">                      <span class="string">&quot;AppleWebKit/604.3.5 (KHTML, like Gecko) Mobile/15B150 MicroMessenger/6.5.22 Net&quot;</span>,</span><br><span class="line">        <span class="string">&quot;Referer&quot;</span>: <span class="string">&quot;https&quot;</span>,</span><br><span class="line">        <span class="string">&quot;Accept-Encoding&quot;</span>: <span class="string">&quot;br, gzip, deflate&quot;</span>,</span><br><span class="line">        <span class="string">&quot;Connection&quot;</span>: <span class="string">&quot;keep-alive&quot;</span>,</span><br><span class="line">        <span class="string">&quot;Cache-Control&quot;</span>: <span class="string">&quot;no-cache&quot;</span>,</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    data = &#123;</span><br><span class="line">        <span class="string">&quot;longitude&quot;</span>: longitude,</span><br><span class="line">        <span class="string">&quot;errMsg&quot;</span>: <span class="string">&quot;getLocation%3Aok&quot;</span>,</span><br><span class="line">        <span class="string">&quot;latitude&quot;</span>: latitude,</span><br><span class="line">        <span class="string">&quot;citycode&quot;</span>: <span class="string">&quot;010&quot;</span>,</span><br><span class="line">        <span class="string">&quot;wxcode&quot;</span>: <span class="string">&quot;0010xiIVF1a75eadkjnsakjdnjk&quot;</span>,</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    resp = requests.post(<span class="string">&quot;https://mwx.mobike.com/mobike-api/rent/nearbyBikesInfo.do&quot;</span>, headers=headers, data=data)</span><br><span class="line">    <span class="built_in">print</span>(resp.content)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    crawl_mobike(<span class="number">116.309337</span>, <span class="number">39.914972</span>)</span><br></pre></td></tr></table></figure>
+
+<p>摩拜单车返回的接口数据格式如下：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">	<span class="attr">&quot;code&quot;</span><span class="punctuation">:</span> <span class="number">0</span><span class="punctuation">,</span></span><br><span class="line">	<span class="attr">&quot;message&quot;</span><span class="punctuation">:</span> <span class="string">&quot;&quot;</span><span class="punctuation">,</span></span><br><span class="line">	<span class="attr">&quot;biketype&quot;</span><span class="punctuation">:</span> <span class="number">0</span><span class="punctuation">,</span></span><br><span class="line">	<span class="attr">&quot;autoZoom&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">	<span class="attr">&quot;radius&quot;</span><span class="punctuation">:</span> <span class="number">150</span><span class="punctuation">,</span></span><br><span class="line">	<span class="attr">&quot;object&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="punctuation">&#123;</span></span><br><span class="line">		<span class="attr">&quot;distId&quot;</span><span class="punctuation">:</span> <span class="string">&quot;0100225657&quot;</span><span class="punctuation">,</span></span><br><span class="line">		<span class="attr">&quot;distX&quot;</span><span class="punctuation">:</span> <span class="number">116.30953432403221</span><span class="punctuation">,</span></span><br><span class="line">		<span class="attr">&quot;distY&quot;</span><span class="punctuation">:</span> <span class="number">39.91498342943186</span><span class="punctuation">,</span></span><br><span class="line">		<span class="attr">&quot;distNum&quot;</span><span class="punctuation">:</span> <span class="number">1</span><span class="punctuation">,</span></span><br><span class="line">		<span class="attr">&quot;distance&quot;</span><span class="punctuation">:</span> <span class="string">&quot;16&quot;</span><span class="punctuation">,</span></span><br><span class="line">		<span class="attr">&quot;bikeIds&quot;</span><span class="punctuation">:</span> <span class="string">&quot;0100225657#&quot;</span><span class="punctuation">,</span></span><br><span class="line">		<span class="attr">&quot;biketype&quot;</span><span class="punctuation">:</span> <span class="number">1</span><span class="punctuation">,</span></span><br><span class="line">		<span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="number">0</span><span class="punctuation">,</span></span><br><span class="line">		<span class="attr">&quot;boundary&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">null</span></span></span><br><span class="line">	<span class="punctuation">&#125;</span><span class="punctuation">,</span> <span class="punctuation">&#123;</span></span><br><span class="line">		<span class="attr">&quot;distId&quot;</span><span class="punctuation">:</span> <span class="string">&quot;0106193023&quot;</span><span class="punctuation">,</span></span><br><span class="line">		<span class="attr">&quot;distX&quot;</span><span class="punctuation">:</span> <span class="number">116.30957439673547</span><span class="punctuation">,</span></span><br><span class="line">		<span class="attr">&quot;distY&quot;</span><span class="punctuation">:</span> <span class="number">39.91493849505124</span><span class="punctuation">,</span></span><br><span class="line">		<span class="attr">&quot;distNum&quot;</span><span class="punctuation">:</span> <span class="number">1</span><span class="punctuation">,</span></span><br><span class="line">		<span class="attr">&quot;distance&quot;</span><span class="punctuation">:</span> <span class="string">&quot;20&quot;</span><span class="punctuation">,</span></span><br><span class="line">		<span class="attr">&quot;bikeIds&quot;</span><span class="punctuation">:</span> <span class="string">&quot;0106193023#&quot;</span><span class="punctuation">,</span></span><br><span class="line">		<span class="attr">&quot;biketype&quot;</span><span class="punctuation">:</span> <span class="number">2</span><span class="punctuation">,</span></span><br><span class="line">		<span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="number">0</span><span class="punctuation">,</span></span><br><span class="line">		<span class="attr">&quot;boundary&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">null</span></span></span><br><span class="line">	<span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">  .....<span class="punctuation">]</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+<h2 id="前端"><a href="#前端" class="headerlink" title="前端"></a>前端</h2><p>前端这里面我使用了Echarts的热力图，它接受的参数为一个列表，这里每个列表是一个三元组，代表经度、纬度、权重。这里面每行都代表一辆摩拜单车，所以权重都是1.</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">[</span></span><br><span class="line">	<span class="punctuation">[</span><span class="number">116.110946655685</span><span class="punctuation">,</span> <span class="number">39.71361160221894</span><span class="punctuation">,</span> <span class="number">1</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">	<span class="punctuation">[</span><span class="number">116.10665613796685</span><span class="punctuation">,</span> <span class="number">39.71794193318955</span><span class="punctuation">,</span> <span class="number">1</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">	<span class="punctuation">[</span><span class="number">116.11279980490671</span><span class="punctuation">,</span> <span class="number">39.719301801233826</span><span class="punctuation">,</span> <span class="number">1</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">	<span class="punctuation">[</span><span class="number">116.10314985441794</span><span class="punctuation">,</span> <span class="number">39.718549033584935</span><span class="punctuation">,</span> <span class="number">1</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">	<span class="punctuation">[</span><span class="number">116.10511134689453</span><span class="punctuation">,</span> <span class="number">39.7211004247298</span><span class="punctuation">,</span> <span class="number">1</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">	<span class="punctuation">[</span><span class="number">116.10854372598347</span><span class="punctuation">,</span> <span class="number">39.72385947622611</span><span class="punctuation">,</span> <span class="number">1</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">	<span class="punctuation">[</span><span class="number">116.10677504048758</span><span class="punctuation">,</span> <span class="number">39.725561916087905</span><span class="punctuation">,</span> <span class="number">1</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">	<span class="punctuation">[</span><span class="number">116.10937042835597</span><span class="punctuation">,</span> <span class="number">39.726014602442234</span><span class="punctuation">,</span> <span class="number">1</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">	<span class="punctuation">[</span><span class="number">116.11245692428736</span><span class="punctuation">,</span> <span class="number">39.725696746635926</span><span class="punctuation">,</span> <span class="number">1</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">	<span class="punctuation">[</span><span class="number">116.11071132111596</span><span class="punctuation">,</span> <span class="number">39.73308017919619</span><span class="punctuation">,</span> <span class="number">1</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">	<span class="punctuation">[</span><span class="number">116.11544721233275</span><span class="punctuation">,</span> <span class="number">39.72695473683173</span><span class="punctuation">,</span> <span class="number">1</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">	<span class="punctuation">[</span><span class="number">116.1151990756164</span><span class="punctuation">,</span> <span class="number">39.73172244352969</span><span class="punctuation">,</span> <span class="number">1</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">	<span class="punctuation">[</span><span class="number">116.10526909433266</span><span class="punctuation">,</span> <span class="number">39.735421221251826</span><span class="punctuation">,</span> <span class="number">1</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">	<span class="punctuation">[</span><span class="number">116.11327451255882</span><span class="punctuation">,</span> <span class="number">39.73611375346716</span><span class="punctuation">,</span> <span class="number">1</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">	<span class="punctuation">[</span><span class="number">116.11641681190581</span><span class="punctuation">,</span> <span class="number">39.731914898153754</span><span class="punctuation">,</span> <span class="number">1</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">	<span class="punctuation">[</span><span class="number">116.10793126000574</span><span class="punctuation">,</span> <span class="number">39.740616627234296</span><span class="punctuation">,</span> <span class="number">1</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">	<span class="punctuation">[</span><span class="number">116.11814176701677</span><span class="punctuation">,</span> <span class="number">39.731214903104224</span><span class="punctuation">,</span> <span class="number">1</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">	<span class="punctuation">[</span><span class="number">116.10263000861319</span><span class="punctuation">,</span> <span class="number">39.74186888903757</span><span class="punctuation">,</span> <span class="number">1</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">	<span class="punctuation">[</span><span class="number">116.11948286049935</span><span class="punctuation">,</span> <span class="number">39.73685980140814</span><span class="punctuation">,</span> <span class="number">1</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">	..........</span><br><span class="line"><span class="punctuation">]</span></span><br></pre></td></tr></table></figure>
+<p>代码见：<a href="http://nladuo.github.io/beijing-heatmap/">http://nladuo.github.io/beijing-heatmap/</a></p>
+<h2 id="效果"><a href="#效果" class="headerlink" title="效果"></a>效果</h2><p>一共16万单车的数据，显示起来非常卡，真正做的话感觉还要聚类一下减少一下点的数量。还有就是感觉定位不是那么准。<br><img src="/effect1.png"></p>
+<p><img src="/effect2.png"></p>
+<h2 id="使用聚类减少点数目"><a href="#使用聚类减少点数目" class="headerlink" title="使用聚类减少点数目"></a>使用聚类减少点数目</h2><p>上面一共显示了16万个点，实在太多了，前端十分卡顿。这里可以使用Kmeans，把16万个点聚类成1万个簇。每个簇也就是原来的一个点，在簇上加上权重，权重代表有多少个点属于这个簇。</p>
+<p>下面使用scikit-learn完成聚类。</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> __future__ <span class="keyword">import</span> print_function</span><br><span class="line"><span class="keyword">from</span> sklearn.cluster <span class="keyword">import</span> MiniBatchKMeans</span><br><span class="line"><span class="keyword">import</span> json</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> pickle</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    <span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&quot;mobikes.json&quot;</span>) <span class="keyword">as</span> f: <span class="comment"># 见http://nladuo.github.io/beijing-heatmap/mobikes.json</span></span><br><span class="line">        bikes = json.load(f)</span><br><span class="line"></span><br><span class="line">    X = []</span><br><span class="line">    <span class="keyword">for</span> bike <span class="keyword">in</span> bikes:</span><br><span class="line">        X.append([bike[<span class="number">0</span>], bike[<span class="number">1</span>]])</span><br><span class="line"></span><br><span class="line">    X = np.array(X)</span><br><span class="line">    <span class="built_in">print</span>(X.shape)</span><br><span class="line"></span><br><span class="line">    model = MiniBatchKMeans(init_size=<span class="number">30000</span>, n_clusters=<span class="number">10000</span>, verbose=<span class="number">1</span>)</span><br><span class="line">    t0 = time.time()</span><br><span class="line">    labels = model.fit_predict(X)</span><br><span class="line">    elapsed_time = time.time() - t0</span><br><span class="line"></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;%.2f&quot;</span> % elapsed_time)  <span class="comment"># 耗时70多秒</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&quot;model.pickle&quot;</span>, <span class="string">&quot;wb&quot;</span>) <span class="keyword">as</span> f:  <span class="comment"># 保存模型</span></span><br><span class="line">        pickle.dump(model, f)</span><br><span class="line"></span><br><span class="line">    centers = []</span><br><span class="line">    <span class="keyword">for</span> center <span class="keyword">in</span> model.cluster_centers_:</span><br><span class="line">        centers.append([center[<span class="number">0</span>], center[<span class="number">1</span>], <span class="number">0</span>]) <span class="comment"># 初始化权重为0</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> label <span class="keyword">in</span> labels:</span><br><span class="line">        centers[label][<span class="number">2</span>] += <span class="number">1</span>  <span class="comment"># 增加权重</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&quot;mobikes2.json&quot;</span>, <span class="string">&quot;w&quot;</span>) <span class="keyword">as</span> f:</span><br><span class="line">        json.dump(centers, f)</span><br></pre></td></tr></table></figure>
+
+<p>相比之前，数据变成了下面的样子。</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">[</span></span><br><span class="line">	<span class="punctuation">[</span><span class="number">116.31992065846111</span><span class="punctuation">,</span> <span class="number">39.89249845164355</span><span class="punctuation">,</span> <span class="number">21</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">	<span class="punctuation">[</span><span class="number">116.4641953192452</span><span class="punctuation">,</span> <span class="number">39.90102073614072</span><span class="punctuation">,</span> <span class="number">10</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">	<span class="punctuation">[</span><span class="number">116.31825203429038</span><span class="punctuation">,</span> <span class="number">40.035862962622325</span><span class="punctuation">,</span> <span class="number">20</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">	<span class="punctuation">[</span><span class="number">116.57042460367792</span><span class="punctuation">,</span> <span class="number">39.86857779007738</span><span class="punctuation">,</span> <span class="number">2</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">	<span class="punctuation">[</span><span class="number">116.19158026936142</span><span class="punctuation">,</span> <span class="number">39.85322767008357</span><span class="punctuation">,</span> <span class="number">12</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">	<span class="punctuation">[</span><span class="number">116.38019673290377</span><span class="punctuation">,</span> <span class="number">39.78085910710848</span><span class="punctuation">,</span> <span class="number">14</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">	<span class="punctuation">[</span><span class="number">116.45768728332209</span><span class="punctuation">,</span> <span class="number">39.99369184793589</span><span class="punctuation">,</span> <span class="number">3</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">	<span class="punctuation">[</span><span class="number">116.23472281774336</span><span class="punctuation">,</span> <span class="number">39.94436936951349</span><span class="punctuation">,</span> <span class="number">20</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">	<span class="punctuation">[</span><span class="number">116.56548164928131</span><span class="punctuation">,</span> <span class="number">39.7858957275953</span><span class="punctuation">,</span> <span class="number">10</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">  .....</span><br><span class="line"><span class="punctuation">]</span></span><br></pre></td></tr></table></figure>
+
+<p>从6.9M变成了867K，不过也损失了一部分精度。<br><img src="/ll.png"></p>
+<h2 id="ofo小黄车是什么样的？"><a href="#ofo小黄车是什么样的？" class="headerlink" title="ofo小黄车是什么样的？"></a>ofo小黄车是什么样的？</h2><p>按照上面的思路，也可以再做个小黄车的分布图，这里面爬下来5万多的数据，效果如下。</p>
+<p><img src="/effect3.png"></p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="../../../01/05/%E4%BD%BF%E7%94%A8ElasticSearch%E6%9E%84%E5%BB%BA%E4%B8%80%E4%B8%AA%E5%AE%8C%E6%95%B4%E7%9A%84%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>Prev</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
+              2018-02-07 22:30:26
+            </span>
+            
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="../../17/%E9%82%A3%E4%BA%9B%E5%B9%B4%EF%BC%8C%E6%88%91%E7%88%AC%E8%BF%87%E7%9A%84%E5%8C%97%E7%A7%91-%E4%B8%89-%E2%80%94%E2%80%94%E7%88%AC%E8%99%AB%E8%BF%9B%E9%98%B6%E4%B9%8B%E5%A4%9A%E8%BF%9B%E7%A8%8B%E7%9A%84%E4%BD%BF%E7%94%A8/" target="_self">
+                <span>Next</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">Contents</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%88%AC%E8%99%AB"><span class="toc-text">爬虫</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E7%AB%AF"><span class="toc-text">前端</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%88%E6%9E%9C"><span class="toc-text">效果</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E8%81%9A%E7%B1%BB%E5%87%8F%E5%B0%91%E7%82%B9%E6%95%B0%E7%9B%AE"><span class="toc-text">使用聚类减少点数目</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ofo%E5%B0%8F%E9%BB%84%E8%BD%A6%E6%98%AF%E4%BB%80%E4%B9%88%E6%A0%B7%E7%9A%84%EF%BC%9F"><span class="toc-text">ofo小黄车是什么样的？</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="../../../../js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="http://www.beian.miit.gov.cn/">http://www.beian.miit.gov.cn/  京ICP备17062395号</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="../../../../js/backtotop.js"></script>
+
+
+
+        
+  <div class="search-icon tools-bar-item" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="Search...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>First search, index file loading, please wait...<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>No result<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The search.xml file was not found, please refer to：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The request failed, Try to refresh the page or try again later.<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="../../../../js/colorscheme.js"></script>
+
+
+
+
+
+        
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + Echarts%E7%BB%98%E5%88%B6%E5%8C%97%E4%BA%AC%E6%91%A9%E6%8B%9C%E5%8D%95%E8%BD%A6%E5%88%86%E5%B8%83%E7%83%AD%E5%8A%9B%E5%9B%BE + '&url=' + http%3A%2F%2Fnladuo.github.io%2F2018%2F02%2F07%2FEcharts%25E7%25BB%2598%25E5%2588%25B6%25E5%258C%2597%25E4%25BA%25AC%25E6%2591%25A9%25E6%258B%259C%25E5%258D%2595%25E8%25BD%25A6%25E5%2588%2586%25E5%25B8%2583%25E7%2583%25AD%25E5%258A%259B%25E5%259B%25BE%2F + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=http://nladuo.github.io/2018/02/07/Echarts%E7%BB%98%E5%88%B6%E5%8C%97%E4%BA%AC%E6%91%A9%E6%8B%9C%E5%8D%95%E8%BD%A6%E5%88%86%E5%B8%83%E7%83%AD%E5%8A%9B%E5%9B%BE/" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
+  
+  
+<script src="../../../../js/shares.js"></script>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>

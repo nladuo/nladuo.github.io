@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="keywords" content="" />
+  <meta name="author" content="叁公子KCN" />
+  <meta name="description" content="" />
+  
+  
+  <title>
+    
+      Seq2Seq练手之单词镜像 
+      
+      
+      |
+    
+     叁公子的博客
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="../../../../js/fancybox.js"></script>
+
+
+  
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/"></a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="../../../../js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="../../../../js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">Seq2Seq练手之单词镜像</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
+          2017-10-23 20:01:52
+        </span>
+        
+      </div>
+      <div class="markdown-body">
+        <h2 id="起源"><a href="#起源" class="headerlink" title="起源"></a>起源</h2><p>最近在做Web安全技术的大作业，大作业是做密码分析的东西，一个密码可以理解为一个序列，可以使用NLP的方法。</p>
+<p>在大作业中，有个任务要做中文分析，比如出现了哪个中文字。比如，密码中可能存在“woainixxxx”这样的形式，如何里面的中文拼音分开，这里想到了Seq2Seq模型，训练数据可以是“woaini”，然后输出为“wo ai ni”，让神经网络帮我们加上空格。</p>
+<h2 id="任务"><a href="#任务" class="headerlink" title="任务"></a>任务</h2><p>这里先想到了之前学Udacity的ud730的LSTM时候留的作业，之前一直没有做。感觉这是一个很好例子，不过有点儿难，暂时没去用TensorFlow来原生实现，这里将使用Keras来做。</p>
+<p><img src="/task.png" alt="task"></p>
+<blockquote>
+<p>这里的任务是单词镜像，其实就是把单词反转一下。</p>
+</blockquote>
+<span id="more"></span>
+
+<h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><p>代码以jupyter notebook形式放在了<a target="_blank" rel="noopener" href="https://github.com/nladuo/ml-study-stuff/blob/master/udacity-deep-learning/mirror_the_words.ipynb">https://github.com/nladuo/ml-study-stuff/blob/master/udacity-deep-learning/mirror_the_words.ipynb</a></p>
+<h2 id="构建数据集"><a href="#构建数据集" class="headerlink" title="构建数据集"></a>构建数据集</h2><h4 id="取数据"><a href="#取数据" class="headerlink" title="取数据"></a>取数据</h4><p>接下来，先构建数据集，这里使用了之前的text8。text8里面一共有1亿个字符，这里只是做个demo，数据取少一点儿，我取了1万个字符作为测试数据，200万字符作为训练数据。</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">valid_size = <span class="number">10000</span></span><br><span class="line">train_size = <span class="number">2000000</span></span><br><span class="line">valid_text = text[:valid_size]</span><br><span class="line">train_text = text[valid_size:valid_size+train_size]</span><br><span class="line">train_size = <span class="built_in">len</span>(train_text)</span><br></pre></td></tr></table></figure>
+<p><img src="/code1.png" alt="code1.png"></p>
+<h4 id="字符数字转换"><a href="#字符数字转换" class="headerlink" title="字符数字转换"></a>字符数字转换</h4><p>在神经网络中，取值都是数值型的，只有小写字符和空格两种，也是就是26+1中字符。</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 将字符转为id</span></span><br><span class="line"><span class="keyword">import</span> string</span><br><span class="line"></span><br><span class="line">vocabulary_size = <span class="built_in">len</span>(string.ascii_lowercase) + <span class="number">1</span> <span class="comment"># [a-z] + &#x27; &#x27;</span></span><br><span class="line">first_letter = <span class="built_in">ord</span>(string.ascii_lowercase[<span class="number">0</span>])</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">char2id</span>(<span class="params">char</span>):</span><br><span class="line">  <span class="keyword">if</span> char <span class="keyword">in</span> string.ascii_lowercase:</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">ord</span>(char) - first_letter + <span class="number">1</span></span><br><span class="line">  <span class="keyword">elif</span> char == <span class="string">&#x27; &#x27;</span>:</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">  <span class="keyword">else</span>:</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;Unexpected character: %s&#x27;</span> % char)</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">id2char</span>(<span class="params">dictid</span>):</span><br><span class="line">  <span class="keyword">if</span> dictid &gt; <span class="number">0</span>:</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">chr</span>(dictid + first_letter - <span class="number">1</span>)</span><br><span class="line">  <span class="keyword">else</span>:</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&#x27; &#x27;</span></span><br></pre></td></tr></table></figure>
+<p><img src="/code2.png" alt="code2.png"></p>
+<h4 id="构建Label"><a href="#构建Label" class="headerlink" title="构建Label"></a>构建Label</h4><p>我们要做单词镜像，这在代码中很好实现。镜像后的text也就是训练的标签。</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">mirror</span>(<span class="params">text</span>):</span><br><span class="line">    words = text.split(<span class="string">&quot; &quot;</span>)</span><br><span class="line">    mirror = []</span><br><span class="line">    <span class="keyword">for</span> word <span class="keyword">in</span> words:</span><br><span class="line">        mirror.append(word[::-<span class="number">1</span>])</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot; &quot;</span>.join(mirror)</span><br></pre></td></tr></table></figure>
+<p><img src="/code3.png" alt="code3.png"></p>
+<h4 id="构建dataset和labels"><a href="#构建dataset和labels" class="headerlink" title="构建dataset和labels"></a>构建dataset和labels</h4><p>下面，我们把text拆开，20个为一组，作为dataset；把20个字符取一个mirror，就成了labels</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">seq_len = <span class="number">20</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">build_dataset</span>(<span class="params">text</span>):</span><br><span class="line">    dataset = []</span><br><span class="line">    labels = []</span><br><span class="line">    length = <span class="built_in">len</span>(text) / seq_len</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(length):</span><br><span class="line">        line = text[i:i+seq_len]</span><br><span class="line">        mirror_line = mirror(line)</span><br><span class="line">        dataset.append([char2id(ch) <span class="keyword">for</span> ch <span class="keyword">in</span> line])</span><br><span class="line">        labels.append([char2id(ch) <span class="keyword">for</span> ch <span class="keyword">in</span> mirror_line])</span><br><span class="line">    <span class="keyword">return</span> dataset, labels</span><br><span class="line"></span><br><span class="line">train_set, train_labels = build_dataset(train_text)</span><br><span class="line">valid_set, valid_labels = build_dataset(valid_text)</span><br></pre></td></tr></table></figure>
+
+<p>然后，进行One-Hot编码，比如：如果数据有三类，0编码成[0 0 1], 1编码成[0 1 0]，2编码成[1 0 0]。这里一共有27种字符，所以是一个长度为27的向量。</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">vectorize</span>(<span class="params">word, seq_len, vec_size</span>):</span><br><span class="line">    vec = np.zeros((seq_len, vec_size), dtype=<span class="built_in">int</span>)</span><br><span class="line">    <span class="keyword">for</span> i, ch <span class="keyword">in</span> <span class="built_in">enumerate</span>(word):</span><br><span class="line">        vec[i, ch] = <span class="number">1</span></span><br><span class="line">    <span class="keyword">return</span> vec</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">vectorize_dataset</span>(<span class="params">dataset, labels</span>):</span><br><span class="line">    x = np.zeros((<span class="built_in">len</span>(dataset), seq_len, vocabulary_size), dtype=np.int8)</span><br><span class="line">    y = np.zeros((<span class="built_in">len</span>(dataset), seq_len, vocabulary_size), dtype=np.int8)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(dataset)):</span><br><span class="line">        x[i] = vectorize(dataset[i], seq_len, vocabulary_size)</span><br><span class="line">        y[i] = vectorize(labels[i], seq_len, vocabulary_size)</span><br><span class="line">    <span class="keyword">return</span> x, y</span><br><span class="line"></span><br><span class="line">train_x, train_y = vectorize_dataset(train_set, train_labels)</span><br><span class="line">valid_x, valid_y = vectorize_dataset(valid_set, valid_labels)</span><br></pre></td></tr></table></figure>
+<p><img src="/code4.png" alt="code4.png"></p>
+<p>到这里，数据集就构建好了。</p>
+<h2 id="训练与测试"><a href="#训练与测试" class="headerlink" title="训练与测试"></a>训练与测试</h2><h4 id="构建模型"><a href="#构建模型" class="headerlink" title="构建模型"></a>构建模型</h4><p>这里要建立seq2seq网络模型了，这里参考了这篇文章:<a target="_blank" rel="noopener" href="http://www.zmonster.me/2016/05/29/sequence_to_sequence_with_keras.html">使用 Keras 实现简单的 Sequence to Sequence 模型</a></p>
+<p>模型里有个RNN，第一个RNN作为Encoder，然后把第一层的输出复制20份(数据的长度)，然后作为第二个RNN(Decoder)，最后得到一个序列的输出。</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> keras.layers.recurrent <span class="keyword">import</span> GRU</span><br><span class="line"><span class="keyword">from</span> keras.layers.wrappers <span class="keyword">import</span> TimeDistributed</span><br><span class="line"><span class="keyword">from</span> keras.models <span class="keyword">import</span> Sequential, model_from_json</span><br><span class="line"><span class="keyword">from</span> keras.layers.core <span class="keyword">import</span> Dense, RepeatVector</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">build_model</span>(<span class="params">input_size, seq_len, hidden_size</span>):</span><br><span class="line">    model = Sequential()</span><br><span class="line">    model.add(GRU(input_shape=(<span class="literal">None</span>, input_size), units=hidden_size, return_sequences=<span class="literal">False</span>))</span><br><span class="line">    model.add(Dense(hidden_size, activation=<span class="string">&quot;relu&quot;</span>))</span><br><span class="line">    model.add(RepeatVector(seq_len))</span><br><span class="line">    model.add(GRU(units=hidden_size, return_sequences=<span class="literal">True</span>))</span><br><span class="line">    model.add(TimeDistributed(Dense(units=input_size, activation=<span class="string">&quot;linear&quot;</span>)))</span><br><span class="line">    model.<span class="built_in">compile</span>(loss=<span class="string">&quot;mse&quot;</span>, optimizer=<span class="string">&#x27;adam&#x27;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> model</span><br><span class="line"></span><br><span class="line">model = build_model(vocabulary_size, seq_len, <span class="number">128</span>)</span><br></pre></td></tr></table></figure>
+
+<h4 id="训练"><a href="#训练" class="headerlink" title="训练"></a>训练</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">model.fit(train_x, train_y,</span><br><span class="line">          batch_size=128,</span><br><span class="line">          epochs=128,</span><br><span class="line">          verbose=1,</span><br><span class="line">          validation_data=(valid_x, valid_y))</span><br></pre></td></tr></table></figure>
+<p>这里使用fit就好了，然后可以看到迭代次数增加，loss降低。<br><img src="/model1.png" alt="model1.png"></p>
+<h4 id="效果"><a href="#效果" class="headerlink" title="效果"></a>效果</h4><p>最后看一下效果，虽然效果不是完全正确，但是还有那么点儿意思的。<br><img src="/result.png" alt="result.png"></p>
+<p>神经网络完全从0、1学习出来能做到这种效果也算是不错了。</p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="../../02/%E5%86%AC%E5%A4%A9%E5%8F%88%E8%A6%81%E5%88%B0%E4%BA%86%EF%BC%8C%E8%87%AA%E5%B7%B1%E5%8A%A8%E6%89%8BDIY%E4%B8%80%E4%B8%AAPM2-5%E6%A3%80%E6%B5%8B%E4%BB%AA%E6%8A%8A%EF%BC%81/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>Prev</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
+              2017-10-23 20:01:52
+            </span>
+            
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="../../../11/09/%E8%AF%BB%E8%AE%BA%E6%96%87Alogorithms-for-Non-negative-Matrix-Factorization/" target="_self">
+                <span>Next</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">Contents</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B5%B7%E6%BA%90"><span class="toc-text">起源</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%BB%E5%8A%A1"><span class="toc-text">任务</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81"><span class="toc-text">代码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9E%84%E5%BB%BA%E6%95%B0%E6%8D%AE%E9%9B%86"><span class="toc-text">构建数据集</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8F%96%E6%95%B0%E6%8D%AE"><span class="toc-text">取数据</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AD%97%E7%AC%A6%E6%95%B0%E5%AD%97%E8%BD%AC%E6%8D%A2"><span class="toc-text">字符数字转换</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9E%84%E5%BB%BALabel"><span class="toc-text">构建Label</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9E%84%E5%BB%BAdataset%E5%92%8Clabels"><span class="toc-text">构建dataset和labels</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%AD%E7%BB%83%E4%B8%8E%E6%B5%8B%E8%AF%95"><span class="toc-text">训练与测试</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9E%84%E5%BB%BA%E6%A8%A1%E5%9E%8B"><span class="toc-text">构建模型</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%AE%AD%E7%BB%83"><span class="toc-text">训练</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%95%88%E6%9E%9C"><span class="toc-text">效果</span></a></li></ol></li></ol></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="../../../../js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="http://www.beian.miit.gov.cn/">http://www.beian.miit.gov.cn/  京ICP备17062395号</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="../../../../js/backtotop.js"></script>
+
+
+
+        
+  <div class="search-icon tools-bar-item" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="Search...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>First search, index file loading, please wait...<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>No result<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The search.xml file was not found, please refer to：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The request failed, Try to refresh the page or try again later.<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="../../../../js/colorscheme.js"></script>
+
+
+
+
+
+        
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + Seq2Seq%E7%BB%83%E6%89%8B%E4%B9%8B%E5%8D%95%E8%AF%8D%E9%95%9C%E5%83%8F + '&url=' + http%3A%2F%2Fnladuo.github.io%2F2017%2F10%2F23%2FSeq2Seq%25E7%25BB%2583%25E6%2589%258B%25E4%25B9%258B%25E5%258D%2595%25E8%25AF%258D%25E9%2595%259C%25E5%2583%258F%2F + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=http://nladuo.github.io/2017/10/23/Seq2Seq%E7%BB%83%E6%89%8B%E4%B9%8B%E5%8D%95%E8%AF%8D%E9%95%9C%E5%83%8F/" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
+  
+  
+<script src="../../../../js/shares.js"></script>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>

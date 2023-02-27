@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="keywords" content="" />
+  <meta name="author" content="叁公子KCN" />
+  <meta name="description" content="" />
+  
+  
+  <title>
+    
+      那些年，我爬过的北科(六)——反反爬虫之js渲染 
+      
+      
+      |
+    
+     叁公子的博客
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="../../../../js/fancybox.js"></script>
+
+
+  
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/"></a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="../../../../js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="../../../../js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">那些年，我爬过的北科(六)——反反爬虫之js渲染</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
+          2018-12-08 16:53:07
+        </span>
+        
+      </div>
+      <div class="markdown-body">
+        <h2 id="反爬虫和反反爬虫？"><a href="#反爬虫和反反爬虫？" class="headerlink" title="反爬虫和反反爬虫？"></a>反爬虫和反反爬虫？</h2><p>从本章开始，我们将要进入反反爬虫篇的内容。</p>
+<p>感觉如果是第一听到这个名字的读者肯定是懵逼的状态。现在我们先来介绍一下什么是爬虫、反爬虫、反反爬虫。</p>
+<p>爬虫其实就是我们前面所学的代码，直接使用<code>requests.get(&quot;http://xxx.com&quot;)</code>就能拿到网站的源码。</p>
+<p>但是很多时候，我们获取的都是有价值的数据，而网站开发者就不想让我们拿到他们的数据，就有了很多反爬虫的策略，不让我们那么容易的爬取到数据。反爬虫的策略其实其实主要就是三个方面：</p>
+<ul>
+<li><strong>①JS加密：</strong>Html是用js代码生成的，不让我们拿到html。</li>
+<li><strong>②禁IP：</strong>我们写爬虫的时候，一般用一个ip爬取，如果访问频率过高，网站开发者可以不让我们这个ip访问网站。</li>
+<li><strong>③验证码：</strong>获取数据之前要先输入验证码。</li>
+</ul>
+<span id="more"></span>
+
+<p>当然，除了这三个，还有些别的东西，比如说<code>User-Agent</code>识别这样的就属于比较基本的了，我们这里就不展开了。</p>
+<p>而反反爬虫，其实就是针对上面的三个方面给出解决方案：</p>
+<ul>
+<li><strong>①针对JS加密：</strong>我们可以使用无头浏览器渲染js，再解析渲染后的html代码。</li>
+<li><strong>②针对禁IP：</strong>我们可以使用代理ip等方式，用不同的ip访问网站。</li>
+<li><strong>③针对验证码：</strong>我们可以对验证码进行识别，也可以使用云打码这种人工验证码平台。</li>
+</ul>
+<p>关于爬虫、反爬虫、反反爬虫的故事，知乎上的这个回答描绘的非常形象。</p>
+<blockquote>
+<p>如何应对网站反爬虫策略？如何高效地爬大量数据? - 申玉宝的回答 - 知乎<br><a target="_blank" rel="noopener" href="https://www.zhihu.com/question/28168585/answer/74840535">https://www.zhihu.com/question/28168585/answer/74840535</a></p>
+</blockquote>
+<h2 id="本章内容"><a href="#本章内容" class="headerlink" title="本章内容"></a>本章内容</h2><p>通过上面的介绍，读者应该对反反爬虫有了一个基本的认识了。本章将要对反爬虫的第一个方案：JS加密，进行反反爬虫。</p>
+<h2 id="尝试爬取baidu-com"><a href="#尝试爬取baidu-com" class="headerlink" title="尝试爬取baidu.com"></a>尝试爬取baidu.com</h2><p>在介绍反反爬虫方法之前，我们先拿百度测试一下。这里假设我们想爬一爬百度搜索美女的搜索结果，也就是这个链接：<a target="_blank" rel="noopener" href="https://www.baidu.com/s?wd=%E7%BE%8E%E5%A5%B3">https://www.baidu.com/s?wd=%E7%BE%8E%E5%A5%B3</a>（注：这里URL进行了url编码）</p>
+<p>我们先用之前超级好用的requests库试一下。<br><img src="/request_baidu.png"></p>
+<p>稍微懂点儿html的就知道，这里没看到所谓的美女图，反而还让我们跳转回<a target="_blank" rel="noopener" href="http://www.baidu.com/">http://www.baidu.com/</a>。</p>
+<h2 id="什么是无头浏览器？"><a href="#什么是无头浏览器？" class="headerlink" title="什么是无头浏览器？"></a>什么是无头浏览器？</h2><p>上面我们用<code>requests.get</code>什么都没看到，但我们用浏览器访问<a target="_blank" rel="noopener" href="https://www.baidu.com/s?wd=%E7%BE%8E%E5%A5%B3">https://www.baidu.com/s?wd=%E7%BE%8E%E5%A5%B3</a>的时候，的的确确看到了搜索结果的。<br><img src="/baidu_search.png"></p>
+<p>用requests不行，明显是百度的后台识别出来我们是低劣的爬虫程序，鄙视我们，什么都不给我们。</p>
+<p>既然用浏览器可以，我们是不是可以通过Api调用我们的浏览器然后爬取搜索结果呢？</p>
+<p>确实是可以，而且还有种浏览器叫：Headless Browser，也就是无头浏览器，没有界面的浏览器。如果有界面的话，我们可能还要用显卡去渲染图形页面，非常耗费字段，这简直是专门为爬虫开发者设计的。</p>
+<h2 id="Phantomjs"><a href="#Phantomjs" class="headerlink" title="Phantomjs"></a>Phantomjs</h2><p>我们这里主要介绍的一款无头浏览器名叫：PhantomJS。虽然它现在已经不更新了，但不妨碍我们继续使用它。</p>
+<h3 id="下载PhantomJS"><a href="#下载PhantomJS" class="headerlink" title="下载PhantomJS"></a>下载PhantomJS</h3><p>我们首先下载安装PhantomJS，下载链接为：<a target="_blank" rel="noopener" href="http://phantomjs.org/download.html">http://phantomjs.org/download.html</a>。</p>
+<p>下载后解压可以看到在bin目录下面有一个<code>phantomjs</code>的可执行文件。（如果是windows的话就是<code>phantomjs.exe</code>）</p>
+<p><img src="/download_phantomjs.png"></p>
+<h3 id="安装selenium"><a href="#安装selenium" class="headerlink" title="安装selenium"></a>安装selenium</h3><p>接下来我们需要安装selenium，直接使用<code>pip</code>命令即可。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install selenium</span><br></pre></td></tr></table></figure>
+<p>selenium是一个用于Web应用程序测试的工具。它兼容各种浏览器，包括：PhantomJS、Chrome、FireFox等。</p>
+<p>phantomjs默认的话要用JavaScript写代码。安装了selenium，我们就可以使用python进行操作了。</p>
+<h3 id="使用PhantomJS爬取百度"><a href="#使用PhantomJS爬取百度" class="headerlink" title="使用PhantomJS爬取百度"></a>使用PhantomJS爬取百度</h3><p>以上安装好了之后，我们再尝试使用phantomjs爬取一下百度。代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> selenium <span class="keyword">import</span> webdriver</span><br><span class="line"></span><br><span class="line">exe_path = <span class="string">&quot;/usr/bin/phantomjs&quot;</span></span><br><span class="line">driver = webdriver.PhantomJS(executable_path=exe_path)</span><br><span class="line"></span><br><span class="line">driver.get(<span class="string">&quot;https://www.baidu.com/s?wd=%E7%BE%8E%E5%A5%B3&quot;</span>)</span><br><span class="line"></span><br><span class="line">driver.save_screenshot(<span class="string">&quot;screenshot.png&quot;</span>)  <span class="comment"># 截个图</span></span><br><span class="line"><span class="built_in">print</span>(driver.page_source)  <span class="comment"># 打印源码</span></span><br><span class="line"></span><br><span class="line">driver.quit()</span><br></pre></td></tr></table></figure>
+<p>这里需要根据自己phantomjs的下载路径配置<code>exe_path</code>。然后首先创建一个driver对象，调用<code>get</code>访问页面，就会自动渲染内部的js，显示出结果。</p>
+<blockquote>
+<p>注意：在不使用了之后，要调用driver.quit()退出，要不然后台会有很多phantomjs进程。</p>
+</blockquote>
+<p>这里我们调用selenium的截图方法看下结果。<br><img src="/phantomjs_baidu.png"></p>
+<p>可以看到我们连网页的截图都弄出来了。selenium除了截图之外，还支持很多使用js才能完成的操作，比如说：模拟点击、滚动等等。如果读者感兴趣可以自己去研究。</p>
+<h3 id="修改PhantomJS的UA"><a href="#修改PhantomJS的UA" class="headerlink" title="修改PhantomJS的UA"></a>修改PhantomJS的UA</h3><p>PhantomJS默认的User-Agent使用的是：PhantomJS。如果我们带着这个会很容易被网站检测出来，我们可以在创建driver的时候加入配置修改PhantomJS的UA，让它伪装成Chrome浏览器。代码实现如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> selenium <span class="keyword">import</span> webdriver</span><br><span class="line"><span class="keyword">from</span> selenium.webdriver.common.desired_capabilities <span class="keyword">import</span> DesiredCapabilities</span><br><span class="line"></span><br><span class="line">dcap = <span class="built_in">dict</span>(DesiredCapabilities.PHANTOMJS)</span><br><span class="line">dcap[<span class="string">&#x27;phantomjs.page.settings.userAgent&#x27;</span>] = (<span class="string">&#x27;Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.94 Safari/537.36&#x27;</span>)</span><br><span class="line">exe_path = <span class="string">&quot;/usr/bin/phantomjs&quot;</span></span><br><span class="line">driver = webdriver.PhantomJS(executable_path=exe_path, desired_capabilities=dcap)</span><br></pre></td></tr></table></figure>
+
+<h2 id="Chrome的无头模式"><a href="#Chrome的无头模式" class="headerlink" title="Chrome的无头模式"></a>Chrome的无头模式</h2><h3 id="PhantomJS访客检测"><a href="#PhantomJS访客检测" class="headerlink" title="PhantomJS访客检测"></a>PhantomJS访客检测</h3><p>当然，有的时候，你会发现有些网站你用了PhantomJS还是爬不了，笔者就遇到过这样的场景。这是因为PhantomJS建立在Qt框架。而Qt实现HTTP栈的方式使它和其他现代浏览器不一样。</p>
+<p>在Chrome中，发出Http请求的head如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable constant_">GET</span> / <span class="variable constant_">HTTP</span>/<span class="number">1.1</span></span><br><span class="line"><span class="title class_">Host</span>: <span class="attr">localhost</span>:<span class="number">1337</span></span><br><span class="line"><span class="title class_">Connection</span>: keep-alive</span><br><span class="line"><span class="title class_">Accept</span>: text/html,application/xhtml+xml,application/xml;q=<span class="number">0.9</span>,image/webp,*<span class="comment">/*;q=0.8</span></span><br><span class="line"><span class="comment">User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36</span></span><br><span class="line"><span class="comment">Accept-Encoding: gzip, deflate, sdch</span></span><br><span class="line"><span class="comment">Accept-Language: en-US,en;q=0.8,ru;q=0.6</span></span><br></pre></td></tr></table></figure>
+
+<p>然而在PhantomJS，相同的HTTP请求是这样的：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable constant_">GET</span> / <span class="variable constant_">HTTP</span>/<span class="number">1.1</span></span><br><span class="line"><span class="title class_">User</span>-<span class="title class_">Agent</span>: <span class="title class_">Mozilla</span>/<span class="number">5.0</span> (<span class="title class_">Macintosh</span>; <span class="title class_">Intel</span> <span class="title class_">Mac</span> <span class="variable constant_">OS</span> X) <span class="title class_">AppleWebKit</span>/<span class="number">534.34</span> (<span class="variable constant_">KHTML</span>, like <span class="title class_">Gecko</span>) <span class="title class_">PhantomJS</span>/<span class="number">1.9</span><span class="number">.8</span> <span class="title class_">Safari</span>/<span class="number">534.34</span></span><br><span class="line"><span class="title class_">Accept</span>: text/html,application/xhtml+xml,application/xml;q=<span class="number">0.9</span>,*<span class="comment">/*;q=0.8</span></span><br><span class="line"><span class="comment">Connection: Keep-Alive</span></span><br><span class="line"><span class="comment">Accept-Encoding: gzip</span></span><br><span class="line"><span class="comment">Accept-Language: en-US,*</span></span><br><span class="line"><span class="comment">Host: localhost:1337</span></span><br></pre></td></tr></table></figure>
+
+<p>你会注意到PhantomJS头是不同于Chrome(事实证明,其他所有现代浏览器)有一些微妙的不同:</p>
+<ul>
+<li>主机（host） 出现最后一行</li>
+<li>连接头（Connection）是大小写混合</li>
+<li>唯一的 接受编码 值是gzip</li>
+</ul>
+<p>在服务器上检查这些HTTP头的变化，它应该可以识别PhantomJS浏览器。</p>
+<h3 id="Selenium-Chrome"><a href="#Selenium-Chrome" class="headerlink" title="Selenium+Chrome"></a>Selenium+Chrome</h3><p>如果读者真的碰到这种情况的话，就可以考虑用别的无头浏览器了，比如说<strong>Chrome的无头模式</strong>。</p>
+<p>Chrome的无头模式和selenium也可以结合在一起使用。这里首先需要下载<code>chromedriver</code>，然后通过selenium的API使用即可。以下为简单的示例，如果读者对这个感兴趣，可以查阅自行百度查找教程。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> selenium <span class="keyword">import</span> webdriver</span><br><span class="line"><span class="keyword">from</span> selenium.webdriver.chrome.options <span class="keyword">import</span> Options</span><br><span class="line"></span><br><span class="line">chrome_options = Options()</span><br><span class="line">chrome_options.add_argument(<span class="string">&#x27;--headless&#x27;</span>)</span><br><span class="line">driver = webdriver.Chrome(chrome_options=chrome_options, executable_path=<span class="string">&#x27;/usr/bin/chromedriver&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="另一个工具：Splash"><a href="#另一个工具：Splash" class="headerlink" title="另一个工具：Splash"></a>另一个工具：Splash</h2><p>这里还有一款工具叫<a target="_blank" rel="noopener" href="https://splash.readthedocs.io/en/stable/">Splash</a>，它是一个JavaScript渲染服务，基于Twisted和QT5，提供了Http的API。</p>
+<p>相比PhantomJS和Chrome的无头模式，Splash的性能会好很多，而且可以支持并发渲染，不过需要跑Docker。</p>
+<p>两个比较火的Python爬虫框架：Scrapy以及PySpider就是使用Splash作为JS渲染引擎。</p>
+<p>这里笔者只是简单进行介绍，如果读者对这个感兴趣，可以查阅自行百度查找教程。</p>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><ul>
+<li><a target="_blank" rel="noopener" href="http://python.jobbole.com/86502/">反爬虫之检测 PhantomJS 访客</a></li>
+</ul>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="../%E9%82%A3%E4%BA%9B%E5%B9%B4%EF%BC%8C%E6%88%91%E7%88%AC%E8%BF%87%E7%9A%84%E5%8C%97%E7%A7%91-%E4%BA%94-%E2%80%94%E2%80%94%E6%95%B0%E6%8D%AE%E5%AD%98%E5%82%A8%E4%B9%8B%E4%BD%BF%E7%94%A8MongoDB/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>Prev</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
+              2018-12-08 16:53:07
+            </span>
+            
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="../%E9%82%A3%E4%BA%9B%E5%B9%B4%EF%BC%8C%E6%88%91%E7%88%AC%E8%BF%87%E7%9A%84%E5%8C%97%E7%A7%91-%E4%B8%83-%E2%80%94%E2%80%94%E5%8F%8D%E5%8F%8D%E7%88%AC%E8%99%AB%E4%B9%8B%E4%BD%BF%E7%94%A8%E4%BB%A3%E7%90%86ip/" target="_self">
+                <span>Next</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">Contents</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%8D%E7%88%AC%E8%99%AB%E5%92%8C%E5%8F%8D%E5%8F%8D%E7%88%AC%E8%99%AB%EF%BC%9F"><span class="toc-text">反爬虫和反反爬虫？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%AC%E7%AB%A0%E5%86%85%E5%AE%B9"><span class="toc-text">本章内容</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B0%9D%E8%AF%95%E7%88%AC%E5%8F%96baidu-com"><span class="toc-text">尝试爬取baidu.com</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E6%97%A0%E5%A4%B4%E6%B5%8F%E8%A7%88%E5%99%A8%EF%BC%9F"><span class="toc-text">什么是无头浏览器？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Phantomjs"><span class="toc-text">Phantomjs</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%8B%E8%BD%BDPhantomJS"><span class="toc-text">下载PhantomJS</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E8%A3%85selenium"><span class="toc-text">安装selenium</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8PhantomJS%E7%88%AC%E5%8F%96%E7%99%BE%E5%BA%A6"><span class="toc-text">使用PhantomJS爬取百度</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9PhantomJS%E7%9A%84UA"><span class="toc-text">修改PhantomJS的UA</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Chrome%E7%9A%84%E6%97%A0%E5%A4%B4%E6%A8%A1%E5%BC%8F"><span class="toc-text">Chrome的无头模式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#PhantomJS%E8%AE%BF%E5%AE%A2%E6%A3%80%E6%B5%8B"><span class="toc-text">PhantomJS访客检测</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Selenium-Chrome"><span class="toc-text">Selenium+Chrome</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%A6%E4%B8%80%E4%B8%AA%E5%B7%A5%E5%85%B7%EF%BC%9ASplash"><span class="toc-text">另一个工具：Splash</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Reference"><span class="toc-text">Reference</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="../../../../js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="http://www.beian.miit.gov.cn/">http://www.beian.miit.gov.cn/  京ICP备17062395号</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="../../../../js/backtotop.js"></script>
+
+
+
+        
+  <div class="search-icon tools-bar-item" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="Search...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>First search, index file loading, please wait...<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>No result<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The search.xml file was not found, please refer to：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The request failed, Try to refresh the page or try again later.<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="../../../../js/colorscheme.js"></script>
+
+
+
+
+
+        
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + %E9%82%A3%E4%BA%9B%E5%B9%B4%EF%BC%8C%E6%88%91%E7%88%AC%E8%BF%87%E7%9A%84%E5%8C%97%E7%A7%91(%E5%85%AD)%E2%80%94%E2%80%94%E5%8F%8D%E5%8F%8D%E7%88%AC%E8%99%AB%E4%B9%8Bjs%E6%B8%B2%E6%9F%93 + '&url=' + http%3A%2F%2Fnladuo.github.io%2F2018%2F12%2F08%2F%25E9%2582%25A3%25E4%25BA%259B%25E5%25B9%25B4%25EF%25BC%258C%25E6%2588%2591%25E7%2588%25AC%25E8%25BF%2587%25E7%259A%2584%25E5%258C%2597%25E7%25A7%2591-%25E5%2585%25AD-%25E2%2580%2594%25E2%2580%2594%25E5%258F%258D%25E5%258F%258D%25E7%2588%25AC%25E8%2599%25AB%25E4%25B9%258Bjs%25E6%25B8%25B2%25E6%259F%2593%2F + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=http://nladuo.github.io/2018/12/08/%E9%82%A3%E4%BA%9B%E5%B9%B4%EF%BC%8C%E6%88%91%E7%88%AC%E8%BF%87%E7%9A%84%E5%8C%97%E7%A7%91-%E5%85%AD-%E2%80%94%E2%80%94%E5%8F%8D%E5%8F%8D%E7%88%AC%E8%99%AB%E4%B9%8Bjs%E6%B8%B2%E6%9F%93/" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
+  
+  
+<script src="../../../../js/shares.js"></script>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>

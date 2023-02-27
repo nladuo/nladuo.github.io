@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="keywords" content="" />
+  <meta name="author" content="叁公子KCN" />
+  <meta name="description" content="" />
+  
+  
+  <title>
+    
+      使用TensorFlow训练Weibo.cn验证码 
+      
+      
+      |
+    
+     叁公子的博客
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="../../../../js/fancybox.js"></script>
+
+
+  
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/"></a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="../../../../js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="../../../../js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">使用TensorFlow训练Weibo.cn验证码</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
+          2017-04-10 12:34:41
+        </span>
+        
+      </div>
+      <div class="markdown-body">
+        <p>最近在抽时间学习TensorFlow这个DL库的使用，学的断断续续的，看官网上第一个案例就是<a target="_blank" rel="noopener" href="https://www.tensorflow.org/get_started/mnist/pros">训练手写字符识别</a>, 我之前在做Weibo.cn验证码识别的时候，自己搞了一个数据集，当时用的c++库tiny-dnn进行训练的(见：<a href="http://nladuo.github.io/2016/09/23/%E9%AA%8C%E8%AF%81%E7%A0%81%E7%A0%B4%E8%A7%A3%E6%8A%80%E6%9C%AF%E5%9B%9B%E9%83%A8%E6%9B%B2%E4%B9%8B%E4%BD%BF%E7%94%A8%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/">验证码破解技术四部曲之使用卷积神经网络（四）</a>)，现在我把它移植到TensorFlow上试试。</p>
+<p>完整代码见：<a target="_blank" rel="noopener" href="https://github.com/nladuo/captcha-break/tree/master/weibo.cn/tensorflow-impl">weibo.cn&#x2F;tensorflow-impl</a></p>
+<h2 id="使用的库"><a href="#使用的库" class="headerlink" title="使用的库"></a>使用的库</h2><ul>
+<li>TensorFlow-1.0</li>
+<li>scikit-learn-0.18</li>
+<li>pillow</li>
+</ul>
+<h2 id="加载数据集"><a href="#加载数据集" class="headerlink" title="加载数据集"></a>加载数据集</h2><p>数据集下载地址：<a target="_blank" rel="noopener" href="https://github.com/nladuo/captcha-break/raw/master/weibo.cn/trainer/training_set.zip">training_set.zip</a>  </p>
+<span id="more"></span>
+
+<p>解压过后如下图：<br><img src="/%E4%BD%BF%E7%94%A8TensorFlow%E8%AE%AD%E7%BB%83Weibo-cn%E9%AA%8C%E8%AF%81%E7%A0%81/dataset.png" alt="dataset"></p>
+<p>我把同一类的图片放到了一个文件夹里，文件夹的名字也就是图片的label，打开文件夹后可以看到字符的图片信息。<br><img src="/%E4%BD%BF%E7%94%A8TensorFlow%E8%AE%AD%E7%BB%83Weibo-cn%E9%AA%8C%E8%AF%81%E7%A0%81/dataset_detail.png" alt="dataset_detail"></p>
+<p>下面，我们把数据加载到一个pickle文件里面，它需要有train_dataset、train_labels、test_dataset、test_labels四个变量代表训练集和测试集的数据和标签。</p>
+<p>此外，还需要有个label_map，用来把训练的标签和实际的标签对应，比如说3对应字母M，4对应字母N。</p>
+<p>此部分的代码见：<a target="_blank" rel="noopener" href="https://github.com/nladuo/captcha-break/blob/master/weibo.cn/tensorflow-impl/load_models.py">load_models.py</a>。注：很多的代码参考自udacity的deeplearning课程。</p>
+<p>首先根据文件夹的来加载所有的数据，index代表训练里的标签，label代表实际的标签，使用PIL读取图片，并转换成numpy数组。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">from</span> PIL <span class="keyword">import</span> Image</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">load_dataset</span>():</span><br><span class="line">    dataset = []</span><br><span class="line">    labelset = []</span><br><span class="line">    label_map = &#123;&#125;</span><br><span class="line"></span><br><span class="line">    base_dir = <span class="string">&quot;../trainer/training_set/&quot;</span>  <span class="comment"># 数据集的位置</span></span><br><span class="line">    labels = os.listdir(base_dir)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> index, label <span class="keyword">in</span> <span class="built_in">enumerate</span>(labels):</span><br><span class="line">        <span class="keyword">if</span> label == <span class="string">&quot;ERROR&quot;</span> <span class="keyword">or</span> label == <span class="string">&quot;.DS_Store&quot;</span>:</span><br><span class="line">            <span class="keyword">continue</span></span><br><span class="line">        <span class="built_in">print</span> <span class="string">&quot;loading:&quot;</span>, label, <span class="string">&quot;index:&quot;</span>, index</span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            image_files = os.listdir(base_dir + label)</span><br><span class="line">            <span class="keyword">for</span> image_file <span class="keyword">in</span> image_files:</span><br><span class="line">                image_path = base_dir + label + <span class="string">&quot;/&quot;</span> + image_file</span><br><span class="line">                im = Image.<span class="built_in">open</span>(image_path).convert(<span class="string">&#x27;L&#x27;</span>)</span><br><span class="line">                dataset.append(np.asarray(im, dtype=np.float32))</span><br><span class="line">                labelset.append(index)</span><br><span class="line">            label_map[index] = label</span><br><span class="line">        <span class="keyword">except</span>: <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> np.array(dataset), np.array(labelset), label_map</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">dataset, labelset, label_map = load_dataset()</span><br></pre></td></tr></table></figure>
+
+<p>接下来，把数据打乱。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">randomize</span>(<span class="params">dataset, labels</span>):</span><br><span class="line">    permutation = np.random.permutation(labels.shape[<span class="number">0</span>])</span><br><span class="line">    shuffled_dataset = dataset[permutation, :, :]</span><br><span class="line">    shuffled_labels = labels[permutation]</span><br><span class="line">    <span class="keyword">return</span> shuffled_dataset, shuffled_labels</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">dataset, labelset = randomize(dataset, labelset)</span><br></pre></td></tr></table></figure>
+
+<p>然后使用scikit-learn的函数，把训练集和测试集分开。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> train_test_split</span><br><span class="line">train_dataset, test_dataset, train_labels, test_labels = train_test_split(dataset, labelset)</span><br></pre></td></tr></table></figure>
+
+<p>在TensorFlow官网给的例子中，会把label进行<code>One-Hot Encoding</code>，并把28*28的图片转换成了一维向量(784)。如下图，查看官网例子的模型。<br><img src="/%E4%BD%BF%E7%94%A8TensorFlow%E8%AE%AD%E7%BB%83Weibo-cn%E9%AA%8C%E8%AF%81%E7%A0%81/minist_data.png" alt="minist_data"></p>
+<p>我也把数据转换了一下，把32*32的图片转换成一维向量(1024)，并对标签进行One-Hot Encoding。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">reformat</span>(<span class="params">dataset, labels, image_size, num_labels</span>):</span><br><span class="line">    dataset = dataset.reshape((-<span class="number">1</span>, image_size * image_size)).astype(np.float32)</span><br><span class="line">    <span class="comment"># Map 1 to [0.0, 1.0, 0.0 ...], 2 to [0.0, 0.0, 1.0 ...]</span></span><br><span class="line">    labels = (np.arange(num_labels) == labels[:, <span class="literal">None</span>]).astype(np.float32)</span><br><span class="line">    <span class="keyword">return</span> dataset, labels</span><br><span class="line"></span><br><span class="line">train_dataset, train_labels = reformat(train_dataset, train_labels, <span class="number">32</span>, <span class="built_in">len</span>(label_map))</span><br><span class="line">test_dataset, test_labels = reformat(test_dataset, test_labels, <span class="number">32</span>, <span class="built_in">len</span>(label_map))</span><br><span class="line"><span class="built_in">print</span> <span class="string">&quot;train_dataset:&quot;</span>, train_dataset.shape</span><br><span class="line"><span class="built_in">print</span> <span class="string">&quot;train_labels:&quot;</span>, train_labels.shape</span><br><span class="line"><span class="built_in">print</span> <span class="string">&quot;test_dataset:&quot;</span>, test_dataset.shape</span><br><span class="line"><span class="built_in">print</span> <span class="string">&quot;test_labels:&quot;</span>, test_labels.shape</span><br></pre></td></tr></table></figure>
+<p>转换后，格式就和minist一样了。<br><img src="/%E4%BD%BF%E7%94%A8TensorFlow%E8%AE%AD%E7%BB%83Weibo-cn%E9%AA%8C%E8%AF%81%E7%A0%81/reformat.png" alt="reformat"></p>
+<p>最后，把数据保存到save.pickle里面。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">save = &#123;</span><br><span class="line">    <span class="string">&#x27;train_dataset&#x27;</span>: train_dataset,</span><br><span class="line">    <span class="string">&#x27;train_labels&#x27;</span>: train_labels,</span><br><span class="line">    <span class="string">&#x27;test_dataset&#x27;</span>: test_dataset,</span><br><span class="line">    <span class="string">&#x27;test_labels&#x27;</span>: test_labels,</span><br><span class="line">    <span class="string">&#x27;label_map&#x27;</span>: label_map</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&quot;save.pickle&quot;</span>, <span class="string">&#x27;wb&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">    pickle.dump(save, f)</span><br></pre></td></tr></table></figure>
+<h2 id="验证数据集加载是否正确"><a href="#验证数据集加载是否正确" class="headerlink" title="验证数据集加载是否正确"></a>验证数据集加载是否正确</h2><p>加载完数据后，需要验证一下数据是否正确。我选择的方法很简单，就是把trainset的第1个(或者第2个、第n个)图片打开，看看它的标签和看到的能不能对上。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> cPickle <span class="keyword">as</span> pickle</span><br><span class="line"><span class="keyword">from</span> PIL <span class="keyword">import</span> Image</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">check_dataset</span>(<span class="params">dataset, labels, label_map, index</span>):</span><br><span class="line">    data = np.uint8(dataset[index]).reshape((<span class="number">32</span>, <span class="number">32</span>))</span><br><span class="line">    i = np.argwhere(labels[index] == <span class="number">1</span>)[<span class="number">0</span>][<span class="number">0</span>]</span><br><span class="line">    im = Image.fromarray(data)</span><br><span class="line">    im.show()</span><br><span class="line">    <span class="built_in">print</span> <span class="string">&quot;label:&quot;</span>, label_map[i]</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    <span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&quot;save.pickle&quot;</span>, <span class="string">&#x27;rb&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">        save = pickle.load(f)</span><br><span class="line">        train_dataset = save[<span class="string">&#x27;train_dataset&#x27;</span>]</span><br><span class="line">        train_labels = save[<span class="string">&#x27;train_labels&#x27;</span>]</span><br><span class="line">        test_dataset = save[<span class="string">&#x27;test_dataset&#x27;</span>]</span><br><span class="line">        test_labels = save[<span class="string">&#x27;test_labels&#x27;</span>]</span><br><span class="line">        label_map = save[<span class="string">&#x27;label_map&#x27;</span>]</span><br><span class="line"></span><br><span class="line">	<span class="comment"># check if the image is corresponding to it&#x27;s label</span></span><br><span class="line">	check_dataset(train_dataset, train_labels, label_map, <span class="number">0</span>)</span><br></pre></td></tr></table></figure>
+<p>运行后，可以看到第一张图片是Y，标签也是正确的。<br><img src="/%E4%BD%BF%E7%94%A8TensorFlow%E8%AE%AD%E7%BB%83Weibo-cn%E9%AA%8C%E8%AF%81%E7%A0%81/check_dataset.png" alt="check_dataset"></p>
+<h2 id="训练"><a href="#训练" class="headerlink" title="训练"></a>训练</h2><p>数据加载好了之后，就可以开始训练了，训练的网络就使用TensorFlow官网在<a target="_blank" rel="noopener" href="https://www.tensorflow.org/get_started/mnist/pros">Deep MNIST for Experts</a>里提供的就好了。</p>
+<p>此部分的代码见：<a target="_blank" rel="noopener" href="https://github.com/nladuo/captcha-break/blob/master/weibo.cn/tensorflow-impl/train.py">train.py</a>。</p>
+<p>先加载一下模型:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> cPickle <span class="keyword">as</span> pickle</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&quot;save.pickle&quot;</span>, <span class="string">&#x27;rb&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">    save = pickle.load(f)</span><br><span class="line">    train_dataset = save[<span class="string">&#x27;train_dataset&#x27;</span>]</span><br><span class="line">    train_labels = save[<span class="string">&#x27;train_labels&#x27;</span>]</span><br><span class="line">    test_dataset = save[<span class="string">&#x27;test_dataset&#x27;</span>]</span><br><span class="line">    test_labels = save[<span class="string">&#x27;test_labels&#x27;</span>]</span><br><span class="line">    label_map = save[<span class="string">&#x27;label_map&#x27;</span>]</span><br><span class="line"></span><br><span class="line">image_size = <span class="number">32</span></span><br><span class="line">num_labels = <span class="built_in">len</span>(label_map)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span> <span class="string">&quot;train_dataset:&quot;</span>, train_dataset.shape</span><br><span class="line"><span class="built_in">print</span> <span class="string">&quot;train_labels:&quot;</span>, train_labels.shape</span><br><span class="line"><span class="built_in">print</span> <span class="string">&quot;test_dataset:&quot;</span>, test_dataset.shape</span><br><span class="line"><span class="built_in">print</span> <span class="string">&quot;test_labels:&quot;</span>, test_labels.shape</span><br><span class="line"><span class="built_in">print</span> <span class="string">&quot;num_labels:&quot;</span>, num_labels</span><br></pre></td></tr></table></figure>
+
+<p>minist的数据都是28*28的，把里面的网络改完了之后，如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">weight_variable</span>(<span class="params">shape</span>):</span><br><span class="line">    initial = tf.truncated_normal(shape, stddev=<span class="number">0.1</span>)</span><br><span class="line">    <span class="keyword">return</span> tf.Variable(initial)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">bias_variable</span>(<span class="params">shape</span>):</span><br><span class="line">    initial = tf.constant(<span class="number">0.1</span>, shape=shape)</span><br><span class="line">    <span class="keyword">return</span> tf.Variable(initial)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">conv2d</span>(<span class="params">x, W</span>):</span><br><span class="line">    <span class="keyword">return</span> tf.nn.conv2d(x, W, strides=[<span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>], padding=<span class="string">&#x27;SAME&#x27;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">max_pool_2x2</span>(<span class="params">x</span>):</span><br><span class="line">    <span class="keyword">return</span> tf.nn.max_pool(x, ksize=[<span class="number">1</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">1</span>],</span><br><span class="line">                          strides=[<span class="number">1</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">1</span>], padding=<span class="string">&#x27;SAME&#x27;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">graph = tf.Graph()</span><br><span class="line"><span class="keyword">with</span> graph.as_default():</span><br><span class="line">    x = tf.placeholder(tf.float32, shape=[<span class="literal">None</span>, image_size * image_size])</span><br><span class="line">    y_ = tf.placeholder(tf.float32, shape=[<span class="literal">None</span>, num_labels])</span><br><span class="line"></span><br><span class="line">    x_image = tf.reshape(x, [-<span class="number">1</span>, <span class="number">32</span>, <span class="number">32</span>, <span class="number">1</span>])</span><br><span class="line"></span><br><span class="line">    <span class="comment"># First Convolutional Layer</span></span><br><span class="line">    W_conv1 = weight_variable([<span class="number">5</span>, <span class="number">5</span>, <span class="number">1</span>, <span class="number">32</span>])</span><br><span class="line">    b_conv1 = bias_variable([<span class="number">32</span>])</span><br><span class="line"></span><br><span class="line">    h_conv1 = tf.nn.relu(conv2d(x_image, W_conv1) + b_conv1)</span><br><span class="line">    h_pool1 = max_pool_2x2(h_conv1)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Second Convolutional Layer</span></span><br><span class="line">    W_conv2 = weight_variable([<span class="number">5</span>, <span class="number">5</span>, <span class="number">32</span>, <span class="number">64</span>])</span><br><span class="line">    b_conv2 = bias_variable([<span class="number">64</span>])</span><br><span class="line"></span><br><span class="line">    h_conv2 = tf.nn.relu(conv2d(h_pool1, W_conv2) + b_conv2)</span><br><span class="line">    h_pool2 = max_pool_2x2(h_conv2)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Densely Connected Layer</span></span><br><span class="line">    W_fc1 = weight_variable([image_size / <span class="number">4</span> * image_size / <span class="number">4</span> * <span class="number">64</span>, <span class="number">1024</span>])</span><br><span class="line">    b_fc1 = bias_variable([<span class="number">1024</span>])</span><br><span class="line"></span><br><span class="line">    h_pool2_flat = tf.reshape(h_pool2, [-<span class="number">1</span>, image_size / <span class="number">4</span> * image_size / <span class="number">4</span> * <span class="number">64</span>])</span><br><span class="line">    h_fc1 = tf.nn.relu(tf.matmul(h_pool2_flat, W_fc1) + b_fc1)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Dropout</span></span><br><span class="line">    keep_prob = tf.placeholder(tf.float32)</span><br><span class="line">    h_fc1_drop = tf.nn.dropout(h_fc1, keep_prob)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Readout Layer</span></span><br><span class="line">    W_fc2 = weight_variable([<span class="number">1024</span>, num_labels])</span><br><span class="line">    b_fc2 = bias_variable([num_labels])</span><br><span class="line"></span><br><span class="line">    y_conv = tf.matmul(h_fc1_drop, W_fc2) + b_fc2</span><br><span class="line"></span><br><span class="line">    cross_entropy = tf.reduce_mean(</span><br><span class="line">        tf.nn.softmax_cross_entropy_with_logits(labels=y_, logits=y_conv))</span><br><span class="line"></span><br><span class="line">    train_step = tf.train.AdamOptimizer(<span class="number">1e-4</span>).minimize(cross_entropy)</span><br><span class="line">    correct_prediction = tf.equal(tf.argmax(y_conv, <span class="number">1</span>), tf.argmax(y_, <span class="number">1</span>))</span><br><span class="line">    accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))</span><br></pre></td></tr></table></figure>
+<p>主要改动就是输入层把28*28改成了image_size*image_size（32*32），然后第三层的全连接网络把7*7改成了image_size&#x2F;4*image_size&#x2F;4（8*8），以及把10（手写字符一共10类）改成了num_labels。</p>
+<p>然后训练，我这里把batch_size改成了128，训练批次改少了。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">batch_size = <span class="number">128</span></span><br><span class="line"><span class="keyword">with</span> tf.Session(graph=graph) <span class="keyword">as</span> session:</span><br><span class="line">    tf.global_variables_initializer().run()</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;Initialized&quot;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> step <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">2001</span>):</span><br><span class="line">        offset = (step * batch_size) % (train_labels.shape[<span class="number">0</span>] - batch_size)</span><br><span class="line">        <span class="comment"># Generate a minibatch.</span></span><br><span class="line">        batch_data = train_dataset[offset:(offset + batch_size), :]</span><br><span class="line">        batch_labels = train_labels[offset:(offset + batch_size), :]</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> step % <span class="number">50</span> == <span class="number">0</span>:</span><br><span class="line">            train_accuracy = accuracy.<span class="built_in">eval</span>(feed_dict=&#123;</span><br><span class="line">                x: batch_data, y_: batch_labels, keep_prob: <span class="number">1.0</span>&#125;)</span><br><span class="line">            test_accuracy = accuracy.<span class="built_in">eval</span>(feed_dict=&#123;</span><br><span class="line">                x: test_dataset, y_: test_labels, keep_prob: <span class="number">1.0</span>&#125;)</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&quot;Step %d, Training accuracy: %g, Test accuracy: %g&quot;</span> % (step, train_accuracy, test_accuracy))</span><br><span class="line"></span><br><span class="line">        train_step.run(feed_dict=&#123;x: batch_data, y_: batch_labels, keep_prob: <span class="number">0.5</span>&#125;)</span><br><span class="line"></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;Test accuracy: %g&quot;</span> % accuracy.<span class="built_in">eval</span>(feed_dict=&#123;</span><br><span class="line">        x: test_dataset, y_: test_labels, keep_prob: <span class="number">1.0</span>&#125;))</span><br></pre></td></tr></table></figure>
+<p>运行，可以看到识别率在不断的上升。<br><img src="/%E4%BD%BF%E7%94%A8TensorFlow%E8%AE%AD%E7%BB%83Weibo-cn%E9%AA%8C%E8%AF%81%E7%A0%81/train.png" alt="train"></p>
+<p>最后，有了接近98%的识别率，只有4000个训练数据，感觉不错了。<br><img src="/%E4%BD%BF%E7%94%A8TensorFlow%E8%AE%AD%E7%BB%83Weibo-cn%E9%AA%8C%E8%AF%81%E7%A0%81/train_last.png" alt="train_last"></p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="../../08/%E5%9F%BA%E4%BA%8Eunoconv%E7%9A%84%E5%9C%A8%E7%BA%BFoffice%E9%A2%84%E8%A7%88/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>Prev</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
+              2017-04-10 12:34:41
+            </span>
+            
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="../../../09/18/%E9%82%A3%E4%BA%9B%E5%B9%B4%EF%BC%8C%E6%88%91%E7%88%AC%E8%BF%87%E7%9A%84%E5%8C%97%E7%A7%91-%E5%BA%8F-%E2%80%94%E2%80%94%E6%88%91%E5%92%8C%E7%88%AC%E8%99%AB%E7%9A%84%E7%BC%98%E5%88%86/" target="_self">
+                <span>Next</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">Contents</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E7%9A%84%E5%BA%93"><span class="toc-text">使用的库</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8A%A0%E8%BD%BD%E6%95%B0%E6%8D%AE%E9%9B%86"><span class="toc-text">加载数据集</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%AA%8C%E8%AF%81%E6%95%B0%E6%8D%AE%E9%9B%86%E5%8A%A0%E8%BD%BD%E6%98%AF%E5%90%A6%E6%AD%A3%E7%A1%AE"><span class="toc-text">验证数据集加载是否正确</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%AD%E7%BB%83"><span class="toc-text">训练</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="../../../../js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="http://www.beian.miit.gov.cn/">http://www.beian.miit.gov.cn/  京ICP备17062395号</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="../../../../js/backtotop.js"></script>
+
+
+
+        
+  <div class="search-icon tools-bar-item" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="Search...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>First search, index file loading, please wait...<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>No result<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The search.xml file was not found, please refer to：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The request failed, Try to refresh the page or try again later.<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="../../../../js/colorscheme.js"></script>
+
+
+
+
+
+        
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + %E4%BD%BF%E7%94%A8TensorFlow%E8%AE%AD%E7%BB%83Weibo.cn%E9%AA%8C%E8%AF%81%E7%A0%81 + '&url=' + http%3A%2F%2Fnladuo.github.io%2F2017%2F04%2F10%2F%25E4%25BD%25BF%25E7%2594%25A8TensorFlow%25E8%25AE%25AD%25E7%25BB%2583Weibo-cn%25E9%25AA%258C%25E8%25AF%2581%25E7%25A0%2581%2F + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=http://nladuo.github.io/2017/04/10/%E4%BD%BF%E7%94%A8TensorFlow%E8%AE%AD%E7%BB%83Weibo-cn%E9%AA%8C%E8%AF%81%E7%A0%81/" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
+  
+  
+<script src="../../../../js/shares.js"></script>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>

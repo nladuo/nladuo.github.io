@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="keywords" content="" />
+  <meta name="author" content="叁公子KCN" />
+  <meta name="description" content="" />
+  
+  
+  <title>
+    
+      读论文Alogorithms for Non-negative Matrix Factorization 
+      
+      
+      |
+    
+     叁公子的博客
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="../../../../js/fancybox.js"></script>
+
+
+  
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/"></a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="../../../../js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="../../../../js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">读论文Alogorithms for Non-negative Matrix Factorization</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
+          2017-11-09 15:27:00
+        </span>
+        
+      </div>
+      <div class="markdown-body">
+        <h3 id="NMF是什么？"><a href="#NMF是什么？" class="headerlink" title="NMF是什么？"></a>NMF是什么？</h3><p>$$ V_{n<em>m}≈W_{n</em>r}H_{r<em>m} $$<br>$$ v_{n</em>1}≈W_{n<em>r}h_{r</em>1} $$<br>找出原数据的latent，压缩数据。将原来需要n维来表示的数据用r维的线性组合来表示。</p>
+<p><img src="/1.jpeg"></p>
+<span id="more"></span>
+
+<h3 id="该文成果"><a href="#该文成果" class="headerlink" title="该文成果"></a>该文成果</h3><ol>
+<li><p>提出两种算法，</p>
+</li>
+<li><p>并证明更新规则是单调的，从而算法可以收敛到局部最优。</p>
+</li>
+</ol>
+<h3 id="Cost-Function"><a href="#Cost-Function" class="headerlink" title="Cost Function"></a>Cost Function</h3><p>$$ ||A-B||^2&#x3D;\sum_{ij}(A_{ij}-B_{ij})^2 $$</p>
+<p>Problem1：最小化 $$||V-WH||^2 $$ ，where $$W,H&gt;0$$</p>
+<p>$$D(A||B)&#x3D;\sum_{ij}(A_{ij}log\frac{A_{ij}}{B_{ij}})-A_{ij}+B_{ij}$$</p>
+<p>Problem2：最小化 $$D(V||WH) $$ ，where $$W,H&gt;0$$</p>
+<p>两个方程针对单个W或者H都是凸的，但是同时的话不是凸的。所以只能找到局部最优，而非全局最优。</p>
+<p>现有方法：</p>
+<ul>
+<li>gradient descent：太慢</li>
+<li>conjugate gradient：more complicated than gradient descent</li>
+<li>基于梯度的方法：对于step的选择比较敏感，对于大型应用不方便</li>
+</ul>
+<h3 id="Updated-rules"><a href="#Updated-rules" class="headerlink" title="Updated rules"></a>Updated rules</h3><h4 id="欧氏距离"><a href="#欧氏距离" class="headerlink" title="欧氏距离"></a>欧氏距离</h4><p>$$H_{a\mu}\leftarrow H_{a\mu}\frac{(W^TV)<em>{a\mu}}{(W^TWH)</em>{a\mu}}$$</p>
+<p>$$W_{ia}\leftarrow W_{ia}\frac{(VH^T)<em>{ia}}{(WHH^T)</em>{ia}} $$</p>
+<h4 id="Divergence"><a href="#Divergence" class="headerlink" title="Divergence"></a>Divergence</h4><p>$$ H_{a\mu} \leftarrow H_{a\mu}\frac{\sum_iW_{ia}V_{i\mu}&#x2F;(WH)<em>{i\mu}}{\sum_kW</em>{ka}}$$</p>
+<p>$$ W_{ia} \leftarrow W_{ia}\frac{\sum_{\mu}H_{a\mu}V_{i\mu}&#x2F;(WH)<em>{i\mu}}{\sum_vH</em>{av}}$$</p>
+<h3 id="Proof-of-Convergence"><a href="#Proof-of-Convergence" class="headerlink" title="Proof of Convergence"></a>Proof of Convergence</h3><h4 id="定义1"><a href="#定义1" class="headerlink" title="定义1"></a>定义1</h4><p>$$ G(h,h’)\geq F(h), G(h, h)&#x3D;F(h) $$</p>
+<p>则$$G(h,h’)$$是$$F(h)$$的辅助函数，当满足上面条件时。</p>
+<p><img src="/2.png"></p>
+<h4 id="引理1"><a href="#引理1" class="headerlink" title="引理1"></a>引理1</h4><p>根据定义1，有$$F(h^{t+1}) \leq G(h^{t+1}, h^t) \leq G(h^t, h^t) &#x3D; F(h)$$<br>$$ h^{t+1} &#x3D; \arg\min_hG(h,h^t) $$<br>不断迭代上式，可以得出局部最优，$$h_{min} &#x3D; \arg \min_h F(h)$$</p>
+<h4 id="引理2"><a href="#引理2" class="headerlink" title="引理2"></a>引理2</h4><p>定义对角阵$$K(h^t)$$<br>$$ K_{ab}(h^t)&#x3D;\frac{\delta_ab(W^TWh^t)_a}{h_a^t} $$</p>
+<p>定义<br>$$ G(h, h^t) &#x3D; F(h^t) + (h-h^t)^T\nabla{F(h^t)} + \frac12 (h-h^t)^TK(h^t) (h-h^t) $$</p>
+<p>如果证明$$G(h, h^t)$$是$$F(h)$$辅助函数，就可以得出欧式距离局部收敛了。</p>
+<p>$$ F(h)&#x3D;\frac12\sum_i(v_i-\sum_aW_{ia}h_a)^2 $$</p>
+<h5 id="F-h-在-h-t-附近的二阶泰勒展开"><a href="#F-h-在-h-t-附近的二阶泰勒展开" class="headerlink" title="$$F(h)$$在$$h^t$$附近的二阶泰勒展开"></a>$$F(h)$$在$$h^t$$附近的二阶泰勒展开</h5><p>$$ F(h)&#x3D;F(h^t) + (h-h^t)^T\nabla{F(h^t)} + \frac12 (h-h^t)^T\nabla^2F(h^t) (h-h^t)  $$<br>其中<br>$$ \nabla{F(h^t)}&#x3D;\sum_i{(v_i-\sum_{a}{W_{ia}h_a^t})(-W_{ia})} $$<br>$$ \nabla^2F(h^t)&#x3D; \nabla(\nabla{F(h^t)})&#x3D;\sum_{ia}(W^T)<em>{ai}h_a^tW</em>{ia}&#x3D;W^TW$$</p>
+<h5 id="半正定性证明"><a href="#半正定性证明" class="headerlink" title="半正定性证明"></a>半正定性证明</h5><p>显然，$$G (h, h)&#x3D;F(h) $$</p>
+<p>那么$$G(h, h^t) \geq F(h)$$ 等价于下式</p>
+<p>$$0 \leq (h-h^t)^T<a href="h-h%5Et">K(h^t)-W^TW</a>$$<br>等价于证明下面矩阵的半正定性<br>$$M_{ab}(h^t)&#x3D;h_a^t(K(h^t)-W^TW)_{ab}h_b^t$$</p>
+<p>对于下式<br>$$ v^TMv&#x3D;\sum_{ab}v_aM_{ab}v_b $$<br>$$ &#x3D; \sum_{ab}v_ah_a^tK(h^t)h_b^tv_b-v_ah_a^t(W^TW)_{ab}h_b^tv_b$$</p>
+<p>其中<br>$$ \delta_{ab}&#x3D;\begin{cases}1, &amp;a&#x3D;b \cr 0, &amp;a\not&#x3D;b\end{cases}$$<br>$$ \sum_{ab}v_ah_a^tK(h^t)h_b^tv_b&#x3D;\sum_{ab}v_ah_a^t\delta_{ab}(W^TWh^t)<em>a&#x2F;h_a^t*h_b^tv_b $$<br>因为$$\delta</em>{ab}$$是对角阵，所以可以得出$$v_a&#x3D;v_b$$<br>即：<br>$$\sum_{ab}v_ah_a^tK(h^t)h_b^tv_b&#x3D;\sum_{ab}(h_a^t)^2(W^TW)<em>{ab}&#x2F;h_a^t*h_b^tv_a^2$$<br>$$&#x3D;\sum</em>{ab}h_a^t(W^TW)_{ab}h_b^t(\frac12v_a^2+\frac12v_b^2)$$</p>
+<p>所以：<br>$$ v^TMv&#x3D;\sum_{ab}h_a^t(W^TW)<em>{ab}h_b^t(\frac12v_a^2+\frac12v_b^2-v_av_b) $$<br>$$ &#x3D;\frac12\sum</em>{ab}h_a^t(W^TW)_{ab}h_b^t(v_a-v_b)^2  $$<br>$$ \geq 0$$</p>
+<h4 id="证明定理1——欧式距离Cost-Function的收敛："><a href="#证明定理1——欧式距离Cost-Function的收敛：" class="headerlink" title="证明定理1——欧式距离Cost Function的收敛："></a>证明定理1——欧式距离Cost Function的收敛：</h4><p>上述式子已经证明$$G(h,h^t)$$是$$F(h^t)$$的辅助函数</p>
+<p>$$ G(h, h^t)&#x3D;F(h^t)+(h-h^t)\nabla{F(h^t)}+\frac12(h-h^t)^TK(h^t)(h-h^t) $$<br>令$$\nabla{G(h, h^t)}&#x3D;0$$<br>$$ \nabla{F(h^t)}+K(h^t)(h-h^t)&#x3D;0$$<br>得递推式<br>$$ h^{t+1}&#x3D;h^t-K(h^t)^{-1}\nabla{F(h^t)} $$</p>
+<p>$$h^{t+1} &#x3D; h^t-\frac{h_a^t}{\delta_{ab}(W^TWh^t)<em>a}\sum_i{(v_i-\sum</em>{a}{W_{ia}h_a})(-W_{ia})} $$<br>$$ &#x3D; h^t - \frac{h_a^t}{\delta_{ab}(W^TWh^t)<em>a}(\sum</em>{ia}(W^T)<em>{ai}h_aW</em>{ia} - \sum_iv_iW_{ia})$$</p>
+<p>最后得到欧式距离的$$H$$的update rules，同理可得到$$W$$的update rules。<br>$$ h_a^{t+1} &#x3D; h_a^t\frac{(W^Tv)_a}{(W^TWh^t)_a}$$</p>
+<h4 id="引理2-1"><a href="#引理2-1" class="headerlink" title="引理2"></a>引理2</h4><p>和前面一样，如果证明$$G(h, h^t)$$是$$F(h)$$辅助函数，就可以得出Divergence下局部收敛了<br>$$ G(h, h^t) &#x3D; \sum_i(v_ilogv_i-v_i)+\sum_{ia}W_{ia}h_a-<br>\sum_{ia}v_i\frac{W_{ia}h_a^t}{\sum_bW_{ib}h_b^t}(logW_{ia}h_a-log\frac{W_{ia}h_a^t}{\sum_bW_{ib}h_b^t}) $$</p>
+<p>$$ F(h) &#x3D; \sum_{i}v_{i}log(\frac{v_i}{\sum_a{W_{ia}h_a}})-v_i+\sum_aW_{ia}h_a $$</p>
+<p>这里$$ G(h, h) &#x3D; F(h) $$如下<br>$$ G(h, h) &#x3D;  \sum_i(v_{i}logv_i-v_i)+\sum_{ia}W_{ia}h_a-<br>\sum_{ia}v_i\frac{W_{ia}h_a}{\sum_bW_{ib}h_b}(logW_{ia}h_a-log\frac{W_{ia}h_a}{\sum_bW_{ib}h_b}) $$</p>
+<p>$$ &#x3D;  \sum_i(v_ilogv_i-v_i)+\sum_{ia}W_{ia}h_a-<br>\sum_{ia}v_i\frac{W_{ia}h_a}{\sum_bW_{ib}h_b}(log{\sum_bW_{ib}h_b}) $$<br>$$&#x3D; \sum_i(v_ilogv_i-v_i)+\sum_{ia}W_{ia}h_a-<br>\sum_{i}v_i\frac{\sum_aW_{ia}h_a}{\sum_bW_{ib}h_b}(log{\sum_bW_{ib}h_b})$$<br>$$ &#x3D;  \sum_{i}v_{i}log(\frac{v_i}{\sum_b{W_{ib}h_b}})-v_i+\sum_aW_{ia}h_a &#x3D; F(h)$$</p>
+<p>由加权形式的Jessen不等式可得<br>$$-log\sum_aW_{ia}h_a \leq -\sum_a\alpha_alog\frac{W_{ia}h_a}{\alpha_a}$$</p>
+<p>其中，<br>$$\sum_a\alpha_a&#x3D;1$$</p>
+<p>令<br>$$ \alpha_a&#x3D;\frac{W_{ia}h_a^t}{\sum_bW_{ib}h_b^t} $$<br>得出<br>$$ -log\sum_aW_{ia}h_a \leq -\sum_a\frac{W_{ia}h_a^t}{\sum_bW_{ib}h_b^t}(logW_{ia}h_a-log\frac{W_{ia}h_a^t}{\sum_bW_{ib}h_b^t}) $$</p>
+<p>即$$F(h) \leq G(h, h^t)$$</p>
+<h4 id="证明定理2——‘Divergence’的Cost-Function的收敛："><a href="#证明定理2——‘Divergence’的Cost-Function的收敛：" class="headerlink" title="证明定理2——‘Divergence’的Cost Function的收敛："></a>证明定理2——‘Divergence’的Cost Function的收敛：</h4><p>令$$\frac{d{G(h, h^t)}}{dh_a}&#x3D;0$$<br>得<br>$$ -\sum_iv_i\frac{W_{ia}h_a^t}{\sum_bW_{ib}h_b^t}\frac{1}{h_a} + \sum_iW_{ia} &#x3D; 0$$</p>
+<p>从而得到$$H$$的递推式，同理也可得$$W$$的递推式</p>
+<p>$$h_a^{t+1}&#x3D;\frac{h_a^t}{\sum_bW_{kb}}\sum_i\frac{v_i}{\sum_bW_{ib}h_b^t}W_{ia}$$</p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="../../../10/23/Seq2Seq%E7%BB%83%E6%89%8B%E4%B9%8B%E5%8D%95%E8%AF%8D%E9%95%9C%E5%83%8F/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>Prev</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
+              2017-11-09 15:27:00
+            </span>
+            
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="../../../../2018/01/05/%E4%BD%BF%E7%94%A8ElasticSearch%E6%9E%84%E5%BB%BA%E4%B8%80%E4%B8%AA%E5%AE%8C%E6%95%B4%E7%9A%84%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E/" target="_self">
+                <span>Next</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">Contents</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#NMF%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="toc-text">NMF是什么？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%A5%E6%96%87%E6%88%90%E6%9E%9C"><span class="toc-text">该文成果</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Cost-Function"><span class="toc-text">Cost Function</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Updated-rules"><span class="toc-text">Updated rules</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%AC%A7%E6%B0%8F%E8%B7%9D%E7%A6%BB"><span class="toc-text">欧氏距离</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Divergence"><span class="toc-text">Divergence</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Proof-of-Convergence"><span class="toc-text">Proof of Convergence</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%9A%E4%B9%891"><span class="toc-text">定义1</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%BC%95%E7%90%861"><span class="toc-text">引理1</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%BC%95%E7%90%862"><span class="toc-text">引理2</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#F-h-%E5%9C%A8-h-t-%E9%99%84%E8%BF%91%E7%9A%84%E4%BA%8C%E9%98%B6%E6%B3%B0%E5%8B%92%E5%B1%95%E5%BC%80"><span class="toc-text">$$F(h)$$在$$h^t$$附近的二阶泰勒展开</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%8D%8A%E6%AD%A3%E5%AE%9A%E6%80%A7%E8%AF%81%E6%98%8E"><span class="toc-text">半正定性证明</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%AF%81%E6%98%8E%E5%AE%9A%E7%90%861%E2%80%94%E2%80%94%E6%AC%A7%E5%BC%8F%E8%B7%9D%E7%A6%BBCost-Function%E7%9A%84%E6%94%B6%E6%95%9B%EF%BC%9A"><span class="toc-text">证明定理1——欧式距离Cost Function的收敛：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%BC%95%E7%90%862-1"><span class="toc-text">引理2</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%AF%81%E6%98%8E%E5%AE%9A%E7%90%862%E2%80%94%E2%80%94%E2%80%98Divergence%E2%80%99%E7%9A%84Cost-Function%E7%9A%84%E6%94%B6%E6%95%9B%EF%BC%9A"><span class="toc-text">证明定理2——‘Divergence’的Cost Function的收敛：</span></a></li></ol></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="../../../../js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="http://www.beian.miit.gov.cn/">http://www.beian.miit.gov.cn/  京ICP备17062395号</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="../../../../js/backtotop.js"></script>
+
+
+
+        
+  <div class="search-icon tools-bar-item" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="Search...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>First search, index file loading, please wait...<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>No result<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The search.xml file was not found, please refer to：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The request failed, Try to refresh the page or try again later.<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="../../../../js/colorscheme.js"></script>
+
+
+
+
+
+        
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + %E8%AF%BB%E8%AE%BA%E6%96%87Alogorithms%20for%20Non-negative%20Matrix%20Factorization + '&url=' + http%3A%2F%2Fnladuo.github.io%2F2017%2F11%2F09%2F%25E8%25AF%25BB%25E8%25AE%25BA%25E6%2596%2587Alogorithms-for-Non-negative-Matrix-Factorization%2F + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=http://nladuo.github.io/2017/11/09/%E8%AF%BB%E8%AE%BA%E6%96%87Alogorithms-for-Non-negative-Matrix-Factorization/" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
+  
+  
+<script src="../../../../js/shares.js"></script>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>

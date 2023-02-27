@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="keywords" content="" />
+  <meta name="author" content="叁公子KCN" />
+  <meta name="description" content="" />
+  
+  
+  <title>
+    
+      验证码破解技术四部曲之使用卷积神经网络（四） 
+      
+      
+      |
+    
+     叁公子的博客
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="../../../../js/fancybox.js"></script>
+
+
+  
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/"></a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="../../../../js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="../../../../js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">验证码破解技术四部曲之使用卷积神经网络（四）</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
+          2016-09-23 19:56:27
+        </span>
+        
+      </div>
+      <div class="markdown-body">
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>在这节，我将用卷积神经网络（简称：CNN）破解新浪微博手机端的验证码(<a target="_blank" rel="noopener" href="http://login.weibo.cn/login/">http://login.weibo.cn/login/</a>)，验证码如下。<br><br><img src="/%E9%AA%8C%E8%AF%81%E7%A0%81%E7%A0%B4%E8%A7%A3%E6%8A%80%E6%9C%AF%E5%9B%9B%E9%83%A8%E6%9B%B2%E4%B9%8B%E4%BD%BF%E7%94%A8%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/test1.png" alt="test1"> <img src="/%E9%AA%8C%E8%AF%81%E7%A0%81%E7%A0%B4%E8%A7%A3%E6%8A%80%E6%9C%AF%E5%9B%9B%E9%83%A8%E6%9B%B2%E4%B9%8B%E4%BD%BF%E7%94%A8%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/test2.png" alt="test2"> <img src="/%E9%AA%8C%E8%AF%81%E7%A0%81%E7%A0%B4%E8%A7%A3%E6%8A%80%E6%9C%AF%E5%9B%9B%E9%83%A8%E6%9B%B2%E4%B9%8B%E4%BD%BF%E7%94%A8%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/test3.png" alt="test3"> <img src="/%E9%AA%8C%E8%AF%81%E7%A0%81%E7%A0%B4%E8%A7%A3%E6%8A%80%E6%9C%AF%E5%9B%9B%E9%83%A8%E6%9B%B2%E4%B9%8B%E4%BD%BF%E7%94%A8%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/test4.png" alt="test4"> <br><br></p>
+<p>本节的代码可以在<a target="_blank" rel="noopener" href="https://github.com/nladuo/captcha-break/tree/master/weibo.cn">https://github.com/nladuo/captcha-break/tree/master/weibo.cn</a>找到。<br><br></p>
+<span id="more"></span>
+
+<p>关于神经网络的原理很难在一节讲清楚。在这里，只需要把神经网络当成一个黑匣子，输入是一个图片，输出一个label，也就是类别。</p>
+<h2 id="LeNet5"><a href="#LeNet5" class="headerlink" title="LeNet5"></a>LeNet5</h2><p>本节使用的神经网络是国外学者Yann LeCun的LeNet5，该神经网络以32x32的图片作为输入，对于字符的变形、旋转、干扰线等扭曲都可以很好的识别，可以实现以下效果。<br><br><img src="/%E9%AA%8C%E8%AF%81%E7%A0%81%E7%A0%B4%E8%A7%A3%E6%8A%80%E6%9C%AF%E5%9B%9B%E9%83%A8%E6%9B%B2%E4%B9%8B%E4%BD%BF%E7%94%A8%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/asamples.gif" alt="asamples.gif"> <img src="/%E9%AA%8C%E8%AF%81%E7%A0%81%E7%A0%B4%E8%A7%A3%E6%8A%80%E6%9C%AF%E5%9B%9B%E9%83%A8%E6%9B%B2%E4%B9%8B%E4%BD%BF%E7%94%A8%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/anoise2.gif" alt="anoise2.gif"><br><br></p>
+<p>更多的效果可以在<a target="_blank" rel="noopener" href="http://yann.lecun.com/exdb/lenet/">http://yann.lecun.com/exdb/lenet/</a>上查看，具体原理可以查看Yann LeCun的<a href="lecun-98.pdf">论文</a>。</p>
+<h2 id="字符下载"><a href="#字符下载" class="headerlink" title="字符下载"></a>字符下载</h2><p>字符下载和上节差不多，这里需要注意的是新浪微博的验证码下载下来是gif格式的，opencv不支持读取gif的读取，需要用PIL把验证码转换成png格式。<br><br></p>
+<p>另外，新浪微博的验证码明显比CSDN下载的验证码要复杂得多，所以需要大量的样本，至少要下载上千个验证码。</p>
+<h2 id="字符分割"><a href="#字符分割" class="headerlink" title="字符分割"></a>字符分割</h2><p>新浪微博的验证码需要进行去除椒盐噪声、去除干扰线、二值化后，才能很好的进行垂直投影分割，我算法写的不是很好，就不在这里展开了，代码可以在spliter中找到。LeNet5的输入是32x32像素，所以为了不对神经网络进行大量修改，也需要将每个字母都方法32*32的模板中，分割后如下：<br><br><img src="/%E9%AA%8C%E8%AF%81%E7%A0%81%E7%A0%B4%E8%A7%A3%E6%8A%80%E6%9C%AF%E5%9B%9B%E9%83%A8%E6%9B%B2%E4%B9%8B%E4%BD%BF%E7%94%A8%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/dataset.png" alt="dataset.png"><br><br></p>
+<p>分割好之后，需要开始大量的人工操作了，经过了几个小时的努力，成功完成了5000多样本的分类，结果放在了trainer&#x2F;training_set中。<br><br><img src="/%E9%AA%8C%E8%AF%81%E7%A0%81%E7%A0%B4%E8%A7%A3%E6%8A%80%E6%9C%AF%E5%9B%9B%E9%83%A8%E6%9B%B2%E4%B9%8B%E4%BD%BF%E7%94%A8%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/training_set.png" alt="training_set.png"><br><br></p>
+<p>这里每个文件夹都是一个分类，共有14个分类（除了ERROR），点进文件夹后可以看到每个文件夹内都有300多张图片。<br><br><img src="/%E9%AA%8C%E8%AF%81%E7%A0%81%E7%A0%B4%E8%A7%A3%E6%8A%80%E6%9C%AF%E5%9B%9B%E9%83%A8%E6%9B%B2%E4%B9%8B%E4%BD%BF%E7%94%A8%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/training_set_f.png" alt="training_set_f.png"><br><br></p>
+<h2 id="训练"><a href="#训练" class="headerlink" title="训练"></a>训练</h2><h4 id="构建网络"><a href="#构建网络" class="headerlink" title="构建网络"></a>构建网络</h4><p>我这里使用的神经网络库是<a target="_blank" rel="noopener" href="https://github.com/tiny-dnn/tiny-dnn">tiny-cnn</a>（现在已改名叫tiny-dnn）。<br><br></p>
+<p>训练相关的代码都在trainer&#x2F;main.cpp中，首先看一下神经网络的构造函数。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">construct_net</span><span class="params">(network&lt;sequential&gt;&amp; nn)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// connection table [Y.Lecun, 1998 Table.1]</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> O true</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> X false</span></span><br><span class="line">    <span class="type">static</span> <span class="type">const</span> <span class="type">bool</span> tbl[] = &#123;</span><br><span class="line">        O, X, X, X, O, O, O, X, X, O, O, O, O, X, O, O,</span><br><span class="line">        O, O, X, X, X, O, O, O, X, X, O, O, O, O, X, O,</span><br><span class="line">        O, O, O, X, X, X, O, O, O, X, X, O, X, O, O, O,</span><br><span class="line">        X, O, O, O, X, X, O, O, O, O, X, X, O, X, O, O,</span><br><span class="line">        X, X, O, O, O, X, X, O, O, O, O, X, O, O, X, O,</span><br><span class="line">        X, X, X, O, O, O, X, X, O, O, O, O, X, O, O, O</span><br><span class="line">    &#125;;</span><br><span class="line"><span class="meta">#<span class="keyword">undef</span> O</span></span><br><span class="line"><span class="meta">#<span class="keyword">undef</span> X</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// construct nets</span></span><br><span class="line">    nn &lt;&lt; <span class="built_in">convolutional_layer</span>&lt;tan_h&gt;(<span class="number">32</span>, <span class="number">32</span>, <span class="number">5</span>, <span class="number">1</span>, <span class="number">6</span>)  <span class="comment">// C1, 1@32x32-in, 6@28x28-out</span></span><br><span class="line">       &lt;&lt; <span class="built_in">average_pooling_layer</span>&lt;tan_h&gt;(<span class="number">28</span>, <span class="number">28</span>, <span class="number">6</span>, <span class="number">2</span>)   <span class="comment">// S2, 6@28x28-in, 6@14x14-out</span></span><br><span class="line">       &lt;&lt; <span class="built_in">convolutional_layer</span>&lt;tan_h&gt;(<span class="number">14</span>, <span class="number">14</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">16</span>,</span><br><span class="line">            <span class="built_in">connection_table</span>(tbl, <span class="number">6</span>, <span class="number">16</span>))              <span class="comment">// C3, 6@14x14-in, 16@10x10-in</span></span><br><span class="line">       &lt;&lt; <span class="built_in">average_pooling_layer</span>&lt;tan_h&gt;(<span class="number">10</span>, <span class="number">10</span>, <span class="number">16</span>, <span class="number">2</span>)  <span class="comment">// S4, 16@10x10-in, 16@5x5-out</span></span><br><span class="line">       &lt;&lt; <span class="built_in">convolutional_layer</span>&lt;tan_h&gt;(<span class="number">5</span>, <span class="number">5</span>, <span class="number">5</span>, <span class="number">16</span>, <span class="number">120</span>) <span class="comment">// C5, 16@5x5-in, 120@1x1-out</span></span><br><span class="line">       &lt;&lt; <span class="built_in">fully_connected_layer</span>&lt;tan_h&gt;(<span class="number">120</span>, <span class="number">14</span>);       <span class="comment">// F6, 120-in, 14-out</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里可以看到有六层神经网络，C1、S2、C3、S4、C5、F6。其实不用仔细的了解神经网络的构造，只需要把它想象成一个黑匣子，黑匣子的输入就是C1层的输入（C1, 1@32x32-in），黑匣子的输出就是F6层（F6,14-out）。32x32对应着图片的大小，14对应着类的个数。比如说要训练MINST数据集（一个手写字符的数据集）的话，需要把fully_connected_layer<tan_h>(120, 14)改成fully_connected_layer<tan_h>(120, 10)，因为MINST中有十类字符(0-9十种数字)。<br><br></p>
+<p>（注：这里只能修改F6层的参数而不能修改C1层的参数，修改C1参数会影响到其他层的输入。）</p>
+<h4 id="加载数据集"><a href="#加载数据集" class="headerlink" title="加载数据集"></a>加载数据集</h4><p>接下来，通过boost库加载数据集，其中五分之四的样本作为训练，还有五分之一的作为测试训练的正确性。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">std::string label_strs[<span class="number">14</span>] = &#123;</span><br><span class="line">    <span class="string">&quot;3&quot;</span>, <span class="string">&quot;C&quot;</span>, <span class="string">&quot;D&quot;</span>, <span class="string">&quot;E&quot;</span>, <span class="string">&quot;F&quot;</span>, <span class="string">&quot;H&quot;</span>, <span class="string">&quot;J&quot;</span>, <span class="string">&quot;K&quot;</span>, <span class="string">&quot;L&quot;</span>, <span class="string">&quot;M&quot;</span>, <span class="string">&quot;N&quot;</span>, <span class="string">&quot;W&quot;</span>, <span class="string">&quot;X&quot;</span>, <span class="string">&quot;Y&quot;</span></span><br><span class="line">&#125;;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">load_dataset</span><span class="params">(std::vector&lt;<span class="type">label_t</span>&gt; &amp;train_labels,</span></span></span><br><span class="line"><span class="params"><span class="function">                  std::vector&lt;<span class="type">vec_t</span>&gt; &amp;train_images,</span></span></span><br><span class="line"><span class="params"><span class="function">                  std::vector&lt;<span class="type">label_t</span>&gt; &amp;test_labels,</span></span></span><br><span class="line"><span class="params"><span class="function">                  std::vector&lt;<span class="type">vec_t</span>&gt; &amp;test_images)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="number">14</span>; ++i)&#123;</span><br><span class="line">        std::vector&lt;std::string&gt; images;</span><br><span class="line"></span><br><span class="line">        fs::directory_iterator end_iter;</span><br><span class="line">        <span class="function">fs::path <span class="title">path</span><span class="params">(<span class="string">&quot;./training_set/&quot;</span>+label_strs[i])</span></span>;</span><br><span class="line">        <span class="keyword">for</span> (fs::directory_iterator <span class="built_in">iter</span>(path); iter != end_iter; ++iter)&#123;</span><br><span class="line">            <span class="keyword">if</span> (fs::<span class="built_in">extension</span>(*iter)==<span class="string">&quot;.png&quot;</span>)&#123;</span><br><span class="line">                images.<span class="built_in">push_back</span>(iter-&gt;<span class="built_in">path</span>().<span class="built_in">string</span>());</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//train_set.size() : test_set.size() = 4:1</span></span><br><span class="line">        <span class="type">int</span> flag = <span class="number">0</span>;</span><br><span class="line">        std::vector&lt;std::string&gt;::iterator itr = images.<span class="built_in">begin</span>();</span><br><span class="line">        <span class="keyword">for</span> (;itr != images.<span class="built_in">end</span>(); ++itr)&#123;</span><br><span class="line">            <span class="type">vec_t</span> data;</span><br><span class="line">            <span class="built_in">convert_image</span>(*itr, <span class="number">-1.0</span>, <span class="number">1.0</span>, <span class="number">32</span>, <span class="number">32</span>, data);</span><br><span class="line">            <span class="keyword">if</span> (flag &lt;= <span class="number">4</span>)&#123;</span><br><span class="line">                train_labels.<span class="built_in">push_back</span>(i);</span><br><span class="line">                train_images.<span class="built_in">push_back</span>(data);</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                test_labels.<span class="built_in">push_back</span>(i);</span><br><span class="line">                test_images.<span class="built_in">push_back</span>(data);</span><br><span class="line">                flag = <span class="number">0</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            flag++;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="参数设置"><a href="#参数设置" class="headerlink" title="参数设置"></a>参数设置</h4><p>卷积神经网络使用的是随机梯度下降进行训练，涉及一些数学知识，这里就不展开了。<br><br></p>
+<p>这里只要把它理解为：神经网络会自己不断的对数据集进行学习(不断的迭代，每次迭代都会对识别率有所改进)。学习的过程会有一个学习速率optimizer.alpha，这里选择的是默认的；还有每次学习多少个数据(minibatch_size)，这里设置每次对100个数据进行学习；还有一个学习的时间(num_epochs)，这里学习了50次之后，学习效果就没有了。也就是识别率达到了峰值。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> minibatch_size = <span class="number">100</span>;             <span class="comment">//每批量的数量</span></span><br><span class="line"><span class="type">int</span> num_epochs = <span class="number">50</span>;                  <span class="comment">//迭代次数</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// optimizer.alpha *= std::sqrt(minibatch_size); 使用默认的学习速率</span></span><br></pre></td></tr></table></figure>
+<h4 id="保存结果"><a href="#保存结果" class="headerlink" title="保存结果"></a>保存结果</h4><p>神经网络的训练之后，需要保存神经网络的权重，把权重输出到”weibo.cn-nn-weights”中。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// save networks</span></span><br><span class="line"><span class="function">std::ofstream <span class="title">ofs</span><span class="params">(<span class="string">&quot;weibo.cn-nn-weights&quot;</span>)</span></span>;</span><br><span class="line">ofs &lt;&lt; nn;</span><br></pre></td></tr></table></figure>
+<h4 id="运行程序"><a href="#运行程序" class="headerlink" title="运行程序"></a>运行程序</h4><p>运行trainer后，可以看到开始加载数据，并且进行一次一次的迭代，每一次迭代都会根据测试数据来进行验证，显示正确识别的字符数目。<br><br><img src="/%E9%AA%8C%E8%AF%81%E7%A0%81%E7%A0%B4%E8%A7%A3%E6%8A%80%E6%9C%AF%E5%9B%9B%E9%83%A8%E6%9B%B2%E4%B9%8B%E4%BD%BF%E7%94%A8%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/training.png" alt="training.png"><br><br></p>
+<p>从上面可以看到，一共有3934个训练样本和972个测试样本，正确识别的字符数目随着迭代次数不断的增加，从72-&gt;120-&gt;142-&gt;223….，识别率不断增加。<br><br></p>
+<p>训练到最后(第四十几次迭代)，可以看到数据已经差不多饱和了,维持在860、870左右，也就是单个字符有89%的识别率，单个验证码有0.89^4&#x3D;0.64左右的识别率。(如果训练了很多次后，发现识别率还没有饱和，可以增大迭代次数num_epochs或者增大学习速率optimizer.alpha)<br><br><img src="/%E9%AA%8C%E8%AF%81%E7%A0%81%E7%A0%B4%E8%A7%A3%E6%8A%80%E6%9C%AF%E5%9B%9B%E9%83%A8%E6%9B%B2%E4%B9%8B%E4%BD%BF%E7%94%A8%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/training_end.png" alt="training_end.png"><br><br></p>
+<h2 id="识别"><a href="#识别" class="headerlink" title="识别"></a>识别</h2><p>最后，可以通过训练好的“weibo.cn-nn-weights”来进行识别，把trainer&#x2F;weibo.cn-nn-weights放到recognizer文件夹下。<br><br></p>
+<p>接下来看看神经网络是如何进行识别的，在recognizer&#x2F;main.cpp中查看recognize函数。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">recognize</span><span class="params">(<span class="type">const</span> std::string&amp; dictionary, cv::Mat &amp;img)</span> </span>&#123;</span><br><span class="line">    network&lt;sequential&gt; nn;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">construct_net</span>(nn);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// load nets</span></span><br><span class="line">    <span class="function">ifstream <span class="title">ifs</span><span class="params">(dictionary.c_str())</span></span>;</span><br><span class="line">    ifs &gt;&gt; nn;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// convert cvMat to vec_t</span></span><br><span class="line">    <span class="type">vec_t</span> data;</span><br><span class="line">    <span class="built_in">convert_mat</span>(img, <span class="number">-1.0</span>, <span class="number">1.0</span>, <span class="number">32</span>, <span class="number">32</span>, data);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// recognize</span></span><br><span class="line">    <span class="keyword">auto</span> res = nn.<span class="built_in">predict</span>(data);</span><br><span class="line">    vector&lt;pair&lt;<span class="type">double</span>, <span class="type">int</span>&gt; &gt; scores;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="number">14</span>; i++)</span><br><span class="line">        scores.<span class="built_in">emplace_back</span>(<span class="built_in">rescale</span>&lt;tan_h&gt;(res[i]), i);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// sort and get the result</span></span><br><span class="line">    <span class="built_in">sort</span>(scores.<span class="built_in">begin</span>(), scores.<span class="built_in">end</span>(), greater&lt;pair&lt;<span class="type">double</span>, <span class="type">int</span>&gt;&gt;());</span><br><span class="line">    <span class="keyword">return</span> scores[<span class="number">0</span>].second;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在神经网络的最后一层中输出的是一个14维的向量，分别对应着每个类的概率，所以通过sort函数，找出概率最大的类就是识别结果了。<br><br></p>
+<p>测试图片：<br><br><img src="/%E9%AA%8C%E8%AF%81%E7%A0%81%E7%A0%B4%E8%A7%A3%E6%8A%80%E6%9C%AF%E5%9B%9B%E9%83%A8%E6%9B%B2%E4%B9%8B%E4%BD%BF%E7%94%A8%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/captchas.png" alt="captchas.png"><br><br></p>
+<p>测试识别结果：<br><br><img src="/%E9%AA%8C%E8%AF%81%E7%A0%81%E7%A0%B4%E8%A7%A3%E6%8A%80%E6%9C%AF%E5%9B%9B%E9%83%A8%E6%9B%B2%E4%B9%8B%E4%BD%BF%E7%94%A8%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/captchas_result.png" alt="captchas_result.png"><br><br></p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="../../22/%E9%AA%8C%E8%AF%81%E7%A0%81%E7%A0%B4%E8%A7%A3%E6%8A%80%E6%9C%AF%E5%9B%9B%E9%83%A8%E6%9B%B2%E4%B9%8B%E4%BD%BF%E7%94%A8K%E8%BF%91%E9%82%BB%E7%AE%97%E6%B3%95/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>Prev</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
+              2016-09-23 19:56:27
+            </span>
+            
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="../../../../2017/04/07/%E6%8A%8A300W%E6%B7%98%E5%AE%9D%E6%96%87%E8%83%B8%E8%AF%84%E8%AE%BA%E7%BB%98%E5%88%B6%E6%88%90%E8%AF%8D%E4%BA%91/" target="_self">
+                <span>Next</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">Contents</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#LeNet5"><span class="toc-text">LeNet5</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AD%97%E7%AC%A6%E4%B8%8B%E8%BD%BD"><span class="toc-text">字符下载</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AD%97%E7%AC%A6%E5%88%86%E5%89%B2"><span class="toc-text">字符分割</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%AD%E7%BB%83"><span class="toc-text">训练</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9E%84%E5%BB%BA%E7%BD%91%E7%BB%9C"><span class="toc-text">构建网络</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8A%A0%E8%BD%BD%E6%95%B0%E6%8D%AE%E9%9B%86"><span class="toc-text">加载数据集</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8F%82%E6%95%B0%E8%AE%BE%E7%BD%AE"><span class="toc-text">参数设置</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BF%9D%E5%AD%98%E7%BB%93%E6%9E%9C"><span class="toc-text">保存结果</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%BF%90%E8%A1%8C%E7%A8%8B%E5%BA%8F"><span class="toc-text">运行程序</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AF%86%E5%88%AB"><span class="toc-text">识别</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="../../../../js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="http://www.beian.miit.gov.cn/">http://www.beian.miit.gov.cn/  京ICP备17062395号</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="../../../../js/backtotop.js"></script>
+
+
+
+        
+  <div class="search-icon tools-bar-item" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="Search...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>First search, index file loading, please wait...<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>No result<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The search.xml file was not found, please refer to：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The request failed, Try to refresh the page or try again later.<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="../../../../js/colorscheme.js"></script>
+
+
+
+
+
+        
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + %E9%AA%8C%E8%AF%81%E7%A0%81%E7%A0%B4%E8%A7%A3%E6%8A%80%E6%9C%AF%E5%9B%9B%E9%83%A8%E6%9B%B2%E4%B9%8B%E4%BD%BF%E7%94%A8%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%EF%BC%88%E5%9B%9B%EF%BC%89 + '&url=' + http%3A%2F%2Fnladuo.github.io%2F2016%2F09%2F23%2F%25E9%25AA%258C%25E8%25AF%2581%25E7%25A0%2581%25E7%25A0%25B4%25E8%25A7%25A3%25E6%258A%2580%25E6%259C%25AF%25E5%259B%259B%25E9%2583%25A8%25E6%259B%25B2%25E4%25B9%258B%25E4%25BD%25BF%25E7%2594%25A8%25E5%258D%25B7%25E7%25A7%25AF%25E7%25A5%259E%25E7%25BB%258F%25E7%25BD%2591%25E7%25BB%259C%2F + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=http://nladuo.github.io/2016/09/23/%E9%AA%8C%E8%AF%81%E7%A0%81%E7%A0%B4%E8%A7%A3%E6%8A%80%E6%9C%AF%E5%9B%9B%E9%83%A8%E6%9B%B2%E4%B9%8B%E4%BD%BF%E7%94%A8%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
+  
+  
+<script src="../../../../js/shares.js"></script>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,1 +1,756 @@
-<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> 叁公子的博客</title><meta name="description" content="A Blog Powered By Hexo"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="short icon" href="/avatar.jpg"><link rel="stylesheet" href="/css/apollo.css"><link rel="search" type="application/opensearchdescription+xml" href="http://nladuo.github.io/atom.xml" title="叁公子的博客"></head><body><div class="wrap"><header><a href="/" class="logo-link"><img src="/avatar.jpg"></a><ul class="nav nav-list"><li class="nav-list-item"><a href="/" target="_self" class="nav-list-link">BLOG</a></li><li class="nav-list-item"><a href="/archives/" target="_self" class="nav-list-link">ARCHIVE</a></li><li class="nav-list-item"><a href="https://github.com/nladuo" target="_blank" class="nav-list-link">GITHUB</a></li><li class="nav-list-item"><a href="http://weibo.com/u/2780483203" target="_blank" class="nav-list-link">WEIBO</a></li></ul></header><section class="container"><div class="archive"><h2 class="archive-year">2015</h2><div class="post-item"><div class="post-info">Nov 10, 2015</div><a href="/2015/11/10/go语言实现模拟登陆极客学院/" class="post-title-link">go语言实现模拟登陆极客学院</a></div></div></section><footer><div class="paginator"></div><div class="copyright"><p>© 2015 - 2016 <a href="http://nladuo.github.io">nladuo</a>, powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/pinggod/hexo-theme-apollo" target="_blank">hexo-theme-apollo</a>.</p></div></footer></div><script async src="//cdn.bootcss.com/mathjax/2.6.1/MathJax.js?config=TeX-MML-AM_CHTML"></script><script>(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;e=o.createElement(i);r=o.getElementsByTagName(i)[0];e.src='//www.google-analytics.com/analytics.js';r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));ga('create',"UA-65933410-1",'auto');ga('send','pageview');</script></body></html>
+<!DOCTYPE html>
+<html lang="" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="keywords" content="" />
+  <meta name="author" content="叁公子KCN" />
+  <meta name="description" content="" />
+  
+  
+  <title>
+    
+      archive_a: 2015/11 
+      
+      
+      |
+    
+     叁公子的博客
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="../../../../js/fancybox.js"></script>
+
+
+  
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/"></a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="../../../../js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 归档页，展示本站所有文章，按照年份降序归类，url形式：https://yoursite/archives/ -->
+
+<!-- last: 按年份把文章分组，当前遍历到的年份 -->
+<!-- now: 当前遍历到的文章的发布年份 -->
+
+<div class="container archives">
+  <div class="post-list">
+    
+        <!-- 后续文章的发布年份呈现 -->
+        <div class="content-title">
+          <h2>
+            <span>2020</span>
+          </h2>
+        </div>
+      
+      <div class="post-item" title="tmux1.8下开启鼠标滑动">
+        <div class="time-m-d">01-08</div>
+        <div class="title">
+          <a href="../../../2020/01/08/tmux1-8%E4%B8%8B%E5%BC%80%E5%90%AF%E9%BC%A0%E6%A0%87%E6%BB%91%E5%8A%A8/">
+            <span>tmux1.8下开启鼠标滑动</span>
+          </a>
+        </div>
+      </div>
+    
+        <!-- 后续文章的发布年份呈现 -->
+        <div class="content-title">
+          <h2>
+            <span>2019</span>
+          </h2>
+        </div>
+      
+      <div class="post-item" title="图像搜索：给你爬的美女图建一个搜索引擎">
+        <div class="time-m-d">11-17</div>
+        <div class="title">
+          <a href="../../../2019/11/17/%E5%9B%BE%E5%83%8F%E6%90%9C%E7%B4%A2%EF%BC%9A%E7%BB%99%E4%BD%A0%E7%88%AC%E7%9A%84%E7%BE%8E%E5%A5%B3%E5%9B%BE%E5%BB%BA%E4%B8%80%E4%B8%AA%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E/">
+            <span>图像搜索：给你爬的美女图建一个搜索引擎</span>
+          </a>
+        </div>
+      </div>
+    
+      <div class="post-item" title="使用Python对音频进行特征提取">
+        <div class="time-m-d">08-31</div>
+        <div class="title">
+          <a href="../../../2019/08/31/%E4%BD%BF%E7%94%A8Python%E5%AF%B9%E9%9F%B3%E9%A2%91%E8%BF%9B%E8%A1%8C%E7%89%B9%E5%BE%81%E6%8F%90%E5%8F%96/">
+            <span>使用Python对音频进行特征提取</span>
+          </a>
+        </div>
+      </div>
+    
+      <div class="post-item" title="ElasticSearch Connection Timeout问题的一个神奇的解决方法">
+        <div class="time-m-d">05-20</div>
+        <div class="title">
+          <a href="../../../2019/05/20/ElasticSearch-Connection-Timeout%E9%97%AE%E9%A2%98%E7%9A%84%E4%B8%80%E4%B8%AA%E7%A5%9E%E5%A5%87%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95/">
+            <span>ElasticSearch Connection Timeout问题的一个神奇的解决方法</span>
+          </a>
+        </div>
+      </div>
+    
+      <div class="post-item" title="一种一行代码实现分布式爬虫的方案">
+        <div class="time-m-d">05-14</div>
+        <div class="title">
+          <a href="../../../2019/05/14/%E4%B8%80%E7%A7%8D%E4%B8%80%E8%A1%8C%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0%E5%88%86%E5%B8%83%E5%BC%8F%E7%88%AC%E8%99%AB%E7%9A%84%E6%96%B9%E6%A1%88/">
+            <span>一种一行代码实现分布式爬虫的方案</span>
+          </a>
+        </div>
+      </div>
+    
+      <div class="post-item" title="Ubuntu-VPS光速搭建Shadowsocks服务">
+        <div class="time-m-d">01-04</div>
+        <div class="title">
+          <a href="../../../2019/01/04/Ubuntu-VPS%E5%85%89%E9%80%9F%E6%90%AD%E5%BB%BAShadowsocks%E6%9C%8D%E5%8A%A1/">
+            <span>Ubuntu-VPS光速搭建Shadowsocks服务</span>
+          </a>
+        </div>
+      </div>
+    
+        <!-- 后续文章的发布年份呈现 -->
+        <div class="content-title">
+          <h2>
+            <span>2018</span>
+          </h2>
+        </div>
+      
+      <div class="post-item" title="那些年，我爬过的北科(十)——搜索案例之ElasticSearch的使用">
+        <div class="time-m-d">12-13</div>
+        <div class="title">
+          <a href="../../../2018/12/13/%E9%82%A3%E4%BA%9B%E5%B9%B4%EF%BC%8C%E6%88%91%E7%88%AC%E8%BF%87%E7%9A%84%E5%8C%97%E7%A7%91-%E5%8D%81-%E2%80%94%E2%80%94%E6%90%9C%E7%B4%A2%E6%A1%88%E4%BE%8B%E4%B9%8BElasticSearch%E7%9A%84%E4%BD%BF%E7%94%A8/">
+            <span>那些年，我爬过的北科(十)——搜索案例之ElasticSearch的使用</span>
+          </a>
+        </div>
+      </div>
+    
+      <div class="post-item" title="那些年，我爬过的北科(九)——搜索案例之爬虫编写">
+        <div class="time-m-d">12-13</div>
+        <div class="title">
+          <a href="../../../2018/12/13/%E9%82%A3%E4%BA%9B%E5%B9%B4%EF%BC%8C%E6%88%91%E7%88%AC%E8%BF%87%E7%9A%84%E5%8C%97%E7%A7%91-%E4%B9%9D-%E2%80%94%E2%80%94%E6%90%9C%E7%B4%A2%E6%A1%88%E4%BE%8B%E4%B9%8B%E7%88%AC%E8%99%AB%E7%BC%96%E5%86%99/">
+            <span>那些年，我爬过的北科(九)——搜索案例之爬虫编写</span>
+          </a>
+        </div>
+      </div>
+    
+      <div class="post-item" title="那些年，我爬过的北科(八)——反反爬虫之验证码识别">
+        <div class="time-m-d">12-08</div>
+        <div class="title">
+          <a href="../../../2018/12/08/%E9%82%A3%E4%BA%9B%E5%B9%B4%EF%BC%8C%E6%88%91%E7%88%AC%E8%BF%87%E7%9A%84%E5%8C%97%E7%A7%91-%E5%85%AB-%E2%80%94%E2%80%94%E5%8F%8D%E5%8F%8D%E7%88%AC%E8%99%AB%E4%B9%8B%E9%AA%8C%E8%AF%81%E7%A0%81%E8%AF%86%E5%88%AB/">
+            <span>那些年，我爬过的北科(八)——反反爬虫之验证码识别</span>
+          </a>
+        </div>
+      </div>
+    
+      <div class="post-item" title="那些年，我爬过的北科(七)——反反爬虫之使用代理ip">
+        <div class="time-m-d">12-08</div>
+        <div class="title">
+          <a href="../../../2018/12/08/%E9%82%A3%E4%BA%9B%E5%B9%B4%EF%BC%8C%E6%88%91%E7%88%AC%E8%BF%87%E7%9A%84%E5%8C%97%E7%A7%91-%E4%B8%83-%E2%80%94%E2%80%94%E5%8F%8D%E5%8F%8D%E7%88%AC%E8%99%AB%E4%B9%8B%E4%BD%BF%E7%94%A8%E4%BB%A3%E7%90%86ip/">
+            <span>那些年，我爬过的北科(七)——反反爬虫之使用代理ip</span>
+          </a>
+        </div>
+      </div>
+    
+      <div class="post-item" title="那些年，我爬过的北科(六)——反反爬虫之js渲染">
+        <div class="time-m-d">12-08</div>
+        <div class="title">
+          <a href="../../../2018/12/08/%E9%82%A3%E4%BA%9B%E5%B9%B4%EF%BC%8C%E6%88%91%E7%88%AC%E8%BF%87%E7%9A%84%E5%8C%97%E7%A7%91-%E5%85%AD-%E2%80%94%E2%80%94%E5%8F%8D%E5%8F%8D%E7%88%AC%E8%99%AB%E4%B9%8Bjs%E6%B8%B2%E6%9F%93/">
+            <span>那些年，我爬过的北科(六)——反反爬虫之js渲染</span>
+          </a>
+        </div>
+      </div>
+    
+      <div class="post-item" title="那些年，我爬过的北科(五)——数据存储之使用MongoDB">
+        <div class="time-m-d">12-08</div>
+        <div class="title">
+          <a href="../../../2018/12/08/%E9%82%A3%E4%BA%9B%E5%B9%B4%EF%BC%8C%E6%88%91%E7%88%AC%E8%BF%87%E7%9A%84%E5%8C%97%E7%A7%91-%E4%BA%94-%E2%80%94%E2%80%94%E6%95%B0%E6%8D%AE%E5%AD%98%E5%82%A8%E4%B9%8B%E4%BD%BF%E7%94%A8MongoDB/">
+            <span>那些年，我爬过的北科(五)——数据存储之使用MongoDB</span>
+          </a>
+        </div>
+      </div>
+    
+      <div class="post-item" title="信息检索基本概念知识笔记总结">
+        <div class="time-m-d">11-27</div>
+        <div class="title">
+          <a href="../../../2018/11/27/%E4%BF%A1%E6%81%AF%E6%A3%80%E7%B4%A2%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E7%9F%A5%E8%AF%86%E7%AC%94%E8%AE%B0%E6%80%BB%E7%BB%93/">
+            <span>信息检索基本概念知识笔记总结</span>
+          </a>
+        </div>
+      </div>
+    
+      <div class="post-item" title="PyAndroidControl:使用python脚本控制你的安卓设备">
+        <div class="time-m-d">11-04</div>
+        <div class="title">
+          <a href="../../../2018/11/04/PyAndroidControl-%E4%BD%BF%E7%94%A8python%E8%84%9A%E6%9C%AC%E6%8E%A7%E5%88%B6%E4%BD%A0%E7%9A%84%E5%AE%89%E5%8D%93%E8%AE%BE%E5%A4%87/">
+            <span>PyAndroidControl:使用python脚本控制你的安卓设备</span>
+          </a>
+        </div>
+      </div>
+    
+      <div class="post-item" title="Flask-Pymongo登陆验证问题小记">
+        <div class="time-m-d">10-25</div>
+        <div class="title">
+          <a href="../../../2018/10/25/Flask-Pymongo%E7%99%BB%E9%99%86%E9%AA%8C%E8%AF%81%E9%97%AE%E9%A2%98%E5%B0%8F%E8%AE%B0/">
+            <span>Flask-Pymongo登陆验证问题小记</span>
+          </a>
+        </div>
+      </div>
+    
+      <div class="post-item" title="读论文Multi-digit Number Recognition from Street View Imagery using Deep Convolutional Neural Networks">
+        <div class="time-m-d">10-20</div>
+        <div class="title">
+          <a href="../../../2018/10/20/%E8%AF%BB%E8%AE%BA%E6%96%87Multi-digit-Number-Recognition-from-Street-View-Imagery-using-Deep-Convolutional-Neural-Networks/">
+            <span>读论文Multi-digit Number Recognition from Street View Imagery using Deep Convolutional Neural Networks</span>
+          </a>
+        </div>
+      </div>
+    
+      <div class="post-item" title="wxpy机器人发送中文文件问题小记">
+        <div class="time-m-d">05-07</div>
+        <div class="title">
+          <a href="../../../2018/05/07/wxpy%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%8F%91%E9%80%81%E4%B8%AD%E6%96%87%E6%96%87%E4%BB%B6%E9%97%AE%E9%A2%98%E5%B0%8F%E8%AE%B0/">
+            <span>wxpy机器人发送中文文件问题小记</span>
+          </a>
+        </div>
+      </div>
+    
+      <div class="post-item" title="使用nginx反向代理到内网的ipython notebook">
+        <div class="time-m-d">03-21</div>
+        <div class="title">
+          <a href="../../../2018/03/21/%E4%BD%BF%E7%94%A8nginx%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86%E5%88%B0%E5%86%85%E7%BD%91%E7%9A%84ipython-notebook/">
+            <span>使用nginx反向代理到内网的ipython notebook</span>
+          </a>
+        </div>
+      </div>
+    
+      <div class="post-item" title="那些年，我爬过的北科(四)——爬虫进阶之极简并行爬虫框架开发">
+        <div class="time-m-d">02-27</div>
+        <div class="title">
+          <a href="../../../2018/02/27/%E9%82%A3%E4%BA%9B%E5%B9%B4%EF%BC%8C%E6%88%91%E7%88%AC%E8%BF%87%E7%9A%84%E5%8C%97%E7%A7%91-%E5%9B%9B-%E2%80%94%E2%80%94%E7%88%AC%E8%99%AB%E8%BF%9B%E9%98%B6%E4%B9%8B%E6%9E%81%E7%AE%80%E5%B9%B6%E8%A1%8C%E7%88%AC%E8%99%AB%E6%A1%86%E6%9E%B6%E5%BC%80%E5%8F%91/">
+            <span>那些年，我爬过的北科(四)——爬虫进阶之极简并行爬虫框架开发</span>
+          </a>
+        </div>
+      </div>
+    
+      <div class="post-item" title="那些年，我爬过的北科(三)——爬虫进阶之多进程的使用">
+        <div class="time-m-d">02-17</div>
+        <div class="title">
+          <a href="../../../2018/02/17/%E9%82%A3%E4%BA%9B%E5%B9%B4%EF%BC%8C%E6%88%91%E7%88%AC%E8%BF%87%E7%9A%84%E5%8C%97%E7%A7%91-%E4%B8%89-%E2%80%94%E2%80%94%E7%88%AC%E8%99%AB%E8%BF%9B%E9%98%B6%E4%B9%8B%E5%A4%9A%E8%BF%9B%E7%A8%8B%E7%9A%84%E4%BD%BF%E7%94%A8/">
+            <span>那些年，我爬过的北科(三)——爬虫进阶之多进程的使用</span>
+          </a>
+        </div>
+      </div>
+    
+      <div class="post-item" title="Echarts绘制北京摩拜单车分布热力图">
+        <div class="time-m-d">02-07</div>
+        <div class="title">
+          <a href="../../../2018/02/07/Echarts%E7%BB%98%E5%88%B6%E5%8C%97%E4%BA%AC%E6%91%A9%E6%8B%9C%E5%8D%95%E8%BD%A6%E5%88%86%E5%B8%83%E7%83%AD%E5%8A%9B%E5%9B%BE/">
+            <span>Echarts绘制北京摩拜单车分布热力图</span>
+          </a>
+        </div>
+      </div>
+    
+      <div class="post-item" title="使用ElasticSearch构建一个完整的搜索引擎">
+        <div class="time-m-d">01-05</div>
+        <div class="title">
+          <a href="../../../2018/01/05/%E4%BD%BF%E7%94%A8ElasticSearch%E6%9E%84%E5%BB%BA%E4%B8%80%E4%B8%AA%E5%AE%8C%E6%95%B4%E7%9A%84%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E/">
+            <span>使用ElasticSearch构建一个完整的搜索引擎</span>
+          </a>
+        </div>
+      </div>
+    
+        <!-- 后续文章的发布年份呈现 -->
+        <div class="content-title">
+          <h2>
+            <span>2017</span>
+          </h2>
+        </div>
+      
+      <div class="post-item" title="读论文Alogorithms for Non-negative Matrix Factorization">
+        <div class="time-m-d">11-09</div>
+        <div class="title">
+          <a href="../../../2017/11/09/%E8%AF%BB%E8%AE%BA%E6%96%87Alogorithms-for-Non-negative-Matrix-Factorization/">
+            <span>读论文Alogorithms for Non-negative Matrix Factorization</span>
+          </a>
+        </div>
+      </div>
+    
+      <div class="post-item" title="Seq2Seq练手之单词镜像">
+        <div class="time-m-d">10-23</div>
+        <div class="title">
+          <a href="../../../2017/10/23/Seq2Seq%E7%BB%83%E6%89%8B%E4%B9%8B%E5%8D%95%E8%AF%8D%E9%95%9C%E5%83%8F/">
+            <span>Seq2Seq练手之单词镜像</span>
+          </a>
+        </div>
+      </div>
+    
+      <div class="post-item" title="冬天又要到了，自己动手DIY一个PM2.5检测仪把！">
+        <div class="time-m-d">10-02</div>
+        <div class="title">
+          <a href="../../../2017/10/02/%E5%86%AC%E5%A4%A9%E5%8F%88%E8%A6%81%E5%88%B0%E4%BA%86%EF%BC%8C%E8%87%AA%E5%B7%B1%E5%8A%A8%E6%89%8BDIY%E4%B8%80%E4%B8%AAPM2-5%E6%A3%80%E6%B5%8B%E4%BB%AA%E6%8A%8A%EF%BC%81/">
+            <span>冬天又要到了，自己动手DIY一个PM2.5检测仪把！</span>
+          </a>
+        </div>
+      </div>
+    
+      <div class="post-item" title="那些年，我爬过的北科(二)——爬虫基础之session登陆">
+        <div class="time-m-d">09-18</div>
+        <div class="title">
+          <a href="../../../2017/09/18/%E9%82%A3%E4%BA%9B%E5%B9%B4%EF%BC%8C%E6%88%91%E7%88%AC%E8%BF%87%E7%9A%84%E5%8C%97%E7%A7%91-%E4%BA%8C-%E2%80%94%E2%80%94%E7%88%AC%E8%99%AB%E5%9F%BA%E7%A1%80%E4%B9%8Bsession%E7%99%BB%E9%99%86/">
+            <span>那些年，我爬过的北科(二)——爬虫基础之session登陆</span>
+          </a>
+        </div>
+      </div>
+    
+      <div class="post-item" title="那些年，我爬过的北科(一)——爬虫基础之环境搭建与入门">
+        <div class="time-m-d">09-18</div>
+        <div class="title">
+          <a href="../../../2017/09/18/%E9%82%A3%E4%BA%9B%E5%B9%B4%EF%BC%8C%E6%88%91%E7%88%AC%E8%BF%87%E7%9A%84%E5%8C%97%E7%A7%91-%E4%B8%80-%E2%80%94%E2%80%94%E7%88%AC%E8%99%AB%E5%9F%BA%E7%A1%80%E4%B9%8B%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA%E4%B8%8E%E5%85%A5%E9%97%A8/">
+            <span>那些年，我爬过的北科(一)——爬虫基础之环境搭建与入门</span>
+          </a>
+        </div>
+      </div>
+    
+      <div class="post-item" title="那些年，我爬过的北科(序)——我和爬虫的缘分">
+        <div class="time-m-d">09-18</div>
+        <div class="title">
+          <a href="../../../2017/09/18/%E9%82%A3%E4%BA%9B%E5%B9%B4%EF%BC%8C%E6%88%91%E7%88%AC%E8%BF%87%E7%9A%84%E5%8C%97%E7%A7%91-%E5%BA%8F-%E2%80%94%E2%80%94%E6%88%91%E5%92%8C%E7%88%AC%E8%99%AB%E7%9A%84%E7%BC%98%E5%88%86/">
+            <span>那些年，我爬过的北科(序)——我和爬虫的缘分</span>
+          </a>
+        </div>
+      </div>
+    
+      <div class="post-item" title="使用TensorFlow训练Weibo.cn验证码">
+        <div class="time-m-d">04-10</div>
+        <div class="title">
+          <a href="../../../2017/04/10/%E4%BD%BF%E7%94%A8TensorFlow%E8%AE%AD%E7%BB%83Weibo-cn%E9%AA%8C%E8%AF%81%E7%A0%81/">
+            <span>使用TensorFlow训练Weibo.cn验证码</span>
+          </a>
+        </div>
+      </div>
+    
+      <div class="post-item" title="基于unoconv的在线office预览">
+        <div class="time-m-d">04-08</div>
+        <div class="title">
+          <a href="../../../2017/04/08/%E5%9F%BA%E4%BA%8Eunoconv%E7%9A%84%E5%9C%A8%E7%BA%BFoffice%E9%A2%84%E8%A7%88/">
+            <span>基于unoconv的在线office预览</span>
+          </a>
+        </div>
+      </div>
+    
+      <div class="post-item" title="把300W淘宝文胸评论绘制成词云">
+        <div class="time-m-d">04-07</div>
+        <div class="title">
+          <a href="../../../2017/04/07/%E6%8A%8A300W%E6%B7%98%E5%AE%9D%E6%96%87%E8%83%B8%E8%AF%84%E8%AE%BA%E7%BB%98%E5%88%B6%E6%88%90%E8%AF%8D%E4%BA%91/">
+            <span>把300W淘宝文胸评论绘制成词云</span>
+          </a>
+        </div>
+      </div>
+    
+        <!-- 后续文章的发布年份呈现 -->
+        <div class="content-title">
+          <h2>
+            <span>2016</span>
+          </h2>
+        </div>
+      
+      <div class="post-item" title="验证码破解技术四部曲之使用卷积神经网络（四）">
+        <div class="time-m-d">09-23</div>
+        <div class="title">
+          <a href="../../../2016/09/23/%E9%AA%8C%E8%AF%81%E7%A0%81%E7%A0%B4%E8%A7%A3%E6%8A%80%E6%9C%AF%E5%9B%9B%E9%83%A8%E6%9B%B2%E4%B9%8B%E4%BD%BF%E7%94%A8%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/">
+            <span>验证码破解技术四部曲之使用卷积神经网络（四）</span>
+          </a>
+        </div>
+      </div>
+    
+      <div class="post-item" title="验证码破解技术四部曲之使用K近邻算法（三）">
+        <div class="time-m-d">09-22</div>
+        <div class="title">
+          <a href="../../../2016/09/22/%E9%AA%8C%E8%AF%81%E7%A0%81%E7%A0%B4%E8%A7%A3%E6%8A%80%E6%9C%AF%E5%9B%9B%E9%83%A8%E6%9B%B2%E4%B9%8B%E4%BD%BF%E7%94%A8K%E8%BF%91%E9%82%BB%E7%AE%97%E6%B3%95/">
+            <span>验证码破解技术四部曲之使用K近邻算法（三）</span>
+          </a>
+        </div>
+      </div>
+    
+      <div class="post-item" title="验证码破解技术四部曲之使用Tesseract（二）">
+        <div class="time-m-d">09-20</div>
+        <div class="title">
+          <a href="../../../2016/09/20/%E9%AA%8C%E8%AF%81%E7%A0%81%E7%A0%B4%E8%A7%A3%E6%8A%80%E6%9C%AF%E5%9B%9B%E9%83%A8%E6%9B%B2%E4%B9%8B%E4%BD%BF%E7%94%A8Tesseract/">
+            <span>验证码破解技术四部曲之使用Tesseract（二）</span>
+          </a>
+        </div>
+      </div>
+    
+      <div class="post-item" title="python中使用tor代理">
+        <div class="time-m-d">07-17</div>
+        <div class="title">
+          <a href="../../../2016/07/17/python%E4%B8%AD%E4%BD%BF%E7%94%A8tor%E4%BB%A3%E7%90%86/">
+            <span>python中使用tor代理</span>
+          </a>
+        </div>
+      </div>
+    
+      <div class="post-item" title="验证码破解技术四部曲之环境搭建篇（一）">
+        <div class="time-m-d">06-28</div>
+        <div class="title">
+          <a href="../../../2016/06/28/%E9%AA%8C%E8%AF%81%E7%A0%81%E7%A0%B4%E8%A7%A3%E5%9B%9B%E9%83%A8%E6%9B%B2%E4%B9%8B%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA%E7%AF%87/">
+            <span>验证码破解技术四部曲之环境搭建篇（一）</span>
+          </a>
+        </div>
+      </div>
+    
+        <!-- 后续文章的发布年份呈现 -->
+        <div class="content-title">
+          <h2>
+            <span>2015</span>
+          </h2>
+        </div>
+      
+      <div class="post-item" title="教你DIY一个PM2.5检测仪">
+        <div class="time-m-d">12-09</div>
+        <div class="title">
+          <a href="../../../2015/12/09/%E6%95%99%E4%BD%A0DIY%E4%B8%80%E4%B8%AAPM2.5%E6%A3%80%E6%B5%8B%E4%BB%AA/">
+            <span>教你DIY一个PM2.5检测仪</span>
+          </a>
+        </div>
+      </div>
+    
+      <div class="post-item" title="go语言实现模拟登陆极客学院">
+        <div class="time-m-d">11-10</div>
+        <div class="title">
+          <a href="../../../2015/11/10/go%E8%AF%AD%E8%A8%80%E5%AE%9E%E7%8E%B0%E6%A8%A1%E6%8B%9F%E7%99%BB%E9%99%86%E6%9E%81%E5%AE%A2%E5%AD%A6%E9%99%A2/">
+            <span>go语言实现模拟登陆极客学院</span>
+          </a>
+        </div>
+      </div>
+    
+      <div class="post-item" title="用csharp编写8x8横向取模软件">
+        <div class="time-m-d">05-03</div>
+        <div class="title">
+          <a href="../../../2015/05/03/%E7%94%A8csharp%E7%BC%96%E5%86%998x8%E6%A8%AA%E5%90%91%E5%8F%96%E6%A8%A1%E8%BD%AF%E4%BB%B6/">
+            <span>用csharp编写8x8横向取模软件</span>
+          </a>
+        </div>
+      </div>
+    
+  </div>
+</div>
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="http://www.beian.miit.gov.cn/">http://www.beian.miit.gov.cn/  京ICP备17062395号</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="../../../../js/backtotop.js"></script>
+
+
+
+        
+  <div class="search-icon tools-bar-item" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="Search...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>First search, index file loading, please wait...<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>No result<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The search.xml file was not found, please refer to：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The request failed, Try to refresh the page or try again later.<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="../../../../js/colorscheme.js"></script>
+
+
+
+
+
+        
+  
+  
+<script src="../../../../js/shares.js"></script>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>

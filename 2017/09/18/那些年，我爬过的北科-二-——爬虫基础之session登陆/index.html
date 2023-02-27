@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="keywords" content="" />
+  <meta name="author" content="叁公子KCN" />
+  <meta name="description" content="" />
+  
+  
+  <title>
+    
+      那些年，我爬过的北科(二)——爬虫基础之session登陆 
+      
+      
+      |
+    
+     叁公子的博客
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="../../../../js/fancybox.js"></script>
+
+
+  
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/"></a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="../../../../js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="../../../../js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">那些年，我爬过的北科(二)——爬虫基础之session登陆</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
+          2017-09-18 17:16:33
+        </span>
+        
+      </div>
+      <div class="markdown-body">
+        <p>（注：由于现在域名全都要备案了，**.tech** 域名不让备案，下面的nladuo.tech统一更改为nladuo.cn）</p>
+<h2 id="说说HTTP请求：GET与POST"><a href="#说说HTTP请求：GET与POST" class="headerlink" title="说说HTTP请求：GET与POST"></a>说说HTTP请求：GET与POST</h2><p>在上一节中，我们在不知道原理的条件下调用了requests.get方法下载了HTML页面。在本节中，我们来说说什么是HTTP请求和它的特点。</p>
+<p>在HTTP请求中，主要有GET和POST两种方式，其主要区别在于:</p>
+<ul>
+<li>GET的信息存储在url中，比如说我们在上节看到的“?categoryId&#x3D;1”。</li>
+<li>而POST的信息则把信息存储在form中，比如说我们在输入登陆用户名密码的时候，不会在网址中看到这些隐私信息；当然，我们在上传大文件的时候，比如说上传一个1个G的视频，也不会把视频的信息放到url中。<span id="more"></span></li>
+</ul>
+<p>另外，HTTP是一种短连接的协议，它基于TCP。为什么这么说呢，因为HTTP请求的过程其实就是：</p>
+<p>首先，我们的浏览器通过tcp和远程web服务器的端口互相建立连接；然后发送一个指令，比如说要获取根连接(url为’&#x2F;‘)的内容；再然后服务器会根据客户端(我们的浏览器)的请求返回相应的结果(如HTML文本、图片等)；客户端得到了请求之后，就会将连接关闭掉，同时web服务器也关闭和客户端的连接；这样，一次HTTP请求也就完成了。</p>
+<p>那么浏览器和web服务器是如何发送指令的呢？</p>
+<h4 id="在Chrome中查看HTTP请求"><a href="#在Chrome中查看HTTP请求" class="headerlink" title="在Chrome中查看HTTP请求"></a>在Chrome中查看HTTP请求</h4><p>下面以<a target="_blank" rel="noopener" href="http://nladuo.cn/test.html">http://nladuo.cn/test.html</a>来作为测试页面，在输入链接的同时打开Chrome的开发者工具，调整到Network选项。<br><img src="/http_network.png" alt="http_network"></p>
+<p>这个网页只有一个请求，那就是它的HTML，返回“It Works”。下面，我们在请求列表中点击test.html这项，可以看到服务器的相应头Requests Headers和客户端的请求头Response Headers。<br><img src="/http_headers.png" alt="http_headers"></p>
+<p>我们点击Requests Headers边上的<code>view source</code>可以看到原始的请求头。<br><img src="/raw_request_headers.png" alt="raw_request_headers"></p>
+<p>在这里面可以看到：</p>
+<ul>
+<li>请求了nladuo.cn上面的“&#x2F;test.html”这个资源，使用了HTTP1.1版本的协议，</li>
+<li>请求的域名的Host为nladuo.cn</li>
+<li>等等。。。</li>
+</ul>
+<p>同理查看Response Headers，<br><img src="/raw_response_headers.png" alt="raw_response_headers"></p>
+<p>可以看到：</p>
+<ul>
+<li>使用了HTTP1.1版本的协议，返回码为200 OK</li>
+<li>日期是啥</li>
+<li>服务器是Apache，2.4.7(Ubuntu)版本</li>
+<li>等等。。。</li>
+</ul>
+<p>下面我们来使用电脑自带的tcp客户端telnet来模拟发送GET请求，看看一个GET请求的实际流程。</p>
+<h4 id="在电脑中使用telnet客户端"><a href="#在电脑中使用telnet客户端" class="headerlink" title="在电脑中使用telnet客户端"></a>在电脑中使用telnet客户端</h4><p>对于mac或者linux用户，可以不用进行任何配置，打开终端输入telnet即可使用。</p>
+<p>对于Windows用户，可以<a target="_blank" rel="noopener" href="https://github.com/nladuo/IoT-Firstep/blob/master/book/5.4.md#%E5%BC%80%E5%90%AFtelnet">在此处</a>查看<code>开启telnet</code>部分。</p>
+<h4 id="使用telnet模拟GET请求"><a href="#使用telnet模拟GET请求" class="headerlink" title="使用telnet模拟GET请求"></a>使用telnet模拟GET请求</h4><p>对于网站来说，默认开放的是80端口，比如在Network请求中的General中可以虽然没有配置，但访问的是80端口。当然，你也可以输入<a target="_blank" rel="noopener" href="http://nladuo.cn/test.html">http://nladuo.cn:80/test.html</a>进行访问，不过一般都不会多此一举。<br><img src="/http_general.png" alt="http_general"></p>
+<p>所以我们要用tcp链接nladuo.cn的80端口，使用以下命令。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">telnet nladuo.cn 80</span><br></pre></td></tr></table></figure>
+<p>输入之后，就可以看到nladuo.cn被解析成了ip：123.206.86.230（这里换了个服务器，所以ip变了，原为191.101.13.124）了，并建立起了tcp连接。在这时mac和linux用户就可以准备输入命令了；对于Windows系统需要首先摁下ctrl键 + ‘]’ 键进入输入模式，然后再按回车切换到显式输入模式后再输入命令。</p>
+<p>我们像在chrome的Network看到的一样，首先我们要发一个GET请求访问&#x2F;test.html资源，并使用HTTP1.1版本的协议，然后再告诉服务器我们访问的Host是nladuo.cn。之后，我们还可以告诉服务器User-Agent是啥，Accept-Encoding是啥，不过这些都不是最重要的，所以只要输入前两条即可。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">GET /test.html HTTP/1.1(回车)</span><br><span class="line">Host: nladuo.cn（回车+回车）</span><br></pre></td></tr></table></figure>
+<p>在这里，每输入一条后输入一个回车，在最后输入两个回车。在输入两个回车之后，等待片刻，就可以看到服务器给我们返回的信息了。<br><img src="/telnet_get.png" alt="telnet_get"></p>
+<p>这里可以看到像之前Chrome浏览器中看到的一样，返回了200 OK、时间、服务器信息、等等….</p>
+<p>在相应头后面的两个回车后面，可以看到返回的HTML信息：“It Works”</p>
+<p>到这里，这次请求就已经结束了，再等待片刻，可以看到远程服务器关闭了tcp链接。一次HTTP请求也正式完成了。</p>
+<h2 id="模拟登陆"><a href="#模拟登陆" class="headerlink" title="模拟登陆"></a>模拟登陆</h2><h4 id="登陆过程发生了什么？"><a href="#登陆过程发生了什么？" class="headerlink" title="登陆过程发生了什么？"></a>登陆过程发生了什么？</h4><p>通过上面的利用tcp模拟http请求的案例，我们知道了客户端发送一个请求头信息，服务器返回一个相应头信息+HTML后，tcp连接就关闭了。但是我们日常使用网页中登陆网页之后，刷新之后浏览器还能记得我们登陆的信息，这是什么原理呢？</p>
+<p>下面以一个简单的登陆页面来学习一下登陆过程中都发生了什么？登陆的链接地址为：<a target="_blank" rel="noopener" href="http://nladuo.cn/crawler_lesson2/">http://nladuo.cn/crawler_lesson2&#x2F;</a>。而登陆后的隐私链接地址为：<a target="_blank" rel="noopener" href="http://nladuo.cn/crawler_lesson2/private.php">http://nladuo.cn/crawler_lesson2&#x2F;private.php</a></p>
+<p>首先，我们先不登录，访问一下隐私页面，注意要首先打开Network，再输入链接<a target="_blank" rel="noopener" href="http://nladuo.cn/crawler_lesson2/private.php">http://nladuo.cn/crawler_lesson2&#x2F;private.php</a>。</p>
+<p><img src="/without_login1.png" alt="without_login1"></p>
+<p>这里可以看到网页显示出了无权查看，并且Response Headers多了一个Set-Cookie字段。当然，如果你没按照我说的做，而是先输入url，显示出页面，然后再打开Network，刷新一下页面查看的话，就会看到以下的结果。</p>
+<p><img src="/without_login2.png" alt="without_login2"></p>
+<p>在Response Headers的Set-Cookie不见了，而Requests Headers多了一个Cookie，这两个的值还是一样的，都是“PHPSESSID&#x3D;9m8vgq9699fun79t3ks6ljrdh7”。</p>
+<p>当然，这个时候不管再刷新几次页面，Response Headers都没有出现新的Set-Cookie了；而在第一次的之后所有请求，Request Headers都会带着一个Cookie。比如我们这里查看登陆页面，<a target="_blank" rel="noopener" href="http://nladuo.cn/crawler_lesson2/">http://nladuo.cn/crawler_lesson2&#x2F;</a>，也带了这个Cookie。<br><img src="/login_page.png" alt="login_page"></p>
+<p>这里可以先带着疑问，我们现在知道，Set-Cookie只执行一次，由服务器返回；在此之后，浏览器会保存Set-Cookie保存的值，每次访问这个域的内容都会带着Set-Cookie的值，并把他放到Cookie字段里。</p>
+<p>接下来，我们尝试一下登陆，这里，用户名和密码都默认为nladuo，我们只要在输入框输入nladuo即可。点击登陆后，我们可以看到这里发了一个POST请求，显示出了“登陆成功”。<br><img src="/login.png" alt="login"></p>
+<p>相比GET而言，POST的请求头中多了Content-Type和Content-Length两个字段，因为这次是把数据放到了Form Data中，而不是在url里了。这里Content-Length就是发送字节的长度，Content-Type则是发送的类型，这里会把表单中的字段转换成键值对，如uname:nladuo,passwd&#x3D;nladuo转换为uname&#x3D;nladuo&amp;passwd&#x3D;nladuo，这样正好也是26个字符。</p>
+<p>当然，这里，我们也可以用Telnet模拟POST请求，读者可以看一下，这里就不多说了。<br><img src="/telnet_post.png" alt="telnet_post"></p>
+<p>下面，我们再看一下Cookie，可以发现这里Cookie没有变，还是 “PHPSESSID&#x3D;9m8vgq9699fun79t3ks6ljrdh7”。</p>
+<h4 id="Cookie与Session"><a href="#Cookie与Session" class="headerlink" title="Cookie与Session"></a>Cookie与Session</h4><p>看到这里，带着疑问，可以引出Cookie和Session的概念了。</p>
+<p>我们上面看到的Cookie是一种客户端的技术，而Session则是服务端的技术。登陆的过程其实就是一个会话开始的时候，服务器给客户端一个ID，如上面看到的Set-Cookie，这其实就代表会话的开始，而当浏览器关闭后，一次会话也就结束了。<br><img src="/session_cookie1.png" alt="session_cookie1"></p>
+<p>在一次会话中，用户的状态保存在服务器中，而客户端是保存一个会话ID，所以当我们在没登陆的时候请求<a target="_blank" rel="noopener" href="http://nladuo.cn/crawler_lesson2/private.php">http://nladuo.cn/crawler_lesson2&#x2F;private.php</a>页面时，服务器会在缓存数据库里的PHPSESSID这张表查找id为9m8vgq9699fun79t3ks6ljrdh7的字段，判断用户是否登陆了，然后根据查询的结果来返回不同的页面。<br><img src="/session_cookie2.png" alt="session_cookie2"></p>
+<p>比如，我们在没有登陆前，缓存服务器中PHPSESSID中9m8vgq9699fun79t3ks6ljrdh7的is_login字段是NULL，所以服务器查询到is_login是空的，所以不给用户看隐私页面。当我们登陆的时候，如果用户名密码正确，服务器就会给缓存服务器上的9m8vgq9699fun79t3ks6ljrdh7字段的is_login设置为True，当用户下次请求隐私页面的时候，就可以看到正确的返回结果了。<br><img src="/session_cookie3.png" alt="session_cookie3"></p>
+<h4 id="使用Cookie模拟登陆"><a href="#使用Cookie模拟登陆" class="headerlink" title="使用Cookie模拟登陆"></a>使用Cookie模拟登陆</h4><p>通过上面的学习，我们知道了如何进行登录，下面我们用代码模拟一下这个步骤：1.首先登陆，2.保存Cookie，3.带着Cookie请求隐私页面</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 1. 先登陆</span></span><br><span class="line">resp1 = requests.post(<span class="string">&quot;http://nladuo.cn/crawler_lesson2/do_login.php&quot;</span>,</span><br><span class="line">  data=&#123;</span><br><span class="line">    <span class="string">&quot;uname&quot;</span>: <span class="string">&quot;nladuo&quot;</span>,</span><br><span class="line">    <span class="string">&quot;passwd&quot;</span>: <span class="string">&quot;nladuo&quot;</span></span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 2. 保存服务器传回来的Cookie</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;Set-Cookie:&quot;</span>, resp1.headers[<span class="string">&quot;set-cookie&quot;</span>])</span><br><span class="line">cookie = resp1.headers[<span class="string">&quot;set-cookie&quot;</span>].split(<span class="string">&quot;;&quot;</span>)[<span class="number">0</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment"># 3. 再通过cookie请求隐私页面</span></span><br><span class="line">resp = requests.get(<span class="string">&quot;http://nladuo.cn/crawler_lesson2/private.php&quot;</span>,</span><br><span class="line">  headers=&#123;</span><br><span class="line">    <span class="string">&quot;Cookie&quot;</span>:  cookie  <span class="comment"># 现用浏览器或者Telnet发送Post请求登录, 把cookie粘到这里</span></span><br><span class="line">&#125;)</span><br><span class="line"><span class="built_in">print</span>(resp.content)</span><br></pre></td></tr></table></figure>
+<p>运行代码，可以看到这里登陆成功，返回了隐私页面。<br><img src="/use_requests.png" alt="use_requests"></p>
+<h4 id="使用requests-session模拟登陆"><a href="#使用requests-session模拟登陆" class="headerlink" title="使用requests.session模拟登陆"></a>使用requests.session模拟登陆</h4><p>不过，上面的方式手动管理Cookie总感觉有些麻烦，Requests库给我提供了一个更方便的对象：requests.session，它可以像浏览器一样记录我们的会话中的Cookie。</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"></span><br><span class="line"><span class="comment"># 1. 创建一个Session</span></span><br><span class="line">session = requests.session()</span><br><span class="line"><span class="comment"># 2. 登陆</span></span><br><span class="line">session.post(<span class="string">&quot;http://nladuo.cn/crawler_lesson2/do_login.php&quot;</span>,</span><br><span class="line">             data=&#123;<span class="string">&quot;uname&quot;</span>: <span class="string">&quot;nladuo&quot;</span>, <span class="string">&quot;passwd&quot;</span>: <span class="string">&quot;nladuo&quot;</span>&#125;)</span><br><span class="line"><span class="comment"># 3. 访问隐私页面</span></span><br><span class="line">resp = session.get(<span class="string">&quot;http://nladuo.cn/crawler_lesson2/private.php&quot;</span>)</span><br><span class="line"><span class="built_in">print</span>(resp.content)</span><br></pre></td></tr></table></figure>
+<p>现在，我们的代码中的流程就像人用浏览器的操作的过程一样了，登陆一下，直接请求隐私页面就好了。</p>
+<p>运行代码后，可以看到同样的正确结果。<br><img src="/use_session.png" alt="use_session"></p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="../%E9%82%A3%E4%BA%9B%E5%B9%B4%EF%BC%8C%E6%88%91%E7%88%AC%E8%BF%87%E7%9A%84%E5%8C%97%E7%A7%91-%E4%B8%80-%E2%80%94%E2%80%94%E7%88%AC%E8%99%AB%E5%9F%BA%E7%A1%80%E4%B9%8B%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA%E4%B8%8E%E5%85%A5%E9%97%A8/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>Prev</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
+              2017-09-18 17:16:33
+            </span>
+            
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="../../../10/02/%E5%86%AC%E5%A4%A9%E5%8F%88%E8%A6%81%E5%88%B0%E4%BA%86%EF%BC%8C%E8%87%AA%E5%B7%B1%E5%8A%A8%E6%89%8BDIY%E4%B8%80%E4%B8%AAPM2-5%E6%A3%80%E6%B5%8B%E4%BB%AA%E6%8A%8A%EF%BC%81/" target="_self">
+                <span>Next</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">Contents</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AF%B4%E8%AF%B4HTTP%E8%AF%B7%E6%B1%82%EF%BC%9AGET%E4%B8%8EPOST"><span class="toc-text">说说HTTP请求：GET与POST</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%9C%A8Chrome%E4%B8%AD%E6%9F%A5%E7%9C%8BHTTP%E8%AF%B7%E6%B1%82"><span class="toc-text">在Chrome中查看HTTP请求</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%9C%A8%E7%94%B5%E8%84%91%E4%B8%AD%E4%BD%BF%E7%94%A8telnet%E5%AE%A2%E6%88%B7%E7%AB%AF"><span class="toc-text">在电脑中使用telnet客户端</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8telnet%E6%A8%A1%E6%8B%9FGET%E8%AF%B7%E6%B1%82"><span class="toc-text">使用telnet模拟GET请求</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A8%A1%E6%8B%9F%E7%99%BB%E9%99%86"><span class="toc-text">模拟登陆</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%99%BB%E9%99%86%E8%BF%87%E7%A8%8B%E5%8F%91%E7%94%9F%E4%BA%86%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="toc-text">登陆过程发生了什么？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Cookie%E4%B8%8ESession"><span class="toc-text">Cookie与Session</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8Cookie%E6%A8%A1%E6%8B%9F%E7%99%BB%E9%99%86"><span class="toc-text">使用Cookie模拟登陆</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8requests-session%E6%A8%A1%E6%8B%9F%E7%99%BB%E9%99%86"><span class="toc-text">使用requests.session模拟登陆</span></a></li></ol></li></ol></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="../../../../js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="http://www.beian.miit.gov.cn/">http://www.beian.miit.gov.cn/  京ICP备17062395号</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="../../../../js/backtotop.js"></script>
+
+
+
+        
+  <div class="search-icon tools-bar-item" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="Search...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>First search, index file loading, please wait...<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>No result<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The search.xml file was not found, please refer to：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The request failed, Try to refresh the page or try again later.<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="../../../../js/colorscheme.js"></script>
+
+
+
+
+
+        
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + %E9%82%A3%E4%BA%9B%E5%B9%B4%EF%BC%8C%E6%88%91%E7%88%AC%E8%BF%87%E7%9A%84%E5%8C%97%E7%A7%91(%E4%BA%8C)%E2%80%94%E2%80%94%E7%88%AC%E8%99%AB%E5%9F%BA%E7%A1%80%E4%B9%8Bsession%E7%99%BB%E9%99%86 + '&url=' + http%3A%2F%2Fnladuo.github.io%2F2017%2F09%2F18%2F%25E9%2582%25A3%25E4%25BA%259B%25E5%25B9%25B4%25EF%25BC%258C%25E6%2588%2591%25E7%2588%25AC%25E8%25BF%2587%25E7%259A%2584%25E5%258C%2597%25E7%25A7%2591-%25E4%25BA%258C-%25E2%2580%2594%25E2%2580%2594%25E7%2588%25AC%25E8%2599%25AB%25E5%259F%25BA%25E7%25A1%2580%25E4%25B9%258Bsession%25E7%2599%25BB%25E9%2599%2586%2F + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=http://nladuo.github.io/2017/09/18/%E9%82%A3%E4%BA%9B%E5%B9%B4%EF%BC%8C%E6%88%91%E7%88%AC%E8%BF%87%E7%9A%84%E5%8C%97%E7%A7%91-%E4%BA%8C-%E2%80%94%E2%80%94%E7%88%AC%E8%99%AB%E5%9F%BA%E7%A1%80%E4%B9%8Bsession%E7%99%BB%E9%99%86/" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
+  
+  
+<script src="../../../../js/shares.js"></script>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="keywords" content="" />
+  <meta name="author" content="叁公子KCN" />
+  <meta name="description" content="" />
+  
+  
+  <title>
+    
+      那些年，我爬过的北科(四)——爬虫进阶之极简并行爬虫框架开发 
+      
+      
+      |
+    
+     叁公子的博客
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="../../../../js/fancybox.js"></script>
+
+
+  
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/"></a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="../../../../js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="../../../../js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">那些年，我爬过的北科(四)——爬虫进阶之极简并行爬虫框架开发</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
+          2018-02-27 21:54:58
+        </span>
+        
+      </div>
+      <div class="markdown-body">
+        <h2 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h2><p>在看过目录之后，读者可能会问为什么这个教程没有讲一个框架，比如说scrapy或者pyspider。在这里，我认为理解爬虫的原理更加重要，而不是学习一个框架。爬虫说到底就是HTTP请求，与语言无关，与框架也无关。</p>
+<p>在本节，我们将用26行代码开发一个简单的并发的（甚至分布式的）爬虫框架。</p>
+<span id="more"></span>
+<h2 id="爬虫的模块"><a href="#爬虫的模块" class="headerlink" title="爬虫的模块"></a>爬虫的模块</h2><p>首先，我们先来说一下爬虫的几个模块。</p>
+<h4 id="任务产生器——Producer"><a href="#任务产生器——Producer" class="headerlink" title="任务产生器——Producer"></a>任务产生器——Producer</h4><p>定义任务，如：爬取什么页面？怎么解析</p>
+<h4 id="下载器——Downloader"><a href="#下载器——Downloader" class="headerlink" title="下载器——Downloader"></a>下载器——Downloader</h4><p>下载器，接受任务产生器的任务，下载完成后给解析器进行解析。主要是I&#x2F;O操作，受限于网速。</p>
+<h4 id="解析器——Parser"><a href="#解析器——Parser" class="headerlink" title="解析器——Parser"></a>解析器——Parser</h4><p>解析器，将下载器下载的内容进行解析，传给输出管道。主要是CPU操作，受限于下载器的下载速度。</p>
+<h4 id="输出管道——Pipeline"><a href="#输出管道——Pipeline" class="headerlink" title="输出管道——Pipeline"></a>输出管道——Pipeline</h4><p>如何展示爬取的数据，如之前我们一直都在用print，其实也就是一个ConsolePipeline。当然你也可以定义FilePipeline、MysqlPipeline、Sqlite3Pipeline等等。</p>
+<ul>
+<li>ConsolePipeline: 把想要的内容直接输出到控制台。</li>
+<li>FilePipeline: 把想要的内容输出到文件里保存，比如保存一个json文件。</li>
+<li>MongoDBPipeline: 把想要的内容存入MongoDB数据库中。</li>
+<li>等等……</li>
+</ul>
+<h4 id="爬虫框架的结构"><a href="#爬虫框架的结构" class="headerlink" title="爬虫框架的结构"></a>爬虫框架的结构</h4><p>上面的四个模块也就构成了四个部分。</p>
+<ul>
+<li>1 . 首先，会有个初始的任务产生器产生下载任务。</li>
+<li>2 . 下载器不断从任务队列中取出任务，下载完任务后，放到网页池中。</li>
+<li>3 . 不同的解析器取出网页进行解析，传给对应的输出管道。期间，解析器也会产生新的下载任务，放入到任务队列中。</li>
+<li>4 . 输出管道对解析的结果进行存储、显示。<br><img src="/structure.png"></li>
+</ul>
+<h4 id="简易的爬虫框架的架构"><a href="#简易的爬虫框架的架构" class="headerlink" title="简易的爬虫框架的架构"></a>简易的爬虫框架的架构</h4><p>其实，我们也可以把爬虫不要分的那么细，下载+解析+输出其实都可以归类为一个Worker。</p>
+<p>就像下面一样，首先初始的任务产生器会产生一个下载任务，然后系统为下载任务创建几个Worker，Worker对任务进行下载解析输出，同时根据解析的一些链接产生新下载的任务放入任务队列。如此循环，直到没有任务。<br><img src="/structure2.png"></p>
+<h2 id="进程间通信"><a href="#进程间通信" class="headerlink" title="进程间通信"></a>进程间通信</h2><p>下面，我们说一下进程间通信。</p>
+<p>这里我们举一个生产者消费者的例子。假设有两个进程，一个叫生产者，一个叫做消费者。生产者只负责生产一些任务，并把任务放到一个池子里面（任务队列），消费者从任务队列中拿到任务，并对完成任务（把任务消费掉）。</p>
+<p>我们这里的任务队列使用multiprocessing的Queue，它可以保证多进程间操作的安全。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> multiprocessing <span class="keyword">import</span> Process, Queue</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">produce</span>(<span class="params">q</span>):  <span class="comment"># 生产</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">10</span>):</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;Put %d to queue...&#x27;</span> % value)</span><br><span class="line">        q.put(i)</span><br><span class="line">        time.sleep(<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">consume</span>(<span class="params">q</span>):  <span class="comment"># 消费</span></span><br><span class="line">    <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> q.empty():</span><br><span class="line">            value = q.get(<span class="literal">True</span>)</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&#x27;Consumer 1, Get %s from queue.&#x27;</span> % value)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    q = Queue()</span><br><span class="line">    producer = Process(target=produce, args=(q,))</span><br><span class="line">    consumer = Process(target=consume, args=(q,))</span><br><span class="line">    producer.start()</span><br><span class="line">    consumer.start()</span><br><span class="line"></span><br><span class="line">    producer.join()  <span class="comment"># 等待结束, 死循环使用Ctrl+C退出</span></span><br><span class="line">    consumer.join()</span><br></pre></td></tr></table></figure>
+
+<p>当然，也可以尝试有多个生产者，多个消费者。下面创建了两个生产者和消费者。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> multiprocessing <span class="keyword">import</span> Process, Queue</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">produce</span>(<span class="params">q</span>):  <span class="comment"># 生产</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">10000</span>):</span><br><span class="line">        <span class="keyword">if</span> i % <span class="number">2</span> == <span class="number">0</span>:</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&quot;Produce &quot;</span>, i)</span><br><span class="line">            q.put(i)</span><br><span class="line">            time.sleep(<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">produce2</span>(<span class="params">q</span>):  <span class="comment"># 生产</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">10000</span>):</span><br><span class="line">        <span class="keyword">if</span> i % <span class="number">2</span> == <span class="number">1</span>:</span><br><span class="line">            <span class="built_in">print</span> <span class="string">&quot;Produce &quot;</span>, i</span><br><span class="line">            q.put(i)</span><br><span class="line">            time.sleep(<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">consume</span>(<span class="params">q</span>):  <span class="comment"># 消费</span></span><br><span class="line">    <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> q.empty():</span><br><span class="line">            value = q.get(<span class="literal">True</span>)</span><br><span class="line">            <span class="built_in">print</span> <span class="string">&#x27;Consumer 1, Get %s from queue.&#x27;</span> % value</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">consume2</span>(<span class="params">q</span>):  <span class="comment"># 消费</span></span><br><span class="line">    <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> q.empty():</span><br><span class="line">            value = q.get(<span class="literal">True</span>)</span><br><span class="line">            <span class="built_in">print</span> <span class="string">&#x27;Consumer 2, Get %s from queue.&#x27;</span> % value</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    q = Queue(<span class="number">5</span>)   <span class="comment"># 队列最多放5个任务, 超过5个则会阻塞住</span></span><br><span class="line">    producer = Process(target=produce, args=(q,))</span><br><span class="line">    producer2 = Process(target=produce2, args=(q,))</span><br><span class="line">    consumer = Process(target=consume, args=(q,))</span><br><span class="line">    consumer2 = Process(target=consume2, args=(q,))</span><br><span class="line"></span><br><span class="line">    producer.start()</span><br><span class="line">    producer2.start()</span><br><span class="line">    consumer.start()</span><br><span class="line">    consumer2.start()</span><br><span class="line"></span><br><span class="line">    producer.join()  <span class="comment"># 等待结束, 死循环使用Ctrl+C退出</span></span><br><span class="line">    producer2.join()</span><br><span class="line">    consumer.join()</span><br><span class="line">    consumer2.join()</span><br></pre></td></tr></table></figure>
+<p>这里生产者生产的时间是每秒钟两个，消费者消费时间几乎可以忽略不计，属于“狼多肉少”系列。运行后，可以看到控制台每秒都输出两行。Consumer1和Consumer2的争抢十分激烈。<br><img src="/out1.png"></p>
+<p>考虑一下“肉多狼少”的情形，代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> multiprocessing <span class="keyword">import</span> Process, Queue</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">produce</span>(<span class="params">q</span>):  <span class="comment"># 生产</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">10000</span>):</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;Produce &quot;</span>, i)</span><br><span class="line">        q.put(i)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">consume</span>(<span class="params">q</span>):  <span class="comment"># 消费</span></span><br><span class="line">    <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> q.empty():</span><br><span class="line">            value = q.get(<span class="literal">True</span>)</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&#x27;Consumer 1, Get %s from queue.&#x27;</span> % value)</span><br><span class="line">            time.sleep(<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">consume2</span>(<span class="params">q</span>):  <span class="comment"># 消费</span></span><br><span class="line">    <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> q.empty():</span><br><span class="line">            value = q.get(<span class="literal">True</span>)</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&#x27;Consumer 2, Get %s from queue.&#x27;</span> % value)</span><br><span class="line">            time.sleep(<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    q = Queue(<span class="number">5</span>)    <span class="comment"># 队列最多放5个数据, 超过5个则会阻塞住</span></span><br><span class="line">    producer = Process(target=produce, args=(q,))</span><br><span class="line">    consumer = Process(target=consume, args=(q,))</span><br><span class="line">    consumer2 = Process(target=consume2, args=(q,))</span><br><span class="line"></span><br><span class="line">    producer.start()</span><br><span class="line">    consumer.start()</span><br><span class="line">    consumer2.start()</span><br><span class="line"></span><br><span class="line">    producer.join()  <span class="comment"># 等待结束, 死循环使用Ctrl+C退出</span></span><br><span class="line">    consumer.join()</span><br><span class="line">    consumer2.join()</span><br></pre></td></tr></table></figure>
+
+<p>这里生产者不停的生产，直到把任务队列塞满。而两个消费者每秒钟消费一个，每当有任务被消费掉，生产者又会立马生产出新的任务，把任务队列塞满。<br><img src="/out2.png"></p>
+<p>上面的说明，系统整体的运行速度其实受限于速度最慢的那个。像我们爬虫，最耗时的操作就是下载，整体的爬取速度也就受限于网速。</p>
+<p>以上的生产和消费者类似爬虫中的Producer和Worker。Producer扮演生产者，生成下载任务，放入任务队列中；Worker扮演消费者，拿到下载任务后，对某个网页进行下载、解析、数据；在此同时，Worker也会扮演生产者，根据解析到的链接生成新的下载任务，并放到任务队列中交给其他的Worker执行。</p>
+<h2 id="DIY并发框架"><a href="#DIY并发框架" class="headerlink" title="DIY并发框架"></a>DIY并发框架</h2><p>下面我们来看看我们自己的并发爬虫框架，这个爬虫框架的代码很短，只有26行，除去空行的话只有21行代码。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> multiprocessing <span class="keyword">import</span> Manager, Pool</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">SimpleCrawler</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, c_num</span>):</span><br><span class="line">        self.task_queue = Manager().Queue()  <span class="comment"># 任务队列</span></span><br><span class="line">        self.workers = &#123;&#125;                    <span class="comment"># Worker, 字典类型, 存放不同的Worker</span></span><br><span class="line">        self.c_num = c_num                   <span class="comment"># 并发数,开几个进程</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">add_task</span>(<span class="params">self, task</span>):</span><br><span class="line">        self.task_queue.put(task)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">add_worker</span>(<span class="params">self, identifier, worker</span>):</span><br><span class="line">        self.workers[identifier] = worker</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">start</span>(<span class="params">self</span>):</span><br><span class="line">        pool = Pool(self.c_num)</span><br><span class="line">        <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">            task = self.task_queue.get(<span class="literal">True</span>)</span><br><span class="line">            <span class="keyword">if</span> task[<span class="string">&#x27;id&#x27;</span>] == <span class="string">&quot;NO&quot;</span>:  <span class="comment"># 结束爬虫</span></span><br><span class="line">                pool.close()</span><br><span class="line">                pool.join()</span><br><span class="line">                exit(<span class="number">0</span>)</span><br><span class="line">            <span class="keyword">else</span>:  <span class="comment"># 给worker完成任务</span></span><br><span class="line">                worker = self.workers[task[<span class="string">&#x27;id&#x27;</span>]]</span><br><span class="line">                pool.apply_async(worker, args=(self.task_queue, task))</span><br></pre></td></tr></table></figure>
+
+<p>这个类中一共就有四个方法：构造方法、添加初始任务方法、设置worker方法、开始爬取方法。</p>
+<p><strong>__init__方法：</strong></p>
+<blockquote>
+<p>在构造方法中，我们创建了一个任务队列，（这里注意使用了Manager.Queue()，因为后面我们要用到进程池，所以要用Manager类），workers字典，以及并发数配置。</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">crawler = SimpleCrawler(<span class="number">5</span>)  <span class="comment"># 并发数为5</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>add_task方法：</strong></p>
+<blockquote>
+<p>负责添加初始任务方法，task的形式为一个字典。有id、url等字段。id负责分配给不同的worker。如下：</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">crawler.add_task(&#123;</span><br><span class="line">    <span class="string">&quot;id&quot;</span>: <span class="string">&quot;worker&quot;</span>,</span><br><span class="line">    <span class="string">&quot;url&quot;</span>: <span class="string">&quot;http://nladuo.cn/scce_site/&quot;</span>,</span><br><span class="line">    <span class="string">&quot;page&quot;</span>: <span class="number">1</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+
+<p><strong>add_worker方法：</strong></p>
+<blockquote>
+<p>负责配置worker，以id作为键存放在workers变量中，其中worker可以定义为一个抽象类或者一个函数。这里为了简单起见，我们直接弄一个函数。</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">worker</span>(<span class="params">queue, task</span>):</span><br><span class="line">    url = task[<span class="string">&quot;url&quot;</span>]</span><br><span class="line">    resp = requests.get(url)</span><br><span class="line">    <span class="comment"># ......，爬取解析网页</span></span><br><span class="line">    queue.put(new_task) <span class="comment"># 可能还会添加新的task</span></span><br><span class="line">    <span class="comment"># ......</span></span><br><span class="line"></span><br><span class="line">crawler.add_worker(<span class="string">&quot;worker&quot;</span>, worker)</span><br></pre></td></tr></table></figure>
+
+<p><strong>start方法：</strong></p>
+<blockquote>
+<p>start方法就是启动爬虫，这里看上面的代码，创建了一个进程池用来实现并发。然后不断的从queue中取出任务，根据任务的id分配给对应id的worker。我们这里规定当id为“NO”时，我们则停止爬虫。</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">crawler.start()</span><br></pre></td></tr></table></figure>
+
+<h2 id="爬取两级页面"><a href="#爬取两级页面" class="headerlink" title="爬取两级页面"></a>爬取两级页面</h2><p>下面，我们来使用这个简单的爬虫框架，来实现一个两级页面的爬虫。</p>
+<p>首先看第一级页面：<a target="_blank" rel="noopener" href="http://nladuo.cn/scce_site/">http://nladuo.cn/scce_site&#x2F;</a>。其实就是之前的新闻列表页。我们可以爬到新闻的标题，以及该标题对应的网页链接。</p>
+<p><img src="/worker1_analysis.png"></p>
+<p>第二级页面是：<a target="_blank" rel="noopener" href="http://nladuo.cn/scce_site/article/2601.html">http://nladuo.cn/scce_site&#x2F;article&#x2F;2601.html</a>，也就是新闻的详情页，这里可以获取到新闻的内容以及点击数目等。</p>
+<p><img src="/worker2_analysis.png"></p>
+<p>下面我们创建两个worker，一个负责爬取列表页面，一个负责爬取新闻详情页。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">worker</span>(<span class="params">queue, task</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot; 爬取新闻列表页 &quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">detail_worker</span>(<span class="params">queue, task</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot; 爬取新闻详情页 &quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">pass</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="主代码"><a href="#主代码" class="headerlink" title="主代码"></a>主代码</h4><p>对于main代码，这里首先需要创建一个crawler。然后添加两个worker，id分别为“worker”和“detail_worker”。然后添加一个初始的任务，也就是爬取新闻列表页的首页。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    crawler = SimpleCrawler(<span class="number">5</span>)</span><br><span class="line">    crawler.add_worker(<span class="string">&quot;worker&quot;</span>, worker)</span><br><span class="line">    crawler.add_worker(<span class="string">&quot;detail_worker&quot;</span>, detail_worker)</span><br><span class="line">    crawler.add_task(&#123;</span><br><span class="line">        <span class="string">&quot;id&quot;</span>: <span class="string">&quot;worker&quot;</span>,</span><br><span class="line">        <span class="string">&quot;url&quot;</span>: <span class="string">&quot;http://nladuo.cn/scce_site/&quot;</span>,</span><br><span class="line">        <span class="string">&quot;page&quot;</span>: <span class="number">1</span></span><br><span class="line">    &#125;)</span><br><span class="line">    crawler.start()</span><br></pre></td></tr></table></figure>
+
+<h4 id="worker代码编写"><a href="#worker代码编写" class="headerlink" title="worker代码编写"></a>worker代码编写</h4><p>接下来，完成我们的worker代码，worker接受两个参数：queue和task。</p>
+<ul>
+<li>queue: 用于解析网页后，添加新的任务</li>
+<li>task: 要完成的任务</li>
+</ul>
+<p>然后worker①首先下载网页，②其次解析网页，③再根据解析的列表进一步需要爬取详情页，所以要添加爬取详情页的任务；④最后判断当前是不是最后一页，如果是就发送退出信号，否则添加下一页的新闻列表爬取任务。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">worker</span>(<span class="params">queue, task</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot; 爬取新闻列表页 &quot;&quot;&quot;</span></span><br><span class="line">    <span class="comment"># 下载任务</span></span><br><span class="line">    url = task[<span class="string">&quot;url&quot;</span>] + <span class="string">&quot;%d.html&quot;</span> % task[<span class="string">&quot;page&quot;</span>]</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;downloading:&quot;</span>, url)</span><br><span class="line">    resp = requests.get(url)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 解析网页</span></span><br><span class="line">    soup = BeautifulSoup(resp.content, <span class="string">&quot;html.parser&quot;</span>)</span><br><span class="line">    items = soup.find_all(<span class="string">&quot;div&quot;</span>, &#123;<span class="string">&quot;class&quot;</span>, <span class="string">&quot;list_title&quot;</span>&#125;)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> index, item <span class="keyword">in</span> <span class="built_in">enumerate</span>(items):</span><br><span class="line">        detail_url = <span class="string">&quot;http://nladuo.cn/scce_site/&quot;</span> + item.a[<span class="string">&#x27;href&#x27;</span>]</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;adding:&quot;</span>, detail_url)</span><br><span class="line">        <span class="comment"># 添加新任务: 爬取详情页</span></span><br><span class="line">        queue.put(&#123;</span><br><span class="line">            <span class="string">&quot;id&quot;</span>: <span class="string">&quot;detail_worker&quot;</span>,</span><br><span class="line">            <span class="string">&quot;url&quot;</span>: detail_url,</span><br><span class="line">            <span class="string">&quot;page&quot;</span>: task[<span class="string">&quot;page&quot;</span>],</span><br><span class="line">            <span class="string">&quot;index&quot;</span>: index,</span><br><span class="line">            <span class="string">&quot;title&quot;</span>: item.get_text().replace(<span class="string">&quot;\n&quot;</span>, <span class="string">&quot;&quot;</span>)</span><br><span class="line">        &#125;)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> task[<span class="string">&quot;page&quot;</span>] == <span class="number">10</span>:  <span class="comment"># 添加结束信号</span></span><br><span class="line">        queue.put(&#123;<span class="string">&quot;id&quot;</span>: <span class="string">&quot;NO&quot;</span>&#125;)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="comment"># 添加新任务: 爬取下一页</span></span><br><span class="line">        queue.put(&#123;</span><br><span class="line">            <span class="string">&quot;id&quot;</span>: <span class="string">&quot;worker&quot;</span>,</span><br><span class="line">            <span class="string">&quot;url&quot;</span>: <span class="string">&quot;http://nladuo.cn/scce_site/&quot;</span>,</span><br><span class="line">            <span class="string">&quot;page&quot;</span>: task[<span class="string">&quot;page&quot;</span>]+<span class="number">1</span></span><br><span class="line">        &#125;)</span><br></pre></td></tr></table></figure>
+
+<h4 id="detail-worker代码编写"><a href="#detail-worker代码编写" class="headerlink" title="detail_worker代码编写"></a>detail_worker代码编写</h4><p>detail_worker的任务比较简单，只要下载任务，然后解析网页并打印即可。这里为了让屏幕输出没那么乱，我们只获取点击数。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">detail_worker</span>(<span class="params">queue, task</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot; 爬取新闻详情页 &quot;&quot;&quot;</span></span><br><span class="line">    <span class="comment"># 下载任务</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;downloading:&quot;</span>, task[<span class="string">&#x27;url&#x27;</span>])</span><br><span class="line">    resp = requests.get(task[<span class="string">&#x27;url&#x27;</span>])</span><br><span class="line">    <span class="comment"># 解析网页</span></span><br><span class="line">    soup = BeautifulSoup(resp.content, <span class="string">&quot;html.parser&quot;</span>)</span><br><span class="line">    click_num = soup.find(<span class="string">&quot;div&quot;</span>, &#123;<span class="string">&quot;class&quot;</span>, <span class="string">&quot;artNum&quot;</span>&#125;).get_text()</span><br><span class="line">    <span class="built_in">print</span>(task[<span class="string">&quot;page&quot;</span>], task[<span class="string">&quot;index&quot;</span>], task[<span class="string">&#x27;title&#x27;</span>], click_num)</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h2><p>到这里，我们就用我们自己开发的框架实现了一个多级页面的爬虫。读者可以考虑一下以下的问题。</p>
+<ul>
+<li>如何实现爬虫的自动结束？考虑监控队列的情况和worker的状态。</li>
+<li>如何实现一个分布式爬虫？考虑使用分布式队列：<a target="_blank" rel="noopener" href="https://github.com/celery/celery">celery</a></li>
+</ul>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="../../17/%E9%82%A3%E4%BA%9B%E5%B9%B4%EF%BC%8C%E6%88%91%E7%88%AC%E8%BF%87%E7%9A%84%E5%8C%97%E7%A7%91-%E4%B8%89-%E2%80%94%E2%80%94%E7%88%AC%E8%99%AB%E8%BF%9B%E9%98%B6%E4%B9%8B%E5%A4%9A%E8%BF%9B%E7%A8%8B%E7%9A%84%E4%BD%BF%E7%94%A8/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>Prev</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
+              2018-02-27 21:54:58
+            </span>
+            
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="../../../03/21/%E4%BD%BF%E7%94%A8nginx%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86%E5%88%B0%E5%86%85%E7%BD%91%E7%9A%84ipython-notebook/" target="_self">
+                <span>Next</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">Contents</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%86%99%E5%9C%A8%E5%89%8D%E9%9D%A2"><span class="toc-text">写在前面</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%88%AC%E8%99%AB%E7%9A%84%E6%A8%A1%E5%9D%97"><span class="toc-text">爬虫的模块</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BB%BB%E5%8A%A1%E4%BA%A7%E7%94%9F%E5%99%A8%E2%80%94%E2%80%94Producer"><span class="toc-text">任务产生器——Producer</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%8B%E8%BD%BD%E5%99%A8%E2%80%94%E2%80%94Downloader"><span class="toc-text">下载器——Downloader</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%A7%A3%E6%9E%90%E5%99%A8%E2%80%94%E2%80%94Parser"><span class="toc-text">解析器——Parser</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%BE%93%E5%87%BA%E7%AE%A1%E9%81%93%E2%80%94%E2%80%94Pipeline"><span class="toc-text">输出管道——Pipeline</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%88%AC%E8%99%AB%E6%A1%86%E6%9E%B6%E7%9A%84%E7%BB%93%E6%9E%84"><span class="toc-text">爬虫框架的结构</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%AE%80%E6%98%93%E7%9A%84%E7%88%AC%E8%99%AB%E6%A1%86%E6%9E%B6%E7%9A%84%E6%9E%B6%E6%9E%84"><span class="toc-text">简易的爬虫框架的架构</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1"><span class="toc-text">进程间通信</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#DIY%E5%B9%B6%E5%8F%91%E6%A1%86%E6%9E%B6"><span class="toc-text">DIY并发框架</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%88%AC%E5%8F%96%E4%B8%A4%E7%BA%A7%E9%A1%B5%E9%9D%A2"><span class="toc-text">爬取两级页面</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%BB%E4%BB%A3%E7%A0%81"><span class="toc-text">主代码</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#worker%E4%BB%A3%E7%A0%81%E7%BC%96%E5%86%99"><span class="toc-text">worker代码编写</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#detail-worker%E4%BB%A3%E7%A0%81%E7%BC%96%E5%86%99"><span class="toc-text">detail_worker代码编写</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%9D%E8%80%83"><span class="toc-text">思考</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="../../../../js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="http://www.beian.miit.gov.cn/">http://www.beian.miit.gov.cn/  京ICP备17062395号</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="../../../../js/backtotop.js"></script>
+
+
+
+        
+  <div class="search-icon tools-bar-item" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="Search...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>First search, index file loading, please wait...<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>No result<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The search.xml file was not found, please refer to：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The request failed, Try to refresh the page or try again later.<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="../../../../js/colorscheme.js"></script>
+
+
+
+
+
+        
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + %E9%82%A3%E4%BA%9B%E5%B9%B4%EF%BC%8C%E6%88%91%E7%88%AC%E8%BF%87%E7%9A%84%E5%8C%97%E7%A7%91(%E5%9B%9B)%E2%80%94%E2%80%94%E7%88%AC%E8%99%AB%E8%BF%9B%E9%98%B6%E4%B9%8B%E6%9E%81%E7%AE%80%E5%B9%B6%E8%A1%8C%E7%88%AC%E8%99%AB%E6%A1%86%E6%9E%B6%E5%BC%80%E5%8F%91 + '&url=' + http%3A%2F%2Fnladuo.github.io%2F2018%2F02%2F27%2F%25E9%2582%25A3%25E4%25BA%259B%25E5%25B9%25B4%25EF%25BC%258C%25E6%2588%2591%25E7%2588%25AC%25E8%25BF%2587%25E7%259A%2584%25E5%258C%2597%25E7%25A7%2591-%25E5%259B%259B-%25E2%2580%2594%25E2%2580%2594%25E7%2588%25AC%25E8%2599%25AB%25E8%25BF%259B%25E9%2598%25B6%25E4%25B9%258B%25E6%259E%2581%25E7%25AE%2580%25E5%25B9%25B6%25E8%25A1%258C%25E7%2588%25AC%25E8%2599%25AB%25E6%25A1%2586%25E6%259E%25B6%25E5%25BC%2580%25E5%258F%2591%2F + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=http://nladuo.github.io/2018/02/27/%E9%82%A3%E4%BA%9B%E5%B9%B4%EF%BC%8C%E6%88%91%E7%88%AC%E8%BF%87%E7%9A%84%E5%8C%97%E7%A7%91-%E5%9B%9B-%E2%80%94%E2%80%94%E7%88%AC%E8%99%AB%E8%BF%9B%E9%98%B6%E4%B9%8B%E6%9E%81%E7%AE%80%E5%B9%B6%E8%A1%8C%E7%88%AC%E8%99%AB%E6%A1%86%E6%9E%B6%E5%BC%80%E5%8F%91/" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
+  
+  
+<script src="../../../../js/shares.js"></script>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>

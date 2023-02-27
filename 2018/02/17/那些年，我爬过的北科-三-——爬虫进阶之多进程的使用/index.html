@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="keywords" content="" />
+  <meta name="author" content="叁公子KCN" />
+  <meta name="description" content="" />
+  
+  
+  <title>
+    
+      那些年，我爬过的北科(三)——爬虫进阶之多进程的使用 
+      
+      
+      |
+    
+     叁公子的博客
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="../../../../js/fancybox.js"></script>
+
+
+  
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/"></a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="../../../../js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="../../../../js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">那些年，我爬过的北科(三)——爬虫进阶之多进程的使用</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
+          2018-02-17 10:21:55
+        </span>
+        
+      </div>
+      <div class="markdown-body">
+        <h2 id="爬取多个页面"><a href="#爬取多个页面" class="headerlink" title="爬取多个页面"></a>爬取多个页面</h2><p>在爬虫基础之环境搭建与入门中，介绍了如何用Requests下载(爬取)了一个页面，并用BeautifulSoup这个HTML解析库来解析页面里面我们想要的内容。</p>
+<p>显然，爬虫肯定不是只让我们爬取一个网页的，这样的工作，人也可以做。下面我们来看：<a target="_blank" rel="noopener" href="http://nladuo.cn/scce_site/">http://nladuo.cn/scce_site&#x2F;</a>这个页面。这个页面一共有10页，点击下一页之后可以看到在网页的url中多了个字段“2.html”，也就是当前页面时第二页的意思。</p>
+<p><img src="/web1.png"></p>
+<p>也就是我们如果要爬取下所有的新闻，只要爬取形如”<a href="">http://nladuo.cn/scce_site&#x2F;{page}.html</a>“的页面就好了。</p>
+<span id="more"></span>
+<p>这里使用一个for循环就可以完成全部页面的爬取。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">from</span> bs4 <span class="keyword">import</span> BeautifulSoup</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">crawl_one_page</span>(<span class="params">page_num</span>):</span><br><span class="line">    resp = requests.get(<span class="string">&quot;http://nladuo.cn/scce_site/&#123;page&#125;.html&quot;</span>.</span><br><span class="line">                        <span class="built_in">format</span>(page=page_num))</span><br><span class="line">    soup = BeautifulSoup(resp.content)</span><br><span class="line">    items = soup.find_all(<span class="string">&quot;div&quot;</span>, &#123;<span class="string">&quot;class&quot;</span>: <span class="string">&quot;every_list&quot;</span>&#125;)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> item <span class="keyword">in</span> items:</span><br><span class="line">        title_div = item.find(<span class="string">&quot;div&quot;</span>, &#123;<span class="string">&quot;class&quot;</span>: <span class="string">&quot;list_title&quot;</span>&#125;)</span><br><span class="line">        title = title_div.a.get_text()</span><br><span class="line">        url = title_div.a[<span class="string">&quot;href&quot;</span>]</span><br><span class="line">        date = item.find(<span class="string">&quot;div&quot;</span>, &#123;<span class="string">&quot;class&quot;</span>: <span class="string">&quot;list_time&quot;</span>&#125;).get_text()</span><br><span class="line">        <span class="built_in">print</span>(date, title, url)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    t0 = time.time()</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, <span class="number">11</span>):</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;crawling page %d .......&quot;</span> % i)</span><br><span class="line">        crawl_one_page(i)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;used:&quot;</span>, (time.time() - t0))</span><br></pre></td></tr></table></figure>
+<h2 id="CPU密集型和IO密集型业务"><a href="#CPU密集型和IO密集型业务" class="headerlink" title="CPU密集型和IO密集型业务"></a>CPU密集型和IO密集型业务</h2><p>通过上面的代码，我们完成了一个顺序结构的爬虫。下面我们来讨论如何爬取的速度瓶颈在哪里，从而提升爬取速率。</p>
+<p>这里介绍一下<strong>CPU密集型业务</strong>和<strong>I&#x2F;O密集型业务</strong>。</p>
+<ul>
+<li>CPU密集型业务（CPU-bound）：也叫计算密集型，指的是系统的硬盘、内存性能相对CPU要好很多，此时，系统运作大部分的状况是CPU Loading 100%，CPU要读&#x2F;写I&#x2F;O(硬盘&#x2F;内存)，I&#x2F;O在很短的时间就可以完成，而CPU还有许多运算要处理，CPU Loading很高。</li>
+<li>I&#x2F;O密集型业务（I&#x2F;O-bound）：指的是系统的CPU性能相对硬盘、内存要好很多，此时，系统运作，大部分的状况是CPU在等I&#x2F;O (硬盘&#x2F;内存) 的读&#x2F;写操作，此时CPU Loading并不高。</li>
+</ul>
+<p>（上述解释来自<a target="_blank" rel="noopener" href="http://blog.csdn.net/youanyyou/article/details/78990156">http://blog.csdn.net/youanyyou/article/details/78990156</a>）</p>
+<p>网络爬虫主要有两个部分，一个是下载页面，一个是解析页面。显然，下载是个长时间的I&#x2F;O密集操作，而解析页面则是需要调用算法来查找页面结构，是个CPU操作。</p>
+<p>对于爬虫来说，耗时主要在下载一个网页中，根据网络的连通性，下载一个网页可能要几百毫秒甚至几秒，而解析一个页面可能只需要几十毫秒。所以爬虫其实是属于I&#x2F;O密集型业务，其瓶颈主要在网络上面。</p>
+<p>所以，提升爬虫的爬取速度，不是把CPU都跑满。而是要多开几个下载器，同时进行下载，把网络I&#x2F;O跑满。</p>
+<p>在Python中，使用多线程和多进程都可以实现并发下载。然而在python多线程无法跑多核（参见：<a target="_blank" rel="noopener" href="https://wiki.python.org/moin/GlobalInterpreterLock">GIL</a>），而多进程可以。</p>
+<p>这里，我们主要说一下python中多进程的使用。</p>
+<h2 id="多进程"><a href="#多进程" class="headerlink" title="多进程"></a>多进程</h2><p>python中调用多进程使用multiprocessing这个包就好了。下面创建了两个进程，每隔一秒打印一下进程ID。（这里的time.sleep可以理解为耗时的I&#x2F;O操作。）</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> multiprocessing</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">process</span>(<span class="params">process_id</span>):</span><br><span class="line">    <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">        time.sleep(<span class="number">1</span>)</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;Task %d, pid: %d, doing something&#x27;</span> % (process_id, os.getpid()))</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    <span class="comment"># 进程1</span></span><br><span class="line">    p = multiprocessing.Process(target=process, args=(<span class="number">1</span>,))</span><br><span class="line">    p.start()</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 进程2</span></span><br><span class="line">    p2 = multiprocessing.Process(target=process, args=(<span class="number">2</span>,))</span><br><span class="line">    p2.start()</span><br></pre></td></tr></table></figure>
+
+<p>可以看到基本上是同时打印两句话。而在没用多进程前，我们的代码会像下面的代码的样子。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">    time.sleep(<span class="number">1</span>)</span><br><span class="line">    <span class="built_in">print</span> <span class="string">&#x27;Task 1, doing something&#x27;</span>  </span><br><span class="line">    time.sleep(<span class="number">1</span>)</span><br><span class="line">    <span class="built_in">print</span> <span class="string">&#x27;Task 2, doing something&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>此时，我们创建两个进程，一个进程爬取1-5页，一个进程爬取6-10页。再来试试，看看速度有没有提升一倍。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> multiprocessing</span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">from</span> bs4 <span class="keyword">import</span> BeautifulSoup</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">crawl_one_page</span>(<span class="params">page_num</span>):</span><br><span class="line">    resp = requests.get(<span class="string">&quot;http://nladuo.cn/scce_site/&#123;page&#125;.html&quot;</span>.</span><br><span class="line">                        <span class="built_in">format</span>(page=page_num))</span><br><span class="line">    soup = BeautifulSoup(resp.content)</span><br><span class="line">    items = soup.find_all(<span class="string">&quot;div&quot;</span>, &#123;<span class="string">&quot;class&quot;</span>: <span class="string">&quot;every_list&quot;</span>&#125;)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> item <span class="keyword">in</span> items:</span><br><span class="line">        title_div = item.find(<span class="string">&quot;div&quot;</span>, &#123;<span class="string">&quot;class&quot;</span>: <span class="string">&quot;list_title&quot;</span>&#125;)</span><br><span class="line">        title = title_div.a.get_text()</span><br><span class="line">        url = title_div.a[<span class="string">&quot;href&quot;</span>]</span><br><span class="line">        date = item.find(<span class="string">&quot;div&quot;</span>, &#123;<span class="string">&quot;class&quot;</span>: <span class="string">&quot;list_time&quot;</span>&#125;).get_text()</span><br><span class="line">        <span class="built_in">print</span>(date, title, url)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">process</span>(<span class="params">start, end</span>):</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(start, end):</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;crawling page %d .......&quot;</span> % i)</span><br><span class="line">        crawl_one_page(i)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    t0 = time.time()</span><br><span class="line">    p = multiprocessing.Process(target=process, args=(<span class="number">1</span>, <span class="number">6</span>))  <span class="comment"># 任务1, 爬取1-5页</span></span><br><span class="line">    p.start()</span><br><span class="line"></span><br><span class="line">    p2 = multiprocessing.Process(target=process, args=(<span class="number">6</span>, <span class="number">11</span>))  <span class="comment"># 任务2, 爬取6-10页</span></span><br><span class="line">    p2.start()</span><br><span class="line"></span><br><span class="line">    p.join()</span><br><span class="line">    p2.join()</span><br><span class="line"></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;used:&quot;</span>, (time.time() - t0))</span><br></pre></td></tr></table></figure>
+<h2 id="进程池"><a href="#进程池" class="headerlink" title="进程池"></a>进程池</h2><p>像上面的方式，我们创建了两个进程，分别处理两个任务。然而有的时候，并不是那么容易的把一个任务分成两个任务。考虑一下把一个任务想象为爬取并解析一个网页，当我们有两个或者多个进程而任务有成千上万个的时候，代码应该怎么写呢？</p>
+<p>这时候，我们需要维护几个进程，然后给每个进程分配一个网页，如何分配，需要我们自己定义。在所有的进程都在运行时，要保证有进程结束时，再加入新的进程。</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> multiprocessing</span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">from</span> bs4 <span class="keyword">import</span> BeautifulSoup</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">crawl_one_page</span>(<span class="params">page_num</span>):</span><br><span class="line">    resp = requests.get(<span class="string">&quot;http://nladuo.cn/scce_site/&#123;page&#125;.html&quot;</span>.</span><br><span class="line">                        <span class="built_in">format</span>(page=page_num))</span><br><span class="line">    soup = BeautifulSoup(resp.content, <span class="string">&quot;html.parser&quot;</span>)</span><br><span class="line">    items = soup.find_all(<span class="string">&quot;div&quot;</span>, &#123;<span class="string">&quot;class&quot;</span>: <span class="string">&quot;every_list&quot;</span>&#125;)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> item <span class="keyword">in</span> items:</span><br><span class="line">        title_div = item.find(<span class="string">&quot;div&quot;</span>, &#123;<span class="string">&quot;class&quot;</span>: <span class="string">&quot;list_title&quot;</span>&#125;)</span><br><span class="line">        title = title_div.a.get_text()</span><br><span class="line">        url = title_div.a[<span class="string">&quot;href&quot;</span>]</span><br><span class="line">        date = item.find(<span class="string">&quot;div&quot;</span>, &#123;<span class="string">&quot;class&quot;</span>: <span class="string">&quot;list_time&quot;</span>&#125;).get_text()</span><br><span class="line">        <span class="built_in">print</span>(date, title, url)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    t0 = time.time()</span><br><span class="line"></span><br><span class="line">    p = <span class="literal">None</span>  <span class="comment"># 进程1</span></span><br><span class="line">    p2 = <span class="literal">None</span>  <span class="comment"># 进程2</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, <span class="number">11</span>):</span><br><span class="line">        <span class="keyword">if</span> i % <span class="number">2</span> == <span class="number">1</span>:  <span class="comment"># 把偶数任务分配给进程1</span></span><br><span class="line">            p = multiprocessing.Process(target=crawl_one_page, args=(i,))</span><br><span class="line">            p.start()</span><br><span class="line">        <span class="keyword">else</span>:           <span class="comment"># 把奇数任务分配给进程2</span></span><br><span class="line">            p2 = multiprocessing.Process(target=crawl_one_page, args=(i,))</span><br><span class="line">            p2.start()</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> i % <span class="number">2</span> == <span class="number">0</span>:  <span class="comment"># 保证只有两个进程, 等待两个进程完成</span></span><br><span class="line">            p.join()</span><br><span class="line">            p2.join()</span><br><span class="line"></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;used:&quot;</span>, (time.time() - t0))</span><br></pre></td></tr></table></figure>
+<p>上面的代码实现了一个简单的两进程的任务分配和管理，但其实也存在着一些问题：比如进程2先结束，此时就只有一个进程在运行，但程序还阻塞住，无法产生新的进程。这里只是简单的做个例子，旨在说明进程管理的复杂性。</p>
+<p>下面我们说一说进程池，其实就是为了解决这个问题而设计的。</p>
+<p>既然叫做进程池，那就是有个池子，里面有一堆公用的进程；当有任务来了，拿一个进程出来；当任务完成了，把进程还回池子里，给别的任务用；当池子里面没有可用进程的时候，那就要等待，等别人把进程归还了再拿去用。</p>
+<p>下面我们来看一下代码，让每个进程每秒打印一下pid，一共打印两遍。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> multiprocessing <span class="keyword">import</span> Pool</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">do_something</span>(<span class="params">num</span>):</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">2</span>):</span><br><span class="line">        time.sleep(<span class="number">1</span>)</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;doing %d, pid: %d&quot;</span> % (num, os.getpid()))</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    p = Pool(<span class="number">3</span>)</span><br><span class="line">    <span class="keyword">for</span> page <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, <span class="number">11</span>):  <span class="comment"># 10个任务</span></span><br><span class="line">        p.apply_async(do_something, args=(page,))</span><br><span class="line"></span><br><span class="line">    p.close()   <span class="comment"># 关闭进程池, 不再接受任务</span></span><br><span class="line">    p.join()    <span class="comment"># 等待子进程结束</span></span><br></pre></td></tr></table></figure>
+<p>运行代码后可以看到，我们可以看到这里是三个三个的打印的，我们成功完成了三并发。同时，进程池一共产生了三个进程：59650、59651、59652，说明后面的所有任务都是使用这三个进程完成的。<br><img src="/multiprocess.png"></p>
+<p>下面，修改爬虫代码，用进程池实现并发爬取。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">from</span> bs4 <span class="keyword">import</span> BeautifulSoup</span><br><span class="line"><span class="keyword">from</span> multiprocessing <span class="keyword">import</span> Pool</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">crawl_one_page</span>(<span class="params">page_num</span>):</span><br><span class="line">    resp = requests.get(<span class="string">&quot;http://nladuo.cn/scce_site/&#123;page&#125;.html&quot;</span>.</span><br><span class="line">                        <span class="built_in">format</span>(page=page_num))</span><br><span class="line">    soup = BeautifulSoup(resp.content, <span class="string">&quot;html.parser&quot;</span>)</span><br><span class="line">    items = soup.find_all(<span class="string">&quot;div&quot;</span>, &#123;<span class="string">&quot;class&quot;</span>: <span class="string">&quot;every_list&quot;</span>&#125;)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> item <span class="keyword">in</span> items:</span><br><span class="line">        title_div = item.find(<span class="string">&quot;div&quot;</span>, &#123;<span class="string">&quot;class&quot;</span>: <span class="string">&quot;list_title&quot;</span>&#125;)</span><br><span class="line">        title = title_div.a.get_text()</span><br><span class="line">        url = title_div.a[<span class="string">&quot;href&quot;</span>]</span><br><span class="line">        date = item.find(<span class="string">&quot;div&quot;</span>, &#123;<span class="string">&quot;class&quot;</span>: <span class="string">&quot;list_time&quot;</span>&#125;).get_text()</span><br><span class="line">        <span class="built_in">print</span>(date, title, url)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    t0 = time.time()</span><br><span class="line">    p = Pool(<span class="number">5</span>)</span><br><span class="line">    <span class="keyword">for</span> page <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, <span class="number">11</span>):  <span class="comment"># 1-10页</span></span><br><span class="line">        p.apply_async(crawl_one_page, args=(page,))</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 关闭进程池, 等待子进程结束</span></span><br><span class="line">    p.close()</span><br><span class="line">    p.join()</span><br><span class="line"></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;used:&quot;</span>, (time.time() - t0))</span><br></pre></td></tr></table></figure>
+
+<p>到这里，多进程的讲解就结束了。</p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="../../07/Echarts%E7%BB%98%E5%88%B6%E5%8C%97%E4%BA%AC%E6%91%A9%E6%8B%9C%E5%8D%95%E8%BD%A6%E5%88%86%E5%B8%83%E7%83%AD%E5%8A%9B%E5%9B%BE/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>Prev</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
+              2018-02-17 10:21:55
+            </span>
+            
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="../../27/%E9%82%A3%E4%BA%9B%E5%B9%B4%EF%BC%8C%E6%88%91%E7%88%AC%E8%BF%87%E7%9A%84%E5%8C%97%E7%A7%91-%E5%9B%9B-%E2%80%94%E2%80%94%E7%88%AC%E8%99%AB%E8%BF%9B%E9%98%B6%E4%B9%8B%E6%9E%81%E7%AE%80%E5%B9%B6%E8%A1%8C%E7%88%AC%E8%99%AB%E6%A1%86%E6%9E%B6%E5%BC%80%E5%8F%91/" target="_self">
+                <span>Next</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">Contents</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%88%AC%E5%8F%96%E5%A4%9A%E4%B8%AA%E9%A1%B5%E9%9D%A2"><span class="toc-text">爬取多个页面</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#CPU%E5%AF%86%E9%9B%86%E5%9E%8B%E5%92%8CIO%E5%AF%86%E9%9B%86%E5%9E%8B%E4%B8%9A%E5%8A%A1"><span class="toc-text">CPU密集型和IO密集型业务</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%9A%E8%BF%9B%E7%A8%8B"><span class="toc-text">多进程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%9B%E7%A8%8B%E6%B1%A0"><span class="toc-text">进程池</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="../../../../js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="http://www.beian.miit.gov.cn/">http://www.beian.miit.gov.cn/  京ICP备17062395号</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="../../../../js/backtotop.js"></script>
+
+
+
+        
+  <div class="search-icon tools-bar-item" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="Search...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>First search, index file loading, please wait...<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>No result<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The search.xml file was not found, please refer to：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The request failed, Try to refresh the page or try again later.<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="../../../../js/colorscheme.js"></script>
+
+
+
+
+
+        
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + %E9%82%A3%E4%BA%9B%E5%B9%B4%EF%BC%8C%E6%88%91%E7%88%AC%E8%BF%87%E7%9A%84%E5%8C%97%E7%A7%91(%E4%B8%89)%E2%80%94%E2%80%94%E7%88%AC%E8%99%AB%E8%BF%9B%E9%98%B6%E4%B9%8B%E5%A4%9A%E8%BF%9B%E7%A8%8B%E7%9A%84%E4%BD%BF%E7%94%A8 + '&url=' + http%3A%2F%2Fnladuo.github.io%2F2018%2F02%2F17%2F%25E9%2582%25A3%25E4%25BA%259B%25E5%25B9%25B4%25EF%25BC%258C%25E6%2588%2591%25E7%2588%25AC%25E8%25BF%2587%25E7%259A%2584%25E5%258C%2597%25E7%25A7%2591-%25E4%25B8%2589-%25E2%2580%2594%25E2%2580%2594%25E7%2588%25AC%25E8%2599%25AB%25E8%25BF%259B%25E9%2598%25B6%25E4%25B9%258B%25E5%25A4%259A%25E8%25BF%259B%25E7%25A8%258B%25E7%259A%2584%25E4%25BD%25BF%25E7%2594%25A8%2F + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=http://nladuo.github.io/2018/02/17/%E9%82%A3%E4%BA%9B%E5%B9%B4%EF%BC%8C%E6%88%91%E7%88%AC%E8%BF%87%E7%9A%84%E5%8C%97%E7%A7%91-%E4%B8%89-%E2%80%94%E2%80%94%E7%88%AC%E8%99%AB%E8%BF%9B%E9%98%B6%E4%B9%8B%E5%A4%9A%E8%BF%9B%E7%A8%8B%E7%9A%84%E4%BD%BF%E7%94%A8/" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
+  
+  
+<script src="../../../../js/shares.js"></script>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>
