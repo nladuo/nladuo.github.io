@@ -4,7 +4,7 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="keywords" content="" />
+  
   <meta name="author" content="叁公子KCN" />
   <meta name="description" content="" />
   
@@ -68,10 +68,10 @@
     <a href="/">
       <!-- 头像取消懒加载，添加no-lazy -->
       
-        <img src="/images/avatar.png" alt="">
+        <img src="/images/avatar.jpg" alt="">
       
     </a>
-    <div class="nickname"><a href="/"></a></div>
+    <div class="nickname"><a href="/">叁叁的博客</a></div>
   </div>
   <div class="navbar">
     <ul>
@@ -143,14 +143,14 @@
       <div class="post-attach">
         <span class="post-pubtime">
           <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
-          2019-08-31 10:00:39
+          2019-08-31 22:40:08
         </span>
         
       </div>
       <div class="markdown-body">
         <h2 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h2><p>因为喜欢玩儿音乐游戏，所以打算研究一下如何用深度学习的模型生成音游的谱面。这篇文章主要目的是介绍或者总结一些音频的知识和代码。</p>
 <p>恩。如果没玩儿过的话，音乐游戏大概是下面这个样子。</p>
-<p><img src="/cytus2.gif"></p>
+<p><img src="cytus2.gif"></p>
 <p>下面进入正题。</p>
 <p>我Google了一下，找到了这篇文章：<a target="_blank" rel="noopener" href="https://towardsdatascience.com/extract-features-of-music-75a3f9bc265d">Music Feature Extraction in Python</a>。然后这篇文章介绍完了还有一个歌曲分类的实践：<a target="_blank" rel="noopener" href="https://medium.com/@sdoshi579/classification-of-music-into-different-genres-using-keras-82ab5339efe0">Classification of Music into different Genres using Keras</a>。</p>
 <p>下面的内容会主要参考一下这两篇文章，并加入一些我的理解。内容如下：</p>
@@ -171,11 +171,11 @@
 <blockquote>
 <p>音频信号是（Audio）带有语音、音乐和音效的有规律的声波的频率、幅度变化信息载体。 根据声波的特征，可把音频信息分类为规则音频和不规则声音。其中规则音频又可以分为语音、音乐和音效。规则音频是一种连续变化的模拟信号，可用一条连续的曲线来表示，称为声波。声音的三个要素是音调、音强和音色。声波或正弦波有三个重要参数：频率 $$ω_0$$、幅度$$A_n$$和相位$$ψ_n$$ ，这也就决定了音频信号的特征。</p>
 </blockquote>
-<p><img src="/aud.jpeg"></p>
+<p><img src="aud.jpeg"></p>
 <p>总体来说：<strong>音频信号就是不同频率和相位的正弦波的一个叠加。</strong></p>
 <p>一般的声音大概就是这个样子。</p>
-<p><img src="/audio.jpeg"></p>
-<p>横轴是时间，纵轴是声音的幅度。因为本质上就是正弦波的一个叠加，所以看到其实是有正有负的。<br><img src="/sin.jpg"></p>
+<p><img src="audio.jpeg"></p>
+<p>横轴是时间，纵轴是声音的幅度。因为本质上就是正弦波的一个叠加，所以看到其实是有正有负的。<br><img src="sin.jpg"></p>
 <h3 id="人耳听力频率范围"><a href="#人耳听力频率范围" class="headerlink" title="人耳听力频率范围"></a>人耳听力频率范围</h3><p>生活中存在各种正弦波，但并不是所有的波都能被人耳听到。比如说我们手机通信的信号，wifi信号，以及阳光都是一种波，但并不能被人听见。</p>
 <blockquote>
 <p>正常人耳听见声音的频率范围是 20Hz 到 2 万 Hz 。相同强度的声音如频率不同的话，听起来的响度是不一样的。至敏感的频率是 3000 和 4000Hz 。</p>
@@ -187,7 +187,7 @@
 <p>在进行模拟&#x2F;数字信号的转换过程中，当采样频率fs.max大于信号中最高频率fmax的2倍时(fs.max&gt;2fmax)，采样之后的数字信号完整地保留了原始信号中的信息。</p>
 </blockquote>
 <p>这个定理描述的很简单，证明其实也不难，对于声音信号，只要采样的频率大于2*2wHz&#x3D;4WHz的话，我们就可以听到无损的音质了。</p>
-<p>上面说人耳听力敏感的范围主要是在4000Hz，所以我们一般听到的音乐其实是使用8000Hz频率进行采样的。这里可以看下最近比较火的芒种这首歌。<br><img src="/mangzhong.jpeg"></p>
+<p>上面说人耳听力敏感的范围主要是在4000Hz，所以我们一般听到的音乐其实是使用8000Hz频率进行采样的。这里可以看下最近比较火的芒种这首歌。<br><img src="mangzhong.jpeg"></p>
 <p>这首歌的时间是3分36秒也就是216秒，它的标准品质的大小是3.3M。这里可以计算下使用8000Hz频率，16bit进行采样的话，那么这个文件的大小是：</p>
 <p>$$ 216<em>8000</em>16(bit) &#x3D; 216<em>8000</em>16&#x2F;8(字节) &#x3D; 216<em>8000</em>2&#x2F;1024&#x2F;1024(M) &#x3D; 3.296(M) $$</p>
 <p>大概也就是3.3兆了。</p>
@@ -197,14 +197,14 @@
 
 <h3 id="加载音乐"><a href="#加载音乐" class="headerlink" title="加载音乐"></a>加载音乐</h3><p>接下来开始在python中加载音乐，这里我选的是一首我超级喜欢的一首音游的歌曲。链接在这里：<a href="visions.mp3">visions.mp3</a></p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> librosa</span><br><span class="line"></span><br><span class="line">x , sr = librosa.load(<span class="string">&quot;visions.mp3&quot;</span>, sr=<span class="number">8000</span>)</span><br><span class="line"><span class="built_in">print</span>(x.shape, sr)</span><br></pre></td></tr></table></figure>
-<p><img src="/music_load.png"></p>
+<p><img src="music_load.png"></p>
 <p>这里<code>x</code>是音频信号的数字信息，可以看到是一维的，<code>sr</code>是采样频率，用8000就好了。</p>
 <p>然后可以看下这首歌在时域上的波形。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">%matplotlib inline</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">import</span> librosa.display</span><br><span class="line">plt.figure(figsize=(<span class="number">14</span>, <span class="number">5</span>))</span><br><span class="line">librosa.display.waveplot(x, sr=sr)</span><br></pre></td></tr></table></figure>
-<p>运行后，效果如下：<br><img src="/music_wave.png"><br>横轴为时间，纵轴为幅度（amplitude）。</p>
+<p>运行后，效果如下：<br><img src="music_wave.png"><br>横轴为时间，纵轴为幅度（amplitude）。</p>
 <h3 id="Spectogram"><a href="#Spectogram" class="headerlink" title="Spectogram"></a>Spectogram</h3><p>上面是音乐时域上的信息。接下来需要对音乐的频率信息进行分析。</p>
 <p>Spectogram这里没找到好的翻译， 大概表示的意思就是：时变的频谱图。</p>
-<h4 id="短时傅里叶变换-STFT"><a href="#短时傅里叶变换-STFT" class="headerlink" title="短时傅里叶变换-STFT"></a>短时傅里叶变换-STFT</h4><p>我们知道对于周期信号，可以使用傅里叶变换可以将时间域的信息变换到频率域上。<br><img src="/ft.jpg"></p>
+<h4 id="短时傅里叶变换-STFT"><a href="#短时傅里叶变换-STFT" class="headerlink" title="短时傅里叶变换-STFT"></a>短时傅里叶变换-STFT</h4><p>我们知道对于周期信号，可以使用傅里叶变换可以将时间域的信息变换到频率域上。<br><img src="ft.jpg"></p>
 <p>比如说看上面这张图的这个波其实是由三个频率的正弦波构成的，可以看到从频率域的原点往上延伸，频率越来越高，可以看到对应的波形越来越密集。</p>
 <p>在文章中提到了一个短时傅里叶变换的概念，作为一名本科学通信的专业学生，我也不记得老师有讲过这个变换，只记得有过离散傅里叶变换。原作者给了个视频：<a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=g1_wcbGUcDY">The Short Time Fourier Transform | Digital Signal Processing</a></p>
 <p>不过在看视频之前，凭借我的想象，感觉这个变换既然叫短时傅里叶变换，那应该是把音频信号拆分开，然后进行傅里叶变换。因为如果对整个音乐进行傅里叶变换的话，我们只能看到所有的频率信息，但不能确定每个频率的发生的大概时间。只能看到有某些频率的声音而已。</p>
@@ -212,15 +212,15 @@
 <blockquote>
 <p>短时傅立叶变换基本思想是将信号加滑动时间窗，并对窗内信号做傅立叶变换，得到信号的时变频谱。</p>
 </blockquote>
-<p>另外，还有一个东西可以感受STFT，这里可以打开网易云音乐，找到一首歌，打开动效。<br><img src="/music_stft.jpeg"><br>可以看到不断变化的各波形，拆分开来看，其实代表着就当前这一短时间内包含的声音的频率信息。上面的这张图其实也就是对当前时刻的音频信号，进行DFT得到的。</p>
+<p>另外，还有一个东西可以感受STFT，这里可以打开网易云音乐，找到一首歌，打开动效。<br><img src="music_stft.jpeg"><br>可以看到不断变化的各波形，拆分开来看，其实代表着就当前这一短时间内包含的声音的频率信息。上面的这张图其实也就是对当前时刻的音频信号，进行DFT得到的。</p>
 <h4 id="画出时变的频谱图"><a href="#画出时变的频谱图" class="headerlink" title="画出时变的频谱图"></a>画出时变的频谱图</h4><p>接下来我们调用librosa的stft方法可以直接得到短时傅里叶变换的结果。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">X = librosa.stft(x)</span><br><span class="line">Xdb = librosa.amplitude_to_db(<span class="built_in">abs</span>(X))   <span class="comment"># 把幅度转成分贝格式</span></span><br><span class="line">plt.figure(figsize=(<span class="number">14</span>, <span class="number">5</span>))</span><br><span class="line">librosa.display.specshow(Xdb, sr=sr, x_axis=<span class="string">&#x27;time&#x27;</span>, y_axis=<span class="string">&#x27;hz&#x27;</span>)</span><br><span class="line">plt.colorbar()</span><br></pre></td></tr></table></figure>
-<p>效果如下：<br><img src="/spectogram.png"><br>这里横轴是时间，纵轴是频率，颜色则代表分贝（声音的响度），可以看到越红的地方信号音量越大。</p>
+<p>效果如下：<br><img src="spectogram.png"><br>这里横轴是时间，纵轴是频率，颜色则代表分贝（声音的响度），可以看到越红的地方信号音量越大。</p>
 <h3 id="特征提取"><a href="#特征提取" class="headerlink" title="特征提取"></a>特征提取</h3><p>接下来，介绍了一些音乐中的主要特征，这里主要翻译原作者的内容。</p>
 <h4 id="过零率（Zero-Crossing-Rate）"><a href="#过零率（Zero-Crossing-Rate）" class="headerlink" title="过零率（Zero Crossing Rate）"></a>过零率（Zero Crossing Rate）</h4><p>过零率(Zero Crossing Rate,ZCR)是指在每帧中,语音信号通过零点(从正变为负或从负变为正)的次数。这个特征已在语音识别和音乐信息检索领域得到广泛使用，是金属声音和摇滚乐的关键特征。</p>
 <p>回到上面的图，我们把一个时间上放大。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">n0 = <span class="number">9000</span></span><br><span class="line">n1 = <span class="number">9100</span></span><br><span class="line">plt.figure(figsize=(<span class="number">14</span>, <span class="number">5</span>))</span><br><span class="line">plt.plot(x[n0:n1])</span><br><span class="line">plt.grid()</span><br></pre></td></tr></table></figure>
-<p>效果如下：<br><img src="/zcr.png"></p>
+<p>效果如下：<br><img src="zcr.png"></p>
 <p>这里有7个过零点，可以通过下面的方法进行计算。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">zero_crossings = librosa.zero_crossings(x[n0:n1], pad=<span class="literal">False</span>)</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">sum</span>(zero_crossings))</span><br></pre></td></tr></table></figure>
 
@@ -230,22 +230,22 @@
 <p><code>.spectral_centroid</code> 来计算每一帧的频谱中心。</p>
 <p><code>.frames_to_time</code>将帧转换为时间，time[i] &#x3D;&#x3D; frame[i]。【因为stft是一个窗口(帧)一个窗口取的，和采样频率并不对应，所以有个转换】</p>
 <p>为了更好的可视化，对频谱中心进行了归一化。</p>
-<p><img src="/spectral_centroid.png"></p>
+<p><img src="spectral_centroid.png"></p>
 <h4 id="频谱滚降点（Spectral-Rolloff）"><a href="#频谱滚降点（Spectral-Rolloff）" class="headerlink" title="频谱滚降点（Spectral Rolloff）"></a>频谱滚降点（Spectral Rolloff）</h4><p>频谱滚降点的意思，我翻译过来大概是：比该频率低的频率的所有能量大于一定比例的整个频谱的能量，通常这个比例为0.85。</p>
-<p>感觉还是有点儿别扭，用公式比较好理解一些。<br><img src="/rolloff.png"></p>
+<p>感觉还是有点儿别扭，用公式比较好理解一些。<br><img src="rolloff.png"></p>
 <p>下面看下代码，和上面频谱中心的代码其实类似，也是一帧一帧的进行特征抽取。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">spectral_rolloff = librosa.feature.spectral_rolloff(x, sr=sr)[<span class="number">0</span>]</span><br><span class="line">librosa.display.waveplot(x, sr=sr, alpha=<span class="number">0.4</span>)</span><br><span class="line">plt.plot(t, normalize(spectral_rolloff), color=<span class="string">&#x27;r&#x27;</span>)</span><br></pre></td></tr></table></figure>
 
 <p><code>.spectral_rolloff</code> 来计算每一帧的频谱滚降点。</p>
-<p><img src="/spectral_rolloff.png"></p>
+<p><img src="spectral_rolloff.png"></p>
 <h4 id="MFCC-梅尔频率倒谱系数"><a href="#MFCC-梅尔频率倒谱系数" class="headerlink" title="MFCC (梅尔频率倒谱系数)"></a>MFCC (梅尔频率倒谱系数)</h4><p>MFCC是音频信号特征中最重要的一个，基本上处理音频信号就会用到。（作为一名通信学士，我也是才知道的）。</p>
 <p>信号的MFCC参数是一个小集合的特征（一般10-20个），它能够简洁的表示频谱的包络。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">mfccs = librosa.feature.mfcc(x, sr=sr)</span><br><span class="line"><span class="built_in">print</span>(mfccs.shape)</span><br><span class="line"><span class="comment">#Displaying  the MFCCs:</span></span><br><span class="line">librosa.display.specshow(mfccs, sr=sr, x_axis=<span class="string">&#x27;time&#x27;</span>)</span><br></pre></td></tr></table></figure>
 
 <p><code>.mfcc</code> 用来计算信号的MFCC参数。</p>
-<p>通过打印<code>mfccs.shape</code>，可以看看每一帧里面有多少维的MFCC特征。第一个参数是mfcc参数的维度，第二个参数是帧数。<br><img src="/mfcc.png"></p>
+<p>通过打印<code>mfccs.shape</code>，可以看看每一帧里面有多少维的MFCC特征。第一个参数是mfcc参数的维度，第二个参数是帧数。<br><img src="mfcc.png"></p>
 <p>这里一共3177帧，每一帧有20维特征。</p>
-<h2 id="使用Keras对歌曲的题材进行分类"><a href="#使用Keras对歌曲的题材进行分类" class="headerlink" title="使用Keras对歌曲的题材进行分类"></a>使用Keras对歌曲的题材进行分类</h2><p>接下来，完成了以上的对音频信号的特征提取，就可以进行一波机器学习了。（这里不会涉及到机器学习的背景知识，默认读者不是机器学习的小白。）<br><img src="/ml_workflow.png"></p>
+<h2 id="使用Keras对歌曲的题材进行分类"><a href="#使用Keras对歌曲的题材进行分类" class="headerlink" title="使用Keras对歌曲的题材进行分类"></a>使用Keras对歌曲的题材进行分类</h2><p>接下来，完成了以上的对音频信号的特征提取，就可以进行一波机器学习了。（这里不会涉及到机器学习的背景知识，默认读者不是机器学习的小白。）<br><img src="ml_workflow.png"></p>
 <h3 id="数据准备"><a href="#数据准备" class="headerlink" title="数据准备"></a>数据准备</h3><h4 id="数据集下载"><a href="#数据集下载" class="headerlink" title="数据集下载"></a>数据集下载</h4><p>这里将要使用<a target="_blank" rel="noopener" href="http://opihi.cs.uvic.ca/sound/genres.tar.gz">GTZAN genre collection</a>。这个数据集包含了10个题材，每个题材包含了100个30s长的音乐。</p>
 <p>这里将使用Tensorflow后端的Keras进行编码。</p>
 <h4 id="加载数据到内存"><a href="#加载数据到内存" class="headerlink" title="加载数据到内存"></a>加载数据到内存</h4><p>这里首先加载这些数据。</p>
@@ -254,7 +254,7 @@
 <p>总体来说，这里使用chroma_stft，rmse，spec_cent，spec_bw，rolloff，zcr的六个特征的均值，再加上mfcc的20个特征的均值，总共26个特征，来表示一个音乐的。</p>
 <h4 id="创建数据集"><a href="#创建数据集" class="headerlink" title="创建数据集"></a>创建数据集</h4><p>接下来我们对数据进行一下归一化，对标签进行one-hot编码。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.preprocessing <span class="keyword">import</span> StandardScaler</span><br><span class="line"><span class="keyword">from</span> keras.utils <span class="keyword">import</span> np_utils</span><br><span class="line"></span><br><span class="line">scaler = StandardScaler()</span><br><span class="line">X = scaler.fit_transform(np.array(data_set, dtype = <span class="built_in">float</span>))</span><br><span class="line">y = np_utils.to_categorical(np.array(label_set))</span><br></pre></td></tr></table></figure>
-<p>效果如下：<br><img src="/dataset.png"></p>
+<p>效果如下：<br><img src="dataset.png"></p>
 <p>然后把测试集和训练集进行分割。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> train_test_split</span><br><span class="line"></span><br><span class="line">X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=<span class="number">0.2</span>)</span><br></pre></td></tr></table></figure>
 
@@ -267,10 +267,10 @@
 
 <h3 id="训练与评估"><a href="#训练与评估" class="headerlink" title="训练与评估"></a>训练与评估</h3><p>接下来使用<code>fit</code>方法进行训练，训练50轮。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">model.fit(X_train, y_train, epochs=<span class="number">50</span>, batch_size=<span class="number">128</span>)</span><br></pre></td></tr></table></figure>
-<p><img src="/train_acc.png"></p>
+<p><img src="train_acc.png"></p>
 <p>训练很快就完了，然后使用<code>evaluate</code>方法进行评估。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">test_loss, test_acc = model.evaluate(X_test,y_test)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;test_acc: &#x27;</span>,test_acc)</span><br></pre></td></tr></table></figure>
-<p><img src="/test_acc.png"></p>
+<p><img src="test_acc.png"></p>
 <p>这里的测试准确率也就百分之70不到，原作者后面还有使用模型预测的代码，感觉都没有必要了。</p>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>这篇博客主要是介绍了一些声音方面的特征提取的知识和代码，关于最后的案例看着玩玩儿就行，基本不具有实用性。</p>
 
@@ -288,7 +288,7 @@
           <div class="post-attach">
             <span class="post-pubtime">
               <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
-              2019-08-31 10:00:39
+              2019-08-31 22:40:08
             </span>
             
           </div>
@@ -343,7 +343,7 @@
     <ul>
       
         <li>
-          <a title="github" target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/nladuo">
             <i class="iconfont icon-github"></i>
           </a>
         </li>
@@ -354,7 +354,14 @@
     
     <div class="footer-more">
       
-        <a target="_blank" rel="noopener" href="http://www.beian.miit.gov.cn/">http://www.beian.miit.gov.cn/  京ICP备17062395号</a>
+        <a target="_blank" rel="noopener" href="https://github.com/nladuo">Copyright © 2023 叁叁</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://beian.miit.gov.cn/">京ICP备17062395号</a>
         
     </div>
   

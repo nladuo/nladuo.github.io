@@ -4,7 +4,7 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="keywords" content="" />
+  
   <meta name="author" content="叁公子KCN" />
   <meta name="description" content="" />
   
@@ -68,10 +68,10 @@
     <a href="/">
       <!-- 头像取消懒加载，添加no-lazy -->
       
-        <img src="/images/avatar.png" alt="">
+        <img src="/images/avatar.jpg" alt="">
       
     </a>
-    <div class="nickname"><a href="/"></a></div>
+    <div class="nickname"><a href="/">叁叁的博客</a></div>
   </div>
   <div class="navbar">
     <ul>
@@ -143,7 +143,7 @@
       <div class="post-attach">
         <span class="post-pubtime">
           <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
-          2017-04-07 16:17:13
+          2018-10-21 01:04:48
         </span>
         
       </div>
@@ -152,14 +152,14 @@
 <span id="more"></span>
 <h2 id="数据预处理"><a href="#数据预处理" class="headerlink" title="数据预处理"></a>数据预处理</h2><p>首先把之前的数据下载下来，链接: <a target="_blank" rel="noopener" href="https://pan.baidu.com/s/1bpbuZLX">https://pan.baidu.com/s/1bpbuZLX</a> 密码: kvyp。数据库使用的是，使用mongoimport命令把之前的数据导入数据库。</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mongoimport -d taobao -c rates  --file ./rates.dat</span><br></pre></td></tr></table></figure>
-<p>使用robomongo客户端查看，一共是300w条数据。<br><img src="/%E6%8A%8A300W%E6%B7%98%E5%AE%9D%E6%96%87%E8%83%B8%E8%AF%84%E8%AE%BA%E7%BB%98%E5%88%B6%E6%88%90%E8%AF%8D%E4%BA%91/count.png" alt="count">  </p>
+<p>使用robomongo客户端查看，一共是300w条数据。<br><img src="%E6%8A%8A300W%E6%B7%98%E5%AE%9D%E6%96%87%E8%83%B8%E8%AF%84%E8%AE%BA%E7%BB%98%E5%88%B6%E6%88%90%E8%AF%8D%E4%BA%91/count.png" alt="count">  </p>
 <p>这里只需要把关键词都提取出来就可以了，不需要考虑评论的顺序，所以把评论的内容都放到一个Txt(corpus.txt)里。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">get_rates</span>():</span><br><span class="line">    client = init_client()</span><br><span class="line">    db = client[config[<span class="string">&#x27;db_name&#x27;</span>]]</span><br><span class="line">    rates = db.rates.find(&#123;&#125;)</span><br><span class="line">    <span class="keyword">return</span> rates</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    rates = get_rates()</span><br><span class="line">    <span class="built_in">print</span> <span class="string">&quot;Adding to corpus.txt...&quot;</span></span><br><span class="line">    f = <span class="built_in">open</span>(<span class="string">&#x27;./assets/corpus.txt&#x27;</span>, <span class="string">&#x27;a&#x27;</span>)</span><br><span class="line">    <span class="keyword">for</span> rate <span class="keyword">in</span> rates:</span><br><span class="line">        f.write(rate[<span class="string">&#x27;rate_content&#x27;</span>])</span><br><span class="line">        f.write(<span class="string">&quot; &quot;</span>)</span><br><span class="line">    f.close()</span><br><span class="line">    <span class="built_in">print</span> <span class="string">&quot;Done.&quot;</span></span><br></pre></td></tr></table></figure>
 
 <h2 id="关键词提取"><a href="#关键词提取" class="headerlink" title="关键词提取"></a>关键词提取</h2><p>这里使用了jieba默认的提取关键词的函数, 这个步骤大概要20分钟。</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">content = open(&quot;./assets/corpus.txt&quot;, &#x27;r&#x27;).read()</span><br><span class="line">tags = jieba.analyse.extract_tags(content, topK=100, withWeight=True)</span><br><span class="line">print &quot;Finished extraction.&quot;</span><br><span class="line"></span><br><span class="line">for tag in tags:</span><br><span class="line">    print tag[0], &quot;\t&quot;, tag[1]</span><br><span class="line"></span><br><span class="line"># 保存tags</span><br><span class="line">with open(&quot;./assets/tags.pickle&quot;, &quot;w&quot;) as f:</span><br><span class="line">    pickle.dump(tags, f)</span><br></pre></td></tr></table></figure>
-<p>运行后会把关键词以及权重保存到tags变量中。<br><img src="/%E6%8A%8A300W%E6%B7%98%E5%AE%9D%E6%96%87%E8%83%B8%E8%AF%84%E8%AE%BA%E7%BB%98%E5%88%B6%E6%88%90%E8%AF%8D%E4%BA%91/weight.png" alt="weight">  </p>
-<h2 id="生成词云"><a href="#生成词云" class="headerlink" title="生成词云"></a>生成词云</h2><p>最后，使用一个开源的词云库<a target="_blank" rel="noopener" href="https://github.com/amueller/word_cloud">word_cloud</a>生成图片， 效果如下。<br><img src="/%E6%8A%8A300W%E6%B7%98%E5%AE%9D%E6%96%87%E8%83%B8%E8%AF%84%E8%AE%BA%E7%BB%98%E5%88%B6%E6%88%90%E8%AF%8D%E4%BA%91/word_cloud.png" alt="word_cloud">  </p>
+<p>运行后会把关键词以及权重保存到tags变量中。<br><img src="%E6%8A%8A300W%E6%B7%98%E5%AE%9D%E6%96%87%E8%83%B8%E8%AF%84%E8%AE%BA%E7%BB%98%E5%88%B6%E6%88%90%E8%AF%8D%E4%BA%91/weight.png" alt="weight">  </p>
+<h2 id="生成词云"><a href="#生成词云" class="headerlink" title="生成词云"></a>生成词云</h2><p>最后，使用一个开源的词云库<a target="_blank" rel="noopener" href="https://github.com/amueller/word_cloud">word_cloud</a>生成图片， 效果如下。<br><img src="%E6%8A%8A300W%E6%B7%98%E5%AE%9D%E6%96%87%E8%83%B8%E8%AF%84%E8%AE%BA%E7%BB%98%E5%88%B6%E6%88%90%E8%AF%8D%E4%BA%91/word_cloud.png" alt="word_cloud">  </p>
 <h2 id="完整代码"><a href="#完整代码" class="headerlink" title="完整代码"></a>完整代码</h2><p>见：<a target="_blank" rel="noopener" href="https://github.com/nladuo/taobao_bra_crawler/tree/master/keyword_analyzer">https://github.com/nladuo/taobao_bra_crawler/tree/master/keyword_analyzer</a></p>
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
 <li><a target="_blank" rel="noopener" href="http://www.cnblogs.com/Yiutto/p/5998262.html">Python pytagcloud 中文分词 生成标签云 系列（一）</a></li>
@@ -180,7 +180,7 @@
           <div class="post-attach">
             <span class="post-pubtime">
               <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
-              2017-04-07 16:17:13
+              2018-10-21 01:04:48
             </span>
             
           </div>
@@ -235,7 +235,7 @@
     <ul>
       
         <li>
-          <a title="github" target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/nladuo">
             <i class="iconfont icon-github"></i>
           </a>
         </li>
@@ -246,7 +246,14 @@
     
     <div class="footer-more">
       
-        <a target="_blank" rel="noopener" href="http://www.beian.miit.gov.cn/">http://www.beian.miit.gov.cn/  京ICP备17062395号</a>
+        <a target="_blank" rel="noopener" href="https://github.com/nladuo">Copyright © 2023 叁叁</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://beian.miit.gov.cn/">京ICP备17062395号</a>
         
     </div>
   

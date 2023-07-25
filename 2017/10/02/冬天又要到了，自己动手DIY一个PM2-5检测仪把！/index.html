@@ -4,7 +4,7 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="keywords" content="" />
+  
   <meta name="author" content="叁公子KCN" />
   <meta name="description" content="" />
   
@@ -68,10 +68,10 @@
     <a href="/">
       <!-- 头像取消懒加载，添加no-lazy -->
       
-        <img src="/images/avatar.png" alt="">
+        <img src="/images/avatar.jpg" alt="">
       
     </a>
-    <div class="nickname"><a href="/"></a></div>
+    <div class="nickname"><a href="/">叁叁的博客</a></div>
   </div>
   <div class="navbar">
     <ul>
@@ -143,7 +143,7 @@
       <div class="post-attach">
         <span class="post-pubtime">
           <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
-          2017-10-02 22:24:30
+          2018-10-21 13:14:12
         </span>
         
       </div>
@@ -151,19 +151,19 @@
         <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>十一一到，天气实在是有点儿冷了。不止不觉冬天又要到了，雾霾也要来了。为了自己身体的健康，以及了解当前的空气质量是否适合外出锻炼，感知空气的状况还是很有必要的。PM2.5作为空气污染因素的重要指标，弄一个PM2.5检测仪可以说是个不错的选择。</p>
 <p>那么，我们先来淘宝一下，看看成品的PM2.5都是什么价位的。这里可以看到700的、1000的、500的，什么价格的都有。</p>
 <span id="more"></span>
-<p><img src="/taobao.jpeg" alt="taobao">  </p>
-<p>感觉这个价格还是有点儿小贵的，都能买个空气净化器了，那么我们再来搜一下PM2.5传感器。<br><img src="/taobao2.jpeg" alt="taobao2"></p>
+<p><img src="taobao.jpeg" alt="taobao">  </p>
+<p>感觉这个价格还是有点儿小贵的，都能买个空气净化器了，那么我们再来搜一下PM2.5传感器。<br><img src="taobao2.jpeg" alt="taobao2"></p>
 <p>只关注PM2.5的传感器，可以看到这里有两款传感器，一个是158的，一个是85的。这两款其实我都用过，两者测出来的数据都差不多，不过第一个保留到小数点儿后一位，第二个只保留到整数。</p>
 <p>其实必要精确到小数点后面一位，所以使用第二种传感器就好了，也就是说一个PM2.5传感器只需要不到100块钱。而PM2.5的传感器都是通过串口传输数据的，所以只要搭配几十块钱或者几块钱的配件就可以DIY一个PM2.5检测仪了，成本低不止一倍！</p>
 <p>这里我主要想到了三种制作方案。</p>
-<h2 id="实行方案"><a href="#实行方案" class="headerlink" title="实行方案"></a>实行方案</h2><h3 id="方案一：电脑显示"><a href="#方案一：电脑显示" class="headerlink" title="方案一：电脑显示"></a>方案一：电脑显示</h3><p>使用usb转ttl串口线将数据传送到电脑上，通过上位机显示。<br><img src="/plan1.png" alt="plan1"></p>
+<h2 id="实行方案"><a href="#实行方案" class="headerlink" title="实行方案"></a>实行方案</h2><h3 id="方案一：电脑显示"><a href="#方案一：电脑显示" class="headerlink" title="方案一：电脑显示"></a>方案一：电脑显示</h3><p>使用usb转ttl串口线将数据传送到电脑上，通过上位机显示。<br><img src="plan1.png" alt="plan1"></p>
 <p>材料费用：</p>
 <ul>
 <li>USB转ttl：5元</li>
 <li>运费：8元</li>
 <li>总价：约113元</li>
 </ul>
-<h3 id="方案二：手机显示"><a href="#方案二：手机显示" class="headerlink" title="方案二：手机显示"></a>方案二：手机显示</h3><p>使用蓝牙将传感器数据转发给手机，通过手机软件显示。<br><img src="/plan2.png" alt="plan2"></p>
+<h3 id="方案二：手机显示"><a href="#方案二：手机显示" class="headerlink" title="方案二：手机显示"></a>方案二：手机显示</h3><p>使用蓝牙将传感器数据转发给手机，通过手机软件显示。<br><img src="plan2.png" alt="plan2"></p>
 <p>材料费用：</p>
 <ul>
 <li>USB转ttl：5元（用于测试传感器）</li>
@@ -171,7 +171,7 @@
 <li>运费：8元</li>
 <li>总价：约133元</li>
 </ul>
-<h3 id="方案三：显示屏显示"><a href="#方案三：显示屏显示" class="headerlink" title="方案三：显示屏显示"></a>方案三：显示屏显示</h3><p>编写单片机代码，读取串口数据，将数据显示在显示屏上。<br><img src="/plan3.jpeg" alt="plan3"><br>材料费用：</p>
+<h3 id="方案三：显示屏显示"><a href="#方案三：显示屏显示" class="headerlink" title="方案三：显示屏显示"></a>方案三：显示屏显示</h3><p>编写单片机代码，读取串口数据，将数据显示在显示屏上。<br><img src="plan3.jpeg" alt="plan3"><br>材料费用：</p>
 <ul>
 <li>USB转ttl：5元（用于测试传感器）</li>
 <li>单片机：16元</li>
@@ -181,44 +181,44 @@
 </ul>
 <h2 id="硬件准备"><a href="#硬件准备" class="headerlink" title="硬件准备"></a>硬件准备</h2><p>这里主要介绍第二种方案。第一种方案需要有电脑才能用，不算方便，并且在第二种方案中也会使用电脑进行测试；而第三种方案需要开发单片机的程序，有点麻烦了。</p>
 <h3 id="传感器选择"><a href="#传感器选择" class="headerlink" title="传感器选择"></a>传感器选择</h3><ul>
-<li><p>攀藤G5、G7或者G10，价格在80-105之间。这里看个人喜好了，系列越高，体积越小，价格也会贵10块钱左右。<br><img src="/cgq1.png" alt="cgq1"></p>
+<li><p>攀藤G5、G7或者G10，价格在80-105之间。这里看个人喜好了，系列越高，体积越小，价格也会贵10块钱左右。<br><img src="cgq1.png" alt="cgq1"></p>
 </li>
-<li><p>攀藤G5S，包括攀藤G5的功能以外，还可以测量甲醛，价格为200左右。如果想再测个甲醛，就可以买G5S的，不过体积比G7、G10要大很多。<br><img src="/cgq2.png" alt="cgq2"></p>
+<li><p>攀藤G5S，包括攀藤G5的功能以外，还可以测量甲醛，价格为200左右。如果想再测个甲醛，就可以买G5S的，不过体积比G7、G10要大很多。<br><img src="cgq2.png" alt="cgq2"></p>
 </li>
 </ul>
 <h3 id="其他配件"><a href="#其他配件" class="headerlink" title="其他配件"></a>其他配件</h3><ul>
-<li><p>USB转ttl，可选CH340、PL2303、CP2102等。<br><img src="/usb_ttl.png" alt="usb_ttl"></p>
+<li><p>USB转ttl，可选CH340、PL2303、CP2102等。<br><img src="usb_ttl.png" alt="usb_ttl"></p>
 </li>
-<li><p>蓝牙模块：选择CC2541蓝牙4.0模块，安卓和iOS通用。<br><img src="/cc2541.png" alt="cc2541"></p>
+<li><p>蓝牙模块：选择CC2541蓝牙4.0模块，安卓和iOS通用。<br><img src="cc2541.png" alt="cc2541"></p>
 </li>
-<li><p>母对母杜邦线<br><img src="/dubangxian.png" alt="dubangxian"></p>
+<li><p>母对母杜邦线<br><img src="dubangxian.png" alt="dubangxian"></p>
 </li>
-<li><p>电源扩展+电源线<br><img src="/electricity.png" alt="electricity"></p>
+<li><p>电源扩展+电源线<br><img src="electricity.png" alt="electricity"></p>
 </li>
 </ul>
 <h2 id="测试传感器"><a href="#测试传感器" class="headerlink" title="测试传感器"></a>测试传感器</h2><h3 id="连接硬件"><a href="#连接硬件" class="headerlink" title="连接硬件"></a>连接硬件</h3><p>这里首先先测试一下传感器是否正常工作，需要USB转ttl，传感器，以及三根杜邦线。（这里使用Windows电脑进行测试）</p>
-<p>其中两者的VCC与VCC相连接，GND与GND相连接，用作供电。第三根线，将传感器的TXD连接到USB转TTL的RXD上，传感器作为一个数据产生者需要通过发送端(TXD)将字节数据发送出去，而USB转TTL通过接收端(RXD)接受传送过来的数据，并通过USB传送到电脑上。<br><img src="/lianjie.png" alt="lianjie"></p>
-<p>连接好之后，就可以插到电脑的USB口上了。<br><img src="/lianjie2.png" alt="lianjie2"></p>
-<h3 id="安装驱动"><a href="#安装驱动" class="headerlink" title="安装驱动"></a>安装驱动</h3><p>将USB插到电脑上后，打开<code>控制面板</code>中的<code>设备管理器</code>，可以看到端口中没有我们串口设备。<br><img src="/driver1.png" alt="driver1"></p>
-<p>我们需要到网上下载相应的驱动（找淘宝卖家要也可以）。<br><img src="/driver2.png" alt="driver2"></p>
-<p>有了驱动以后，安装到电脑中，重启一下，再次打开<code>设备管理器</code>。可以看到这里显示出了我们的USB转TTL设备。<br><img src="/driver3.png" alt="driver3"></p>
+<p>其中两者的VCC与VCC相连接，GND与GND相连接，用作供电。第三根线，将传感器的TXD连接到USB转TTL的RXD上，传感器作为一个数据产生者需要通过发送端(TXD)将字节数据发送出去，而USB转TTL通过接收端(RXD)接受传送过来的数据，并通过USB传送到电脑上。<br><img src="lianjie.png" alt="lianjie"></p>
+<p>连接好之后，就可以插到电脑的USB口上了。<br><img src="lianjie2.png" alt="lianjie2"></p>
+<h3 id="安装驱动"><a href="#安装驱动" class="headerlink" title="安装驱动"></a>安装驱动</h3><p>将USB插到电脑上后，打开<code>控制面板</code>中的<code>设备管理器</code>，可以看到端口中没有我们串口设备。<br><img src="driver1.png" alt="driver1"></p>
+<p>我们需要到网上下载相应的驱动（找淘宝卖家要也可以）。<br><img src="driver2.png" alt="driver2"></p>
+<p>有了驱动以后，安装到电脑中，重启一下，再次打开<code>设备管理器</code>。可以看到这里显示出了我们的USB转TTL设备。<br><img src="driver3.png" alt="driver3"></p>
 <h3 id="测试传感器-1"><a href="#测试传感器-1" class="headerlink" title="测试传感器"></a>测试传感器</h3><p>接下来，首先下载一个串口调试助手，查看传感器发送的数据，附上链接：<a target="_blank" rel="noopener" href="https://raw.githubusercontent.com/nladuo/ElectronicDIY/master/04-PM2.5%E6%A3%80%E6%B5%8B%E4%BB%AA2.0/sscom32.exe">https://raw.githubusercontent.com/nladuo/ElectronicDIY/master/04-PM2.5%E6%A3%80%E6%B5%8B%E4%BB%AA2.0/sscom32.exe</a>。</p>
-<p>打开串口调试助手后，选择刚刚在设备管理器看到的端口（我这里是COM23），并选择HEX显示，最后打开串口。<br><img src="/com.png" alt="com"></p>
+<p>打开串口调试助手后，选择刚刚在设备管理器看到的端口（我这里是COM23），并选择HEX显示，最后打开串口。<br><img src="com.png" alt="com"></p>
 <p>如果你能成功看到显示的一串一串以<code>42 4D 00 1C</code>开始的数据，就说明传感器是好的。</p>
-<h3 id="计算一下当前的PM2-5值"><a href="#计算一下当前的PM2-5值" class="headerlink" title="计算一下当前的PM2.5值"></a>计算一下当前的PM2.5值</h3><p>首先，看一下数据的说明。<br><img src="/table.png" alt="table"></p>
-<p>可以看到前四位都是不变的，也就是<code>42 4D 00 1C</code>，然后第7、第8位代表国际标准的PM2.5值的高位和低位，第13、第14位代表我国标准的PM2.5值的高位和低位。最后计算结果就是高位x256+低位就好了。<br><img src="/compute.png" alt="compute"></p>
+<h3 id="计算一下当前的PM2-5值"><a href="#计算一下当前的PM2-5值" class="headerlink" title="计算一下当前的PM2.5值"></a>计算一下当前的PM2.5值</h3><p>首先，看一下数据的说明。<br><img src="table.png" alt="table"></p>
+<p>可以看到前四位都是不变的，也就是<code>42 4D 00 1C</code>，然后第7、第8位代表国际标准的PM2.5值的高位和低位，第13、第14位代表我国标准的PM2.5值的高位和低位。最后计算结果就是高位x256+低位就好了。<br><img src="compute.png" alt="compute"></p>
 <p>（可以看到当前空气质量还是不错的，适合外出锻炼。）</p>
 <h2 id="连接蓝牙与电源"><a href="#连接蓝牙与电源" class="headerlink" title="连接蓝牙与电源"></a>连接蓝牙与电源</h2><p>测试完之后，我们开始连接蓝牙和电源。</p>
-<p>这里蓝牙和传感器模块都需要电源，所以需要一个电源扩展模块，各自连接一下电源，需要四根杜邦线。数据的传输和上面的差不多，将传感器的TXD端连接到蓝牙4.0模块的RXD端就好了，只需要一根杜邦线。<br><img src="/connect.png" alt="connect"></p>
-<p>最后，我是拿胶条一粘，固定一下。<br><img src="/connect2.png" alt="connect2"></p>
+<p>这里蓝牙和传感器模块都需要电源，所以需要一个电源扩展模块，各自连接一下电源，需要四根杜邦线。数据的传输和上面的差不多，将传感器的TXD端连接到蓝牙4.0模块的RXD端就好了，只需要一根杜邦线。<br><img src="connect.png" alt="connect"></p>
+<p>最后，我是拿胶条一粘，固定一下。<br><img src="connect2.png" alt="connect2"></p>
 <h2 id="测试小程序"><a href="#测试小程序" class="headerlink" title="测试小程序"></a>测试小程序</h2><h3 id="下载小程序"><a href="#下载小程序" class="headerlink" title="下载小程序"></a>下载小程序</h3><p>大学的时候，我就喜欢写个安卓的APP，再写个iOS的APP，然后连上单片机传数据玩儿。不过随着年龄的增长，爱玩儿的心还是收了收，能少写点儿就少写点儿把。</p>
 <p>感觉小程序的出现算是解决了这个问题吧，平时自己写来玩儿的东西说是一个APP还是太大了。安卓倒是还好，还算开放；苹果的真要发布出去还要认证，而且还得每年交钱。</p>
-<p>这里不多说了，下面是小程序的小程序码，扫一扫即可安装（如果有变化的话，我会在博客更新）。<br><img src="/qrcode.jpg" alt="qrcode"></p>
+<p>这里不多说了，下面是小程序的小程序码，扫一扫即可安装（如果有变化的话，我会在博客更新）。<br><img src="qrcode.jpg" alt="qrcode"></p>
 <p>代码的话这里就不说了，第一次写小程序。源码放在了：<a target="_blank" rel="noopener" href="https://github.com/nladuo/ElectronicDIY/tree/master/04-PM2.5%E6%A3%80%E6%B5%8B%E4%BB%AA2.0/pm25-%E5%B0%8F%E7%A8%8B%E5%BA%8F">https://github.com/nladuo/ElectronicDIY/tree/master/04-PM2.5%E6%A3%80%E6%B5%8B%E4%BB%AA2.0/pm25-%E5%B0%8F%E7%A8%8B%E5%BA%8F</a></p>
-<h3 id="小程序的使用"><a href="#小程序的使用" class="headerlink" title="小程序的使用"></a>小程序的使用</h3><p>下面我们打开小程序，这里为了让界面不是很空旷，获取了一下用户的头像。然后就是用户的配置，如果用的是攀藤G5S把甲醛的选项勾上就好了。<br><img src="/xcx1.jpeg" alt="xcx1"></p>
-<p>然后，插上我们的设备，可以看到蓝牙上面的灯在闪烁，这说明蓝牙还没配对。<br><img src="/xcx2.gif" alt="xcx2"></p>
-<p>接下来，点击<code>连接蓝牙设备</code>按钮，进入扫描设备界面，这里选择蓝牙设备。（我这里之前是改过名字，选择了BLE_RGB_LED这个）。<br><img src="/xcx3.png" alt="xcx3"></p>
-<p>点击了设备名称后，等待片刻，就可以看到正常显示出来PM2.5、PM10的值了。<br><img src="/xcx4.png" alt="xcx4"></p>
+<h3 id="小程序的使用"><a href="#小程序的使用" class="headerlink" title="小程序的使用"></a>小程序的使用</h3><p>下面我们打开小程序，这里为了让界面不是很空旷，获取了一下用户的头像。然后就是用户的配置，如果用的是攀藤G5S把甲醛的选项勾上就好了。<br><img src="xcx1.jpeg" alt="xcx1"></p>
+<p>然后，插上我们的设备，可以看到蓝牙上面的灯在闪烁，这说明蓝牙还没配对。<br><img src="xcx2.gif" alt="xcx2"></p>
+<p>接下来，点击<code>连接蓝牙设备</code>按钮，进入扫描设备界面，这里选择蓝牙设备。（我这里之前是改过名字，选择了BLE_RGB_LED这个）。<br><img src="xcx3.png" alt="xcx3"></p>
+<p>点击了设备名称后，等待片刻，就可以看到正常显示出来PM2.5、PM10的值了。<br><img src="xcx4.png" alt="xcx4"></p>
 <p>可以看到这里PM2.5的值有一两百，倒不是因为空气不太好，主要是写这篇文章的时候笔者的妈妈正在做饭，搞了一堆油烟出来，于是就变成这样了。</p>
 
       </div>
@@ -235,7 +235,7 @@
           <div class="post-attach">
             <span class="post-pubtime">
               <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
-              2017-10-02 22:24:30
+              2018-10-21 13:14:12
             </span>
             
           </div>
@@ -290,7 +290,7 @@
     <ul>
       
         <li>
-          <a title="github" target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/nladuo">
             <i class="iconfont icon-github"></i>
           </a>
         </li>
@@ -301,7 +301,14 @@
     
     <div class="footer-more">
       
-        <a target="_blank" rel="noopener" href="http://www.beian.miit.gov.cn/">http://www.beian.miit.gov.cn/  京ICP备17062395号</a>
+        <a target="_blank" rel="noopener" href="https://github.com/nladuo">Copyright © 2023 叁叁</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://beian.miit.gov.cn/">京ICP备17062395号</a>
         
     </div>
   

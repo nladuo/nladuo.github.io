@@ -4,7 +4,7 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="keywords" content="" />
+  
   <meta name="author" content="叁公子KCN" />
   <meta name="description" content="" />
   
@@ -68,10 +68,10 @@
     <a href="/">
       <!-- 头像取消懒加载，添加no-lazy -->
       
-        <img src="/images/avatar.png" alt="">
+        <img src="/images/avatar.jpg" alt="">
       
     </a>
-    <div class="nickname"><a href="/"></a></div>
+    <div class="nickname"><a href="/">叁叁的博客</a></div>
   </div>
   <div class="navbar">
     <ul>
@@ -143,13 +143,13 @@
       <div class="post-attach">
         <span class="post-pubtime">
           <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
-          2017-11-09 15:27:00
+          2018-10-21 01:04:48
         </span>
         
       </div>
       <div class="markdown-body">
         <h3 id="NMF是什么？"><a href="#NMF是什么？" class="headerlink" title="NMF是什么？"></a>NMF是什么？</h3><p>$$ V_{n<em>m}≈W_{n</em>r}H_{r<em>m} $$<br>$$ v_{n</em>1}≈W_{n<em>r}h_{r</em>1} $$<br>找出原数据的latent，压缩数据。将原来需要n维来表示的数据用r维的线性组合来表示。</p>
-<p><img src="/1.jpeg"></p>
+<p><img src="1.jpeg"></p>
 <span id="more"></span>
 
 <h3 id="该文成果"><a href="#该文成果" class="headerlink" title="该文成果"></a>该文成果</h3><ol>
@@ -175,7 +175,7 @@
 <p>$$ W_{ia} \leftarrow W_{ia}\frac{\sum_{\mu}H_{a\mu}V_{i\mu}&#x2F;(WH)<em>{i\mu}}{\sum_vH</em>{av}}$$</p>
 <h3 id="Proof-of-Convergence"><a href="#Proof-of-Convergence" class="headerlink" title="Proof of Convergence"></a>Proof of Convergence</h3><h4 id="定义1"><a href="#定义1" class="headerlink" title="定义1"></a>定义1</h4><p>$$ G(h,h’)\geq F(h), G(h, h)&#x3D;F(h) $$</p>
 <p>则$$G(h,h’)$$是$$F(h)$$的辅助函数，当满足上面条件时。</p>
-<p><img src="/2.png"></p>
+<p><img src="2.png"></p>
 <h4 id="引理1"><a href="#引理1" class="headerlink" title="引理1"></a>引理1</h4><p>根据定义1，有$$F(h^{t+1}) \leq G(h^{t+1}, h^t) \leq G(h^t, h^t) &#x3D; F(h)$$<br>$$ h^{t+1} &#x3D; \arg\min_hG(h,h^t) $$<br>不断迭代上式，可以得出局部最优，$$h_{min} &#x3D; \arg \min_h F(h)$$</p>
 <h4 id="引理2"><a href="#引理2" class="headerlink" title="引理2"></a>引理2</h4><p>定义对角阵$$K(h^t)$$<br>$$ K_{ab}(h^t)&#x3D;\frac{\delta_ab(W^TWh^t)_a}{h_a^t} $$</p>
 <p>定义<br>$$ G(h, h^t) &#x3D; F(h^t) + (h-h^t)^T\nabla{F(h^t)} + \frac12 (h-h^t)^TK(h^t) (h-h^t) $$</p>
@@ -218,7 +218,7 @@
           <div class="post-attach">
             <span class="post-pubtime">
               <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
-              2017-11-09 15:27:00
+              2018-10-21 01:04:48
             </span>
             
           </div>
@@ -273,7 +273,7 @@
     <ul>
       
         <li>
-          <a title="github" target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/nladuo">
             <i class="iconfont icon-github"></i>
           </a>
         </li>
@@ -284,7 +284,14 @@
     
     <div class="footer-more">
       
-        <a target="_blank" rel="noopener" href="http://www.beian.miit.gov.cn/">http://www.beian.miit.gov.cn/  京ICP备17062395号</a>
+        <a target="_blank" rel="noopener" href="https://github.com/nladuo">Copyright © 2023 叁叁</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://beian.miit.gov.cn/">京ICP备17062395号</a>
         
     </div>
   

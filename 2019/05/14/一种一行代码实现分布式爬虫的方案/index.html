@@ -4,7 +4,7 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="keywords" content="" />
+  
   <meta name="author" content="叁公子KCN" />
   <meta name="description" content="" />
   
@@ -68,10 +68,10 @@
     <a href="/">
       <!-- 头像取消懒加载，添加no-lazy -->
       
-        <img src="/images/avatar.png" alt="">
+        <img src="/images/avatar.jpg" alt="">
       
     </a>
-    <div class="nickname"><a href="/"></a></div>
+    <div class="nickname"><a href="/">叁叁的博客</a></div>
   </div>
   <div class="navbar">
     <ul>
@@ -143,7 +143,7 @@
       <div class="post-attach">
         <span class="post-pubtime">
           <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
-          2019-05-14 15:45:51
+          2019-05-14 17:30:10
         </span>
         
       </div>
@@ -162,15 +162,15 @@
 <p>上面的代码也就是先把字符串转成md5串，然后取md5串的最后一个字母的ascii码作为分类的id。然后就可以通过取模的方法分类了。</p>
 <h3 id="分成2类"><a href="#分成2类" class="headerlink" title="分成2类"></a>分成2类</h3><p>我们这里测试一下分成2类的分布如何，我们随机生成10万个任务，看看能不能将这10万个分成两半。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> random</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">generate_random_string</span>():</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&#x27;&#x27;</span>.join(random.sample(string.ascii_letters + string.digits, <span class="number">20</span>))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class_map = &#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">100000</span>):</span><br><span class="line">    class_id = get_class_num(generate_random_string()) % <span class="number">2</span>  <span class="comment"># 分成两类</span></span><br><span class="line">    <span class="keyword">if</span> class_id <span class="keyword">not</span> <span class="keyword">in</span> class_map.keys():</span><br><span class="line">        class_map[class_id] = <span class="number">1</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        class_map[class_id] += <span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(class_map)</span><br></pre></td></tr></table></figure>
-<p>运行之后可以看到两个类别的数量差100多，基本不差什么。<br><img src="/class2.png"></p>
-<h3 id="分成3类"><a href="#分成3类" class="headerlink" title="分成3类"></a>分成3类</h3><p>然后再测一下三类的。<br><img src="/class3.png"></p>
+<p>运行之后可以看到两个类别的数量差100多，基本不差什么。<br><img src="class2.png"></p>
+<h3 id="分成3类"><a href="#分成3类" class="headerlink" title="分成3类"></a>分成3类</h3><p>然后再测一下三类的。<br><img src="class3.png"></p>
 <p>这里一个是3.75万，两个是3.12万。可以发现差了很多。</p>
 <h2 id="分类器的完善"><a href="#分类器的完善" class="headerlink" title="分类器的完善"></a>分类器的完善</h2><p>这里其实是因为我们的id分布不均匀的缘故。md5输出的结果是26个小写字母+10个数字，一共36种字母。数字的ascii码从48到57，小写字母的ascii码从97到122。除了二分类，其实很难保证分配很均匀。</p>
 <p>这里其实有一个简单的方法，就是多加几个字母，我们不只是取最后面一个字母的ascii码，而是把最后面好几个的ascii码加起来。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">get_class_num</span>(<span class="params">_<span class="built_in">str</span></span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot; 取字符串的最后五个字母的ascii码之和 &quot;&quot;&quot;</span></span><br><span class="line">    _<span class="built_in">str</span> = <span class="built_in">str</span>(_<span class="built_in">str</span>)</span><br><span class="line">    md5_str = get_md5(_<span class="built_in">str</span>)</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">ord</span>(md5_str[-<span class="number">1</span>]) + <span class="built_in">ord</span>(md5_str[-<span class="number">2</span>]) + <span class="built_in">ord</span>(md5_str[-<span class="number">3</span>]) + <span class="built_in">ord</span>(md5_str[-<span class="number">4</span>]) + <span class="built_in">ord</span>(md5_str[-<span class="number">5</span>])</span><br></pre></td></tr></table></figure>
 
-<p>然后在测试一下三个类的。<br><img src="/class3_2.png"></p>
-<p>这里就好了，我们再测一下7个类。<br><img src="/class7.png"></p>
+<p>然后在测试一下三个类的。<br><img src="class3_2.png"></p>
+<p>这里就好了，我们再测一下7个类。<br><img src="class7.png"></p>
 <p>看着也很均匀。</p>
 <p>我测了一下五个字符相加20个类都很okay，不过再多的比如说100个类这种肯定是不行。如果类别特别多，可以再多加几个字符的ascii码提高随机性。</p>
 <h2 id="添加id重置服务"><a href="#添加id重置服务" class="headerlink" title="添加id重置服务"></a>添加id重置服务</h2><p>以上的办法虽然解决了一定的分布式爬虫问题。但是实际中，服务器处理任务的能力不一样，每个任务的难度也不一样。还是会出现分配不均匀的情况。</p>
@@ -193,7 +193,7 @@
           <div class="post-attach">
             <span class="post-pubtime">
               <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
-              2019-05-14 15:45:51
+              2019-05-14 17:30:10
             </span>
             
           </div>
@@ -248,7 +248,7 @@
     <ul>
       
         <li>
-          <a title="github" target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/nladuo">
             <i class="iconfont icon-github"></i>
           </a>
         </li>
@@ -259,7 +259,14 @@
     
     <div class="footer-more">
       
-        <a target="_blank" rel="noopener" href="http://www.beian.miit.gov.cn/">http://www.beian.miit.gov.cn/  京ICP备17062395号</a>
+        <a target="_blank" rel="noopener" href="https://github.com/nladuo">Copyright © 2023 叁叁</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://beian.miit.gov.cn/">京ICP备17062395号</a>
         
     </div>
   

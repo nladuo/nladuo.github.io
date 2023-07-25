@@ -4,7 +4,7 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="keywords" content="" />
+  
   <meta name="author" content="叁公子KCN" />
   <meta name="description" content="" />
   
@@ -68,10 +68,10 @@
     <a href="/">
       <!-- 头像取消懒加载，添加no-lazy -->
       
-        <img src="/images/avatar.png" alt="">
+        <img src="/images/avatar.jpg" alt="">
       
     </a>
-    <div class="nickname"><a href="/"></a></div>
+    <div class="nickname"><a href="/">叁叁的博客</a></div>
   </div>
   <div class="navbar">
     <ul>
@@ -143,23 +143,23 @@
       <div class="post-attach">
         <span class="post-pubtime">
           <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
-          2018-12-08 20:03:22
+          2018-12-08 21:06:01
         </span>
         
       </div>
       <div class="markdown-body">
         <h2 id="内容介绍"><a href="#内容介绍" class="headerlink" title="内容介绍"></a>内容介绍</h2><p>本章将要介绍一下如何使用代理ip解决反爬虫的<strong>禁ip</strong>的问题，并扩展了解一下代理ip池的构建与adsl服务器的使用。</p>
 <h2 id="代理ip初探"><a href="#代理ip初探" class="headerlink" title="代理ip初探"></a>代理ip初探</h2><h3 id="如何获取自己的ip"><a href="#如何获取自己的ip" class="headerlink" title="如何获取自己的ip"></a>如何获取自己的ip</h3><p>下面，我们先来看一下如何获取自己的ip地址。我们直接在百度上搜索ip，或者通过<a target="_blank" rel="noopener" href="http://www.ip138.com/">http://www.ip138.com/</a>这个网站就可以。比如说我现在的ip如下：</p>
-<p><img src="/ip138.png"></p>
+<p><img src="ip138.png"></p>
 <span id="more"></span>
 <p>ip作为一个身份信息，一般是不会变的，想要改变自己的ip的方法就是找代理了。</p>
 <p>所谓代理，其实就是比如说我们要访问一个网页，但这个时候我们不自己去访问，而是告诉代理我们想要访问什么，然后代理用自己的ip去访问，再返回给我们。这样网站其实拿到的不是我们的真实ip，而是代理的ip。</p>
 <h3 id="python中使用代理ip"><a href="#python中使用代理ip" class="headerlink" title="python中使用代理ip"></a>python中使用代理ip</h3><p>免费的代理ip有很多，虽然这种网站都不会提供太多的代理ip。我们这里以西刺代理的免费ip为例，看看在python中如何使用代理ip。</p>
 <p>首先打开<a target="_blank" rel="noopener" href="http://www.xicidaili.com/nn/">http://www.xicidaili.com/nn/</a>，可以看到这里有很多代理ip。</p>
-<p><img src="/xici.png"></p>
+<p><img src="xici.png"></p>
 <p>这里可以根据当日的情况挑选一个ip，我这里选择了<code>139.129.207.72:808</code>这个代理。然后我们编写代码，调用ip138的接口，查看一下自己使用代理后的ip是否改变。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">from</span> bs4 <span class="keyword">import</span> BeautifulSoup</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">parse_ip</span>(<span class="params">content</span>):</span><br><span class="line">    soup = BeautifulSoup(content, <span class="string">&quot;html.parser&quot;</span>)</span><br><span class="line">    <span class="built_in">print</span>(soup.body.get_text())</span><br><span class="line"></span><br><span class="line">resp = requests.get(<span class="string">&quot;http://2018.ip138.com/ic.asp&quot;</span>)</span><br><span class="line">parse_ip(resp.content.decode(<span class="string">&quot;gbk&quot;</span>))</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;\n改变ip后:&quot;</span>)</span><br><span class="line">proxies = &#123;<span class="string">&quot;http&quot;</span>: <span class="string">&quot;http://139.129.207.72:808&quot;</span>&#125;  <span class="comment"># 需要改成在西刺代理上看到的可用代理ip</span></span><br><span class="line">resp2 = requests.get(<span class="string">&quot;http://2018.ip138.com/ic.asp&quot;</span>, proxies=proxies)</span><br><span class="line">parse_ip(resp2.content.decode(<span class="string">&quot;gbk&quot;</span>))</span><br></pre></td></tr></table></figure>
-<p>可以看到使用前，我的ip还是北京的ip，使用后变成了山东的ip了。<br><img src="/proxy.png"></p>
+<p>可以看到使用前，我的ip还是北京的ip，使用后变成了山东的ip了。<br><img src="proxy.png"></p>
 <h2 id="构建代理ip池"><a href="#构建代理ip池" class="headerlink" title="构建代理ip池"></a>构建代理ip池</h2><p>在使用代理ip时，我们一般都会去花钱买一些可用的ip或者是购买包月服务。但实际上，买来的ip并不是都能用的，而且大多时候是很多都不能用，不能用比例非常之高。</p>
 <p>代理ip池的目标其实就是要验证那些能用，哪些不能用，如果可用，就把可用的ip放到一个“池子”里。等我们爬虫程序需要ip的时候，从“池子”里拿就好了。</p>
 <p>这里我们不会去自己写一个代理ip池子，而是举一个例子：比如说我们想要爬取链家网的房价数据。</p>
@@ -195,7 +195,7 @@
           <div class="post-attach">
             <span class="post-pubtime">
               <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
-              2018-12-08 20:03:22
+              2018-12-08 21:06:01
             </span>
             
           </div>
@@ -250,7 +250,7 @@
     <ul>
       
         <li>
-          <a title="github" target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/nladuo">
             <i class="iconfont icon-github"></i>
           </a>
         </li>
@@ -261,7 +261,14 @@
     
     <div class="footer-more">
       
-        <a target="_blank" rel="noopener" href="http://www.beian.miit.gov.cn/">http://www.beian.miit.gov.cn/  京ICP备17062395号</a>
+        <a target="_blank" rel="noopener" href="https://github.com/nladuo">Copyright © 2023 叁叁</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://beian.miit.gov.cn/">京ICP备17062395号</a>
         
     </div>
   

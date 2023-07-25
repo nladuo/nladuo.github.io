@@ -4,7 +4,7 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="keywords" content="" />
+  
   <meta name="author" content="叁公子KCN" />
   <meta name="description" content="" />
   
@@ -68,10 +68,10 @@
     <a href="/">
       <!-- 头像取消懒加载，添加no-lazy -->
       
-        <img src="/images/avatar.png" alt="">
+        <img src="/images/avatar.jpg" alt="">
       
     </a>
-    <div class="nickname"><a href="/"></a></div>
+    <div class="nickname"><a href="/">叁叁的博客</a></div>
   </div>
   <div class="navbar">
     <ul>
@@ -143,7 +143,7 @@
       <div class="post-attach">
         <span class="post-pubtime">
           <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
-          2018-12-08 16:53:07
+          2018-12-09 00:03:38
         </span>
         
       </div>
@@ -172,16 +172,16 @@
 </blockquote>
 <h2 id="本章内容"><a href="#本章内容" class="headerlink" title="本章内容"></a>本章内容</h2><p>通过上面的介绍，读者应该对反反爬虫有了一个基本的认识了。本章将要对反爬虫的第一个方案：JS加密，进行反反爬虫。</p>
 <h2 id="尝试爬取baidu-com"><a href="#尝试爬取baidu-com" class="headerlink" title="尝试爬取baidu.com"></a>尝试爬取baidu.com</h2><p>在介绍反反爬虫方法之前，我们先拿百度测试一下。这里假设我们想爬一爬百度搜索美女的搜索结果，也就是这个链接：<a target="_blank" rel="noopener" href="https://www.baidu.com/s?wd=%E7%BE%8E%E5%A5%B3">https://www.baidu.com/s?wd=%E7%BE%8E%E5%A5%B3</a>（注：这里URL进行了url编码）</p>
-<p>我们先用之前超级好用的requests库试一下。<br><img src="/request_baidu.png"></p>
+<p>我们先用之前超级好用的requests库试一下。<br><img src="request_baidu.png"></p>
 <p>稍微懂点儿html的就知道，这里没看到所谓的美女图，反而还让我们跳转回<a target="_blank" rel="noopener" href="http://www.baidu.com/">http://www.baidu.com/</a>。</p>
-<h2 id="什么是无头浏览器？"><a href="#什么是无头浏览器？" class="headerlink" title="什么是无头浏览器？"></a>什么是无头浏览器？</h2><p>上面我们用<code>requests.get</code>什么都没看到，但我们用浏览器访问<a target="_blank" rel="noopener" href="https://www.baidu.com/s?wd=%E7%BE%8E%E5%A5%B3">https://www.baidu.com/s?wd=%E7%BE%8E%E5%A5%B3</a>的时候，的的确确看到了搜索结果的。<br><img src="/baidu_search.png"></p>
+<h2 id="什么是无头浏览器？"><a href="#什么是无头浏览器？" class="headerlink" title="什么是无头浏览器？"></a>什么是无头浏览器？</h2><p>上面我们用<code>requests.get</code>什么都没看到，但我们用浏览器访问<a target="_blank" rel="noopener" href="https://www.baidu.com/s?wd=%E7%BE%8E%E5%A5%B3">https://www.baidu.com/s?wd=%E7%BE%8E%E5%A5%B3</a>的时候，的的确确看到了搜索结果的。<br><img src="baidu_search.png"></p>
 <p>用requests不行，明显是百度的后台识别出来我们是低劣的爬虫程序，鄙视我们，什么都不给我们。</p>
 <p>既然用浏览器可以，我们是不是可以通过Api调用我们的浏览器然后爬取搜索结果呢？</p>
 <p>确实是可以，而且还有种浏览器叫：Headless Browser，也就是无头浏览器，没有界面的浏览器。如果有界面的话，我们可能还要用显卡去渲染图形页面，非常耗费字段，这简直是专门为爬虫开发者设计的。</p>
 <h2 id="Phantomjs"><a href="#Phantomjs" class="headerlink" title="Phantomjs"></a>Phantomjs</h2><p>我们这里主要介绍的一款无头浏览器名叫：PhantomJS。虽然它现在已经不更新了，但不妨碍我们继续使用它。</p>
 <h3 id="下载PhantomJS"><a href="#下载PhantomJS" class="headerlink" title="下载PhantomJS"></a>下载PhantomJS</h3><p>我们首先下载安装PhantomJS，下载链接为：<a target="_blank" rel="noopener" href="http://phantomjs.org/download.html">http://phantomjs.org/download.html</a>。</p>
 <p>下载后解压可以看到在bin目录下面有一个<code>phantomjs</code>的可执行文件。（如果是windows的话就是<code>phantomjs.exe</code>）</p>
-<p><img src="/download_phantomjs.png"></p>
+<p><img src="download_phantomjs.png"></p>
 <h3 id="安装selenium"><a href="#安装selenium" class="headerlink" title="安装selenium"></a>安装selenium</h3><p>接下来我们需要安装selenium，直接使用<code>pip</code>命令即可。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install selenium</span><br></pre></td></tr></table></figure>
 <p>selenium是一个用于Web应用程序测试的工具。它兼容各种浏览器，包括：PhantomJS、Chrome、FireFox等。</p>
@@ -192,7 +192,7 @@
 <blockquote>
 <p>注意：在不使用了之后，要调用driver.quit()退出，要不然后台会有很多phantomjs进程。</p>
 </blockquote>
-<p>这里我们调用selenium的截图方法看下结果。<br><img src="/phantomjs_baidu.png"></p>
+<p>这里我们调用selenium的截图方法看下结果。<br><img src="phantomjs_baidu.png"></p>
 <p>可以看到我们连网页的截图都弄出来了。selenium除了截图之外，还支持很多使用js才能完成的操作，比如说：模拟点击、滚动等等。如果读者感兴趣可以自己去研究。</p>
 <h3 id="修改PhantomJS的UA"><a href="#修改PhantomJS的UA" class="headerlink" title="修改PhantomJS的UA"></a>修改PhantomJS的UA</h3><p>PhantomJS默认的User-Agent使用的是：PhantomJS。如果我们带着这个会很容易被网站检测出来，我们可以在创建driver的时候加入配置修改PhantomJS的UA，让它伪装成Chrome浏览器。代码实现如下：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> selenium <span class="keyword">import</span> webdriver</span><br><span class="line"><span class="keyword">from</span> selenium.webdriver.common.desired_capabilities <span class="keyword">import</span> DesiredCapabilities</span><br><span class="line"></span><br><span class="line">dcap = <span class="built_in">dict</span>(DesiredCapabilities.PHANTOMJS)</span><br><span class="line">dcap[<span class="string">&#x27;phantomjs.page.settings.userAgent&#x27;</span>] = (<span class="string">&#x27;Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.94 Safari/537.36&#x27;</span>)</span><br><span class="line">exe_path = <span class="string">&quot;/usr/bin/phantomjs&quot;</span></span><br><span class="line">driver = webdriver.PhantomJS(executable_path=exe_path, desired_capabilities=dcap)</span><br></pre></td></tr></table></figure>
@@ -238,7 +238,7 @@
           <div class="post-attach">
             <span class="post-pubtime">
               <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
-              2018-12-08 16:53:07
+              2018-12-09 00:03:38
             </span>
             
           </div>
@@ -293,7 +293,7 @@
     <ul>
       
         <li>
-          <a title="github" target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/nladuo">
             <i class="iconfont icon-github"></i>
           </a>
         </li>
@@ -304,7 +304,14 @@
     
     <div class="footer-more">
       
-        <a target="_blank" rel="noopener" href="http://www.beian.miit.gov.cn/">http://www.beian.miit.gov.cn/  京ICP备17062395号</a>
+        <a target="_blank" rel="noopener" href="https://github.com/nladuo">Copyright © 2023 叁叁</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://beian.miit.gov.cn/">京ICP备17062395号</a>
         
     </div>
   

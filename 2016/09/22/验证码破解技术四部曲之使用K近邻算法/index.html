@@ -4,7 +4,7 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="keywords" content="" />
+  
   <meta name="author" content="叁公子KCN" />
   <meta name="description" content="" />
   
@@ -68,10 +68,10 @@
     <a href="/">
       <!-- 头像取消懒加载，添加no-lazy -->
       
-        <img src="/images/avatar.png" alt="">
+        <img src="/images/avatar.jpg" alt="">
       
     </a>
-    <div class="nickname"><a href="/"></a></div>
+    <div class="nickname"><a href="/">叁叁的博客</a></div>
   </div>
   <div class="navbar">
     <ul>
@@ -143,7 +143,7 @@
       <div class="post-attach">
         <span class="post-pubtime">
           <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
-          2016-09-22 16:55:42
+          2018-10-21 01:04:47
         </span>
         
       </div>
@@ -152,13 +152,13 @@
 <h2 id="下载验证码"><a href="#下载验证码" class="headerlink" title="下载验证码"></a>下载验证码</h2><p>在这一节中，将要对CSDN下载的验证码进行破解，就是在<a target="_blank" rel="noopener" href="http://download.csdn.net/">http://download.csdn.net/</a>下载东西的时候，短时间内下载次数过多弹出来的验证码。<br><br></p>
 <span id="more"></span>
 
-<p>做机器学习的第一个步骤就是采集数据，构建训练样本。首先，来看一下CSDN下载中出现的验证码。<br><br><img src="/%E9%AA%8C%E8%AF%81%E7%A0%81%E7%A0%B4%E8%A7%A3%E6%8A%80%E6%9C%AF%E5%9B%9B%E9%83%A8%E6%9B%B2%E4%B9%8B%E4%BD%BF%E7%94%A8K%E8%BF%91%E9%82%BB%E7%AE%97%E6%B3%95/captcha1.png" alt="captcha1">  <img src="/%E9%AA%8C%E8%AF%81%E7%A0%81%E7%A0%B4%E8%A7%A3%E6%8A%80%E6%9C%AF%E5%9B%9B%E9%83%A8%E6%9B%B2%E4%B9%8B%E4%BD%BF%E7%94%A8K%E8%BF%91%E9%82%BB%E7%AE%97%E6%B3%95/captcha2.png" alt="captcha2"><br><br></p>
+<p>做机器学习的第一个步骤就是采集数据，构建训练样本。首先，来看一下CSDN下载中出现的验证码。<br><br><img src="%E9%AA%8C%E8%AF%81%E7%A0%81%E7%A0%B4%E8%A7%A3%E6%8A%80%E6%9C%AF%E5%9B%9B%E9%83%A8%E6%9B%B2%E4%B9%8B%E4%BD%BF%E7%94%A8K%E8%BF%91%E9%82%BB%E7%AE%97%E6%B3%95/captcha1.png" alt="captcha1">  <img src="%E9%AA%8C%E8%AF%81%E7%A0%81%E7%A0%B4%E8%A7%A3%E6%8A%80%E6%9C%AF%E5%9B%9B%E9%83%A8%E6%9B%B2%E4%B9%8B%E4%BD%BF%E7%94%A8K%E8%BF%91%E9%82%BB%E7%AE%97%E6%B3%95/captcha2.png" alt="captcha2"><br><br></p>
 <p>在每次刷新的时候，会有以上这两种验证码出现。在本节中，为了方便学习K近邻算法（简称为：KNN），选择第二种来进行破解，因为第二种的字母分割十分容易，每个字母的位置都是固定的。<br><br></p>
 <p>由于两种验证码的图片大小不一样，所以可以使用图片大小来判断哪个是第一种验证码，哪个是第二种验证码，这里使用python进行验证码下载。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># coding:utf-8</span></span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> uuid</span><br><span class="line"><span class="keyword">from</span> PIL <span class="keyword">import</span> Image</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line">url = <span class="string">&quot;http://download.csdn.net/index.php/rest/tools/validcode/source_ip_validate/10.5711163911089325&quot;</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">100</span>):</span><br><span class="line">    resp = requests.get(url)</span><br><span class="line">    filename = <span class="string">&quot;./captchas/&quot;</span> + <span class="built_in">str</span>(uuid.uuid4()) + <span class="string">&quot;.png&quot;</span></span><br><span class="line">    <span class="keyword">with</span> <span class="built_in">open</span>(filename, <span class="string">&#x27;wb&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">        <span class="keyword">for</span> chunk <span class="keyword">in</span> resp.iter_content(chunk_size=<span class="number">1024</span>):</span><br><span class="line">            <span class="keyword">if</span> chunk:  <span class="comment"># filter out keep-alive new chunks</span></span><br><span class="line">                f.write(chunk)</span><br><span class="line">                f.flush()</span><br><span class="line">        f.close()</span><br><span class="line">    im = Image.<span class="built_in">open</span>(filename)</span><br><span class="line">    <span class="keyword">if</span> im.size != (<span class="number">48</span>, <span class="number">20</span>):</span><br><span class="line">        os.remove(filename)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="built_in">print</span> filename</span><br></pre></td></tr></table></figure>
 <h2 id="分割字符"><a href="#分割字符" class="headerlink" title="分割字符"></a>分割字符</h2><p>下载过后，就需要对字母进行分割。机器学习虽然牛逼，但是也需要对样本进行预处理，这里的预处理就是把字母分割出来，并且分割成同样的尺寸。分割的方式可以使用代码分割，当然也可以通过人用PS等工具进行手动分割。<br></p>
-<p>我这里使用代码分割，字母分割的代码在spliter文件夹下，我使用了boost库来来读取所有下载的验证码，对图片进行二值化后，进行定点分割，可以看到分割好的字母如下。<br><br><img src="/%E9%AA%8C%E8%AF%81%E7%A0%81%E7%A0%B4%E8%A7%A3%E6%8A%80%E6%9C%AF%E5%9B%9B%E9%83%A8%E6%9B%B2%E4%B9%8B%E4%BD%BF%E7%94%A8K%E8%BF%91%E9%82%BB%E7%AE%97%E6%B3%95/letters.png" alt="letters"><br><br></p>
-<p>之后，需要人工对字母进行分类，分类好的图片见recognizer&#x2F;dataset，我这里每个字母需要6个样本，10个字母，总共60个样本。<br><br><img src="/%E9%AA%8C%E8%AF%81%E7%A0%81%E7%A0%B4%E8%A7%A3%E6%8A%80%E6%9C%AF%E5%9B%9B%E9%83%A8%E6%9B%B2%E4%B9%8B%E4%BD%BF%E7%94%A8K%E8%BF%91%E9%82%BB%E7%AE%97%E6%B3%95/dataset.png" alt="dataset"><br><br></p>
+<p>我这里使用代码分割，字母分割的代码在spliter文件夹下，我使用了boost库来来读取所有下载的验证码，对图片进行二值化后，进行定点分割，可以看到分割好的字母如下。<br><br><img src="%E9%AA%8C%E8%AF%81%E7%A0%81%E7%A0%B4%E8%A7%A3%E6%8A%80%E6%9C%AF%E5%9B%9B%E9%83%A8%E6%9B%B2%E4%B9%8B%E4%BD%BF%E7%94%A8K%E8%BF%91%E9%82%BB%E7%AE%97%E6%B3%95/letters.png" alt="letters"><br><br></p>
+<p>之后，需要人工对字母进行分类，分类好的图片见recognizer&#x2F;dataset，我这里每个字母需要6个样本，10个字母，总共60个样本。<br><br><img src="%E9%AA%8C%E8%AF%81%E7%A0%81%E7%A0%B4%E8%A7%A3%E6%8A%80%E6%9C%AF%E5%9B%9B%E9%83%A8%E6%9B%B2%E4%B9%8B%E4%BD%BF%E7%94%A8K%E8%BF%91%E9%82%BB%E7%AE%97%E6%B3%95/dataset.png" alt="dataset"><br><br></p>
 <h2 id="算法原理"><a href="#算法原理" class="headerlink" title="算法原理"></a>算法原理</h2><p>K近邻算法的定义十分简单，在百度百科上有这样的解释：如果一个样本在特征空间中的k个最相似(即特征空间中最邻近)的样本中的大多数属于某一个类别，则该样本也属于这个类别。<br><br></p>
 <p>也就是说，需要找到要识别的字母在训练样本中K个最近的字母，然后找出这K个字母中最多的是某个类的？要识别的图片也就是该类的。</p>
 <h2 id="实现KNN"><a href="#实现KNN" class="headerlink" title="实现KNN"></a>实现KNN</h2><h4 id="计算距离"><a href="#计算距离" class="headerlink" title="计算距离"></a>计算距离</h4><p>首先，先定义一下距离如何计算，这里可以用各种数学上的距离，欧式距离、马氏距离等等。。<br><br></p>
@@ -180,7 +180,7 @@
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> max_label = <span class="number">-1</span>;</span><br><span class="line">labels_map[max_label] = <span class="number">-1</span>;</span><br><span class="line">map&lt;<span class="type">int</span>,<span class="type">int</span>&gt;::iterator it;</span><br><span class="line"><span class="keyword">for</span>(it=labels_map.<span class="built_in">begin</span>();it!=labels_map.<span class="built_in">end</span>();++it)&#123;</span><br><span class="line">    <span class="keyword">if</span>(it-&gt;second &gt; labels_map[max_label])&#123;</span><br><span class="line">        max_label = it-&gt;first;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">delete</span>[] k_nearest;</span><br><span class="line"><span class="keyword">return</span> max_label;</span><br></pre></td></tr></table></figure>
 <h2 id="识别验证码"><a href="#识别验证码" class="headerlink" title="识别验证码"></a>识别验证码</h2><p>最后，我们把验证码的4个字母分割出来，再进行K近邻分类，就可以得到识别结果了。</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">recognize</span><span class="params">(string path, Mat dataset[], <span class="type">int</span> labels[])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Mat test_image = <span class="built_in">imread</span>(path, CV_LOAD_IMAGE_GRAYSCALE);</span><br><span class="line">    <span class="built_in">threshold</span>(test_image, test_image, <span class="number">100</span>, <span class="number">255</span>, cv::THRESH_BINARY);</span><br><span class="line">    Range col_ranges[<span class="number">4</span>] = &#123;</span><br><span class="line">        <span class="built_in">Range</span>(<span class="number">5</span>, <span class="number">5</span>+<span class="number">8</span>),</span><br><span class="line">        <span class="built_in">Range</span>(<span class="number">14</span>, <span class="number">14</span>+<span class="number">8</span>),</span><br><span class="line">        <span class="built_in">Range</span>(<span class="number">23</span>, <span class="number">23</span>+<span class="number">8</span>),</span><br><span class="line">        <span class="built_in">Range</span>(<span class="number">32</span>, <span class="number">32</span>+<span class="number">8</span>)</span><br><span class="line">    &#125;;</span><br><span class="line">    cout&lt;&lt;<span class="string">&quot;Result:&quot;</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="number">4</span>; i++)&#123;</span><br><span class="line">        Mat letter = test_image.<span class="built_in">colRange</span>(col_ranges[i]);</span><br><span class="line">        cout &lt;&lt; <span class="built_in">knn_classify</span>(letter, dataset, labels, <span class="number">5</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    cout&lt;&lt;endl;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="效果"><a href="#效果" class="headerlink" title="效果"></a>效果</h2><p>识别图片：<br><br><img src="/%E9%AA%8C%E8%AF%81%E7%A0%81%E7%A0%B4%E8%A7%A3%E6%8A%80%E6%9C%AF%E5%9B%9B%E9%83%A8%E6%9B%B2%E4%B9%8B%E4%BD%BF%E7%94%A8K%E8%BF%91%E9%82%BB%E7%AE%97%E6%B3%95/captchas.png" alt="captchas"><br><br><br>识别结果：<br><br><img src="/%E9%AA%8C%E8%AF%81%E7%A0%81%E7%A0%B4%E8%A7%A3%E6%8A%80%E6%9C%AF%E5%9B%9B%E9%83%A8%E6%9B%B2%E4%B9%8B%E4%BD%BF%E7%94%A8K%E8%BF%91%E9%82%BB%E7%AE%97%E6%B3%95/captchas_result.png" alt="captchas_result"><br><br></p>
+<h2 id="效果"><a href="#效果" class="headerlink" title="效果"></a>效果</h2><p>识别图片：<br><br><img src="%E9%AA%8C%E8%AF%81%E7%A0%81%E7%A0%B4%E8%A7%A3%E6%8A%80%E6%9C%AF%E5%9B%9B%E9%83%A8%E6%9B%B2%E4%B9%8B%E4%BD%BF%E7%94%A8K%E8%BF%91%E9%82%BB%E7%AE%97%E6%B3%95/captchas.png" alt="captchas"><br><br><br>识别结果：<br><br><img src="%E9%AA%8C%E8%AF%81%E7%A0%81%E7%A0%B4%E8%A7%A3%E6%8A%80%E6%9C%AF%E5%9B%9B%E9%83%A8%E6%9B%B2%E4%B9%8B%E4%BD%BF%E7%94%A8K%E8%BF%91%E9%82%BB%E7%AE%97%E6%B3%95/captchas_result.png" alt="captchas_result"><br><br></p>
 <h2 id="练习"><a href="#练习" class="headerlink" title="练习"></a>练习</h2><p>通过以上，我们破解了CSDN下载的第二种验证码，第一种验证码的识别过程也是可以使用KNN的，但是第一种和第二种的分割字母的方式不同，读者可以尝试使用opencv的findCountours函数对字母进行分割，或者使用垂直投影的方式进行分割，需要注意的是第一种验证码有一个黑色的边框，如果不处理会影响findCountours函数的效果。</p>
 
       </div>
@@ -197,7 +197,7 @@
           <div class="post-attach">
             <span class="post-pubtime">
               <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
-              2016-09-22 16:55:42
+              2018-10-21 01:04:47
             </span>
             
           </div>
@@ -252,7 +252,7 @@
     <ul>
       
         <li>
-          <a title="github" target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/nladuo">
             <i class="iconfont icon-github"></i>
           </a>
         </li>
@@ -263,7 +263,14 @@
     
     <div class="footer-more">
       
-        <a target="_blank" rel="noopener" href="http://www.beian.miit.gov.cn/">http://www.beian.miit.gov.cn/  京ICP备17062395号</a>
+        <a target="_blank" rel="noopener" href="https://github.com/nladuo">Copyright © 2023 叁叁</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://beian.miit.gov.cn/">京ICP备17062395号</a>
         
     </div>
   

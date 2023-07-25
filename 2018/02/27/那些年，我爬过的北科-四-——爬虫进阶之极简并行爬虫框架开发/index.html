@@ -4,7 +4,7 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="keywords" content="" />
+  
   <meta name="author" content="叁公子KCN" />
   <meta name="description" content="" />
   
@@ -68,10 +68,10 @@
     <a href="/">
       <!-- 头像取消懒加载，添加no-lazy -->
       
-        <img src="/images/avatar.png" alt="">
+        <img src="/images/avatar.jpg" alt="">
       
     </a>
-    <div class="nickname"><a href="/"></a></div>
+    <div class="nickname"><a href="/">叁叁的博客</a></div>
   </div>
   <div class="navbar">
     <ul>
@@ -143,7 +143,7 @@
       <div class="post-attach">
         <span class="post-pubtime">
           <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
-          2018-02-27 21:54:58
+          2018-12-05 12:15:40
         </span>
         
       </div>
@@ -167,10 +167,10 @@
 <li>1 . 首先，会有个初始的任务产生器产生下载任务。</li>
 <li>2 . 下载器不断从任务队列中取出任务，下载完任务后，放到网页池中。</li>
 <li>3 . 不同的解析器取出网页进行解析，传给对应的输出管道。期间，解析器也会产生新的下载任务，放入到任务队列中。</li>
-<li>4 . 输出管道对解析的结果进行存储、显示。<br><img src="/structure.png"></li>
+<li>4 . 输出管道对解析的结果进行存储、显示。<br><img src="structure.png"></li>
 </ul>
 <h4 id="简易的爬虫框架的架构"><a href="#简易的爬虫框架的架构" class="headerlink" title="简易的爬虫框架的架构"></a>简易的爬虫框架的架构</h4><p>其实，我们也可以把爬虫不要分的那么细，下载+解析+输出其实都可以归类为一个Worker。</p>
-<p>就像下面一样，首先初始的任务产生器会产生一个下载任务，然后系统为下载任务创建几个Worker，Worker对任务进行下载解析输出，同时根据解析的一些链接产生新下载的任务放入任务队列。如此循环，直到没有任务。<br><img src="/structure2.png"></p>
+<p>就像下面一样，首先初始的任务产生器会产生一个下载任务，然后系统为下载任务创建几个Worker，Worker对任务进行下载解析输出，同时根据解析的一些链接产生新下载的任务放入任务队列。如此循环，直到没有任务。<br><img src="structure2.png"></p>
 <h2 id="进程间通信"><a href="#进程间通信" class="headerlink" title="进程间通信"></a>进程间通信</h2><p>下面，我们说一下进程间通信。</p>
 <p>这里我们举一个生产者消费者的例子。假设有两个进程，一个叫生产者，一个叫做消费者。生产者只负责生产一些任务，并把任务放到一个池子里面（任务队列），消费者从任务队列中拿到任务，并对完成任务（把任务消费掉）。</p>
 <p>我们这里的任务队列使用multiprocessing的Queue，它可以保证多进程间操作的安全。</p>
@@ -178,11 +178,11 @@
 
 <p>当然，也可以尝试有多个生产者，多个消费者。下面创建了两个生产者和消费者。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> multiprocessing <span class="keyword">import</span> Process, Queue</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">produce</span>(<span class="params">q</span>):  <span class="comment"># 生产</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">10000</span>):</span><br><span class="line">        <span class="keyword">if</span> i % <span class="number">2</span> == <span class="number">0</span>:</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&quot;Produce &quot;</span>, i)</span><br><span class="line">            q.put(i)</span><br><span class="line">            time.sleep(<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">produce2</span>(<span class="params">q</span>):  <span class="comment"># 生产</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">10000</span>):</span><br><span class="line">        <span class="keyword">if</span> i % <span class="number">2</span> == <span class="number">1</span>:</span><br><span class="line">            <span class="built_in">print</span> <span class="string">&quot;Produce &quot;</span>, i</span><br><span class="line">            q.put(i)</span><br><span class="line">            time.sleep(<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">consume</span>(<span class="params">q</span>):  <span class="comment"># 消费</span></span><br><span class="line">    <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> q.empty():</span><br><span class="line">            value = q.get(<span class="literal">True</span>)</span><br><span class="line">            <span class="built_in">print</span> <span class="string">&#x27;Consumer 1, Get %s from queue.&#x27;</span> % value</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">consume2</span>(<span class="params">q</span>):  <span class="comment"># 消费</span></span><br><span class="line">    <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> q.empty():</span><br><span class="line">            value = q.get(<span class="literal">True</span>)</span><br><span class="line">            <span class="built_in">print</span> <span class="string">&#x27;Consumer 2, Get %s from queue.&#x27;</span> % value</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    q = Queue(<span class="number">5</span>)   <span class="comment"># 队列最多放5个任务, 超过5个则会阻塞住</span></span><br><span class="line">    producer = Process(target=produce, args=(q,))</span><br><span class="line">    producer2 = Process(target=produce2, args=(q,))</span><br><span class="line">    consumer = Process(target=consume, args=(q,))</span><br><span class="line">    consumer2 = Process(target=consume2, args=(q,))</span><br><span class="line"></span><br><span class="line">    producer.start()</span><br><span class="line">    producer2.start()</span><br><span class="line">    consumer.start()</span><br><span class="line">    consumer2.start()</span><br><span class="line"></span><br><span class="line">    producer.join()  <span class="comment"># 等待结束, 死循环使用Ctrl+C退出</span></span><br><span class="line">    producer2.join()</span><br><span class="line">    consumer.join()</span><br><span class="line">    consumer2.join()</span><br></pre></td></tr></table></figure>
-<p>这里生产者生产的时间是每秒钟两个，消费者消费时间几乎可以忽略不计，属于“狼多肉少”系列。运行后，可以看到控制台每秒都输出两行。Consumer1和Consumer2的争抢十分激烈。<br><img src="/out1.png"></p>
+<p>这里生产者生产的时间是每秒钟两个，消费者消费时间几乎可以忽略不计，属于“狼多肉少”系列。运行后，可以看到控制台每秒都输出两行。Consumer1和Consumer2的争抢十分激烈。<br><img src="out1.png"></p>
 <p>考虑一下“肉多狼少”的情形，代码如下：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> multiprocessing <span class="keyword">import</span> Process, Queue</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">produce</span>(<span class="params">q</span>):  <span class="comment"># 生产</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">10000</span>):</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;Produce &quot;</span>, i)</span><br><span class="line">        q.put(i)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">consume</span>(<span class="params">q</span>):  <span class="comment"># 消费</span></span><br><span class="line">    <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> q.empty():</span><br><span class="line">            value = q.get(<span class="literal">True</span>)</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&#x27;Consumer 1, Get %s from queue.&#x27;</span> % value)</span><br><span class="line">            time.sleep(<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">consume2</span>(<span class="params">q</span>):  <span class="comment"># 消费</span></span><br><span class="line">    <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> q.empty():</span><br><span class="line">            value = q.get(<span class="literal">True</span>)</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&#x27;Consumer 2, Get %s from queue.&#x27;</span> % value)</span><br><span class="line">            time.sleep(<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    q = Queue(<span class="number">5</span>)    <span class="comment"># 队列最多放5个数据, 超过5个则会阻塞住</span></span><br><span class="line">    producer = Process(target=produce, args=(q,))</span><br><span class="line">    consumer = Process(target=consume, args=(q,))</span><br><span class="line">    consumer2 = Process(target=consume2, args=(q,))</span><br><span class="line"></span><br><span class="line">    producer.start()</span><br><span class="line">    consumer.start()</span><br><span class="line">    consumer2.start()</span><br><span class="line"></span><br><span class="line">    producer.join()  <span class="comment"># 等待结束, 死循环使用Ctrl+C退出</span></span><br><span class="line">    consumer.join()</span><br><span class="line">    consumer2.join()</span><br></pre></td></tr></table></figure>
 
-<p>这里生产者不停的生产，直到把任务队列塞满。而两个消费者每秒钟消费一个，每当有任务被消费掉，生产者又会立马生产出新的任务，把任务队列塞满。<br><img src="/out2.png"></p>
+<p>这里生产者不停的生产，直到把任务队列塞满。而两个消费者每秒钟消费一个，每当有任务被消费掉，生产者又会立马生产出新的任务，把任务队列塞满。<br><img src="out2.png"></p>
 <p>上面的说明，系统整体的运行速度其实受限于速度最慢的那个。像我们爬虫，最耗时的操作就是下载，整体的爬取速度也就受限于网速。</p>
 <p>以上的生产和消费者类似爬虫中的Producer和Worker。Producer扮演生产者，生成下载任务，放入任务队列中；Worker扮演消费者，拿到下载任务后，对某个网页进行下载、解析、数据；在此同时，Worker也会扮演生产者，根据解析到的链接生成新的下载任务，并放到任务队列中交给其他的Worker执行。</p>
 <h2 id="DIY并发框架"><a href="#DIY并发框架" class="headerlink" title="DIY并发框架"></a>DIY并发框架</h2><p>下面我们来看看我们自己的并发爬虫框架，这个爬虫框架的代码很短，只有26行，除去空行的话只有21行代码。</p>
@@ -216,9 +216,9 @@
 
 <h2 id="爬取两级页面"><a href="#爬取两级页面" class="headerlink" title="爬取两级页面"></a>爬取两级页面</h2><p>下面，我们来使用这个简单的爬虫框架，来实现一个两级页面的爬虫。</p>
 <p>首先看第一级页面：<a target="_blank" rel="noopener" href="http://nladuo.cn/scce_site/">http://nladuo.cn/scce_site&#x2F;</a>。其实就是之前的新闻列表页。我们可以爬到新闻的标题，以及该标题对应的网页链接。</p>
-<p><img src="/worker1_analysis.png"></p>
+<p><img src="worker1_analysis.png"></p>
 <p>第二级页面是：<a target="_blank" rel="noopener" href="http://nladuo.cn/scce_site/article/2601.html">http://nladuo.cn/scce_site&#x2F;article&#x2F;2601.html</a>，也就是新闻的详情页，这里可以获取到新闻的内容以及点击数目等。</p>
-<p><img src="/worker2_analysis.png"></p>
+<p><img src="worker2_analysis.png"></p>
 <p>下面我们创建两个worker，一个负责爬取列表页面，一个负责爬取新闻详情页。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">worker</span>(<span class="params">queue, task</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot; 爬取新闻列表页 &quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">detail_worker</span>(<span class="params">queue, task</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot; 爬取新闻详情页 &quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">pass</span></span><br></pre></td></tr></table></figure>
 
@@ -257,7 +257,7 @@
           <div class="post-attach">
             <span class="post-pubtime">
               <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
-              2018-02-27 21:54:58
+              2018-12-05 12:15:40
             </span>
             
           </div>
@@ -312,7 +312,7 @@
     <ul>
       
         <li>
-          <a title="github" target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/nladuo">
             <i class="iconfont icon-github"></i>
           </a>
         </li>
@@ -323,7 +323,14 @@
     
     <div class="footer-more">
       
-        <a target="_blank" rel="noopener" href="http://www.beian.miit.gov.cn/">http://www.beian.miit.gov.cn/  京ICP备17062395号</a>
+        <a target="_blank" rel="noopener" href="https://github.com/nladuo">Copyright © 2023 叁叁</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://beian.miit.gov.cn/">京ICP备17062395号</a>
         
     </div>
   

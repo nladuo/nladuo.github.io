@@ -4,7 +4,7 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="keywords" content="" />
+  
   <meta name="author" content="叁公子KCN" />
   <meta name="description" content="" />
   
@@ -68,10 +68,10 @@
     <a href="/">
       <!-- 头像取消懒加载，添加no-lazy -->
       
-        <img src="/images/avatar.png" alt="">
+        <img src="/images/avatar.jpg" alt="">
       
     </a>
-    <div class="nickname"><a href="/"></a></div>
+    <div class="nickname"><a href="/">叁叁的博客</a></div>
   </div>
   <div class="navbar">
     <ul>
@@ -143,7 +143,7 @@
       <div class="post-attach">
         <span class="post-pubtime">
           <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
-          2018-12-08 11:44:37
+          2018-12-08 15:14:29
         </span>
         
       </div>
@@ -162,29 +162,29 @@
 <h2 id="MongoDB安装"><a href="#MongoDB安装" class="headerlink" title="MongoDB安装"></a>MongoDB安装</h2><p>如果没有安装过MongoDB，需要先对mongodb进行一下安装。</p>
 <h3 id="下载MongoDB"><a href="#下载MongoDB" class="headerlink" title="下载MongoDB"></a>下载MongoDB</h3><p>MongoDB有商业版也有社区版本，我们下载免费的社区版本就好了。可以在此处<a target="_blank" rel="noopener" href="https://www.mongodb.com/download-center/community">https://www.mongodb.com/download-center/community</a>看到各种操作系统的MongoDB安装包。</p>
 <p>我们可以选择一款适合自己的操作系统的进行下载安装。下面我们分别以Mac和Windows系统举例来进行MongoDB的安装。</p>
-<h3 id="Mac版本安装与启动"><a href="#Mac版本安装与启动" class="headerlink" title="Mac版本安装与启动"></a>Mac版本安装与启动</h3><h4 id="下载安装包"><a href="#下载安装包" class="headerlink" title="下载安装包"></a>下载安装包</h4><p>首先我们下载最新版本（4.0.4版本）的mongodb的包，可以看到下载下来是一个tgz的解压文件。<br><img src="/install_mac.png"></p>
+<h3 id="Mac版本安装与启动"><a href="#Mac版本安装与启动" class="headerlink" title="Mac版本安装与启动"></a>Mac版本安装与启动</h3><h4 id="下载安装包"><a href="#下载安装包" class="headerlink" title="下载安装包"></a>下载安装包</h4><p>首先我们下载最新版本（4.0.4版本）的mongodb的包，可以看到下载下来是一个tgz的解压文件。<br><img src="install_mac.png"></p>
 <p>然后我们对tgz文件进行解压, 并进入到解压后的目录</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">tar zvxf mongodb-osx-ssl-x86_64-4.0.4.tgz</span><br><span class="line"><span class="built_in">cd</span> mongodb-osx-x86_64-4.0.4</span><br></pre></td></tr></table></figure>
-<p>进入目录后，我们可以看到有一个bin目录文件，这里面就是mongodb的各种脚本了。<br><img src="/install_mac2.png"></p>
+<p>进入目录后，我们可以看到有一个bin目录文件，这里面就是mongodb的各种脚本了。<br><img src="install_mac2.png"></p>
 <h4 id="启动MongoDB服务器"><a href="#启动MongoDB服务器" class="headerlink" title="启动MongoDB服务器"></a>启动MongoDB服务器</h4><p>然后我们需要创建数据存放的目录，mongodb数据默认存放的路径是<code>/data/db</code>，如果这个目录不存在的话，需要自己创建。确保数据创建后，通过<code>mongod</code>命令即可启动mongodb服务。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./bin/mongod  <span class="comment"># 启动mongodb服务</span></span><br></pre></td></tr></table></figure>
 <p>如果不想用<code>/data/db</code>这个路径的话，可以通过<code>--dbpath</code>参数设置想要存放的位置。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> <span class="built_in">test</span></span><br><span class="line">./bin/mongod --dbpath ./test  <span class="comment"># 数据存放在当前路径的test目录下</span></span><br></pre></td></tr></table></figure>
-<p><img src="/install_mac3.png"></p>
+<p><img src="install_mac3.png"></p>
 <h4 id="使用MongoDB客户端"><a href="#使用MongoDB客户端" class="headerlink" title="使用MongoDB客户端"></a>使用MongoDB客户端</h4><p>接下来我们测测能不能连上服务器，这里可以用mongodb自带的客户端：<code>mongo</code>命令。在终端中输入以下命令，尝试连接mongodb服务。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./bin/mongo</span><br></pre></td></tr></table></figure>
-<p>如果输入命令后，成功看到左下角有个代输入的光标，就说明安装成功了。<br><img src="/install_mac4.png"></p>
-<h3 id="Windows安装与启动"><a href="#Windows安装与启动" class="headerlink" title="Windows安装与启动"></a>Windows安装与启动</h3><h4 id="下载安装包-1"><a href="#下载安装包-1" class="headerlink" title="下载安装包"></a>下载安装包</h4><p>首先我们下载最新版本（4.0.4版本）的mongodb的包，我们这个选择zip安装包。<br><img src="/install_windows1.png"></p>
-<p>下载后进行解压，然后进入解压后的目录，可以看到有一个bin文件夹，这里面就是mongodb的各种脚本。<br><img src="/install_windows2.png"></p>
-<h4 id="启动MongoDB服务器-1"><a href="#启动MongoDB服务器-1" class="headerlink" title="启动MongoDB服务器"></a>启动MongoDB服务器</h4><p>然后我们需要创建数据存放的目录，mongodb数据默认存放的路径是<code>C:\data\db</code>，如果这个目录不存在的话，需要自己创建。<br><img src="/install_windows3.png"></p>
-<p>确保数据创建后，通过<code>mongod.exe</code>命令即可启动mongodb服务。<br><img src="/install_windows4.png"></p>
+<p>如果输入命令后，成功看到左下角有个代输入的光标，就说明安装成功了。<br><img src="install_mac4.png"></p>
+<h3 id="Windows安装与启动"><a href="#Windows安装与启动" class="headerlink" title="Windows安装与启动"></a>Windows安装与启动</h3><h4 id="下载安装包-1"><a href="#下载安装包-1" class="headerlink" title="下载安装包"></a>下载安装包</h4><p>首先我们下载最新版本（4.0.4版本）的mongodb的包，我们这个选择zip安装包。<br><img src="install_windows1.png"></p>
+<p>下载后进行解压，然后进入解压后的目录，可以看到有一个bin文件夹，这里面就是mongodb的各种脚本。<br><img src="install_windows2.png"></p>
+<h4 id="启动MongoDB服务器-1"><a href="#启动MongoDB服务器-1" class="headerlink" title="启动MongoDB服务器"></a>启动MongoDB服务器</h4><p>然后我们需要创建数据存放的目录，mongodb数据默认存放的路径是<code>C:\data\db</code>，如果这个目录不存在的话，需要自己创建。<br><img src="install_windows3.png"></p>
+<p>确保数据创建后，通过<code>mongod.exe</code>命令即可启动mongodb服务。<br><img src="install_windows4.png"></p>
 <p>如果不想用<code>C:\data\db</code>这个路径的话，可以通过<code>--dbpath</code>参数设置想要存放的位置。</p>
 <h4 id="使用MongoDB客户端-1"><a href="#使用MongoDB客户端-1" class="headerlink" title="使用MongoDB客户端"></a>使用MongoDB客户端</h4><p>接下来我们测测能不能连上服务器，这里可以用mongodb自带的客户端。在终端中运行<code>mongo.exe</code>，尝试连接mongodb服务。</p>
-<p>如果运行后，成功看到左下角有个代输入的光标，就说明安装成功了。<br><img src="/install_windows5.png"></p>
+<p>如果运行后，成功看到左下角有个代输入的光标，就说明安装成功了。<br><img src="install_windows5.png"></p>
 <h2 id="MongoDB的一些概念"><a href="#MongoDB的一些概念" class="headerlink" title="MongoDB的一些概念"></a>MongoDB的一些概念</h2><p>MongoDB以BSON格式的文档（Documents）形式存储。Databases中包含集合（Collections），集合（Collections）中存储文档（Documents）。接下来我们简单了解一下这几个概念。</p>
 <h3 id="Databases-数据库"><a href="#Databases-数据库" class="headerlink" title="Databases: 数据库"></a>Databases: 数据库</h3><p>Databases是数据库，我们一般会把不同的项目划分成不同的数据库。</p>
 <p>我们可以使用<code>show dbs</code>查看已有的数据库，使用<code>use db_name</code>进入某个数据库。下面是我们进入test数据库的截图。</p>
-<p><img src="/show_db.png"></p>
+<p><img src="show_db.png"></p>
 <h3 id="Collections-集合"><a href="#Collections-集合" class="headerlink" title="Collections: 集合"></a>Collections: 集合</h3><p>Collections是集合，一个项目中，也会有不同格式的数据。我们一般会将同一种类型的数据放在一个集合里面。比如说我们开发网站有新闻，可能会创建一个news集合；也需要有用户，再创建一个user集合。</p>
 <p>集合的概念就如同关系型数据库里面的表一样。</p>
 <h3 id="Documents-文档"><a href="#Documents-文档" class="headerlink" title="Documents: 文档"></a>Documents: 文档</h3><p>Documents是文档，文档是由field和value对的结构组成，如下结构。</p>
@@ -192,7 +192,7 @@
 <p>其中field名是个字符串，而value值可以是任何BSON数据类型，包括：其他document，数字，和document数组。</p>
 <p>在MongoDB中集合不需要创建，直接使用就可以，同理数据库也不需要创建，直接使用use就可以。</p>
 <p>下面我们在test数据库下面的news集合中插入一条数据看看。</p>
-<p><img src="/insert_doc.png"></p>
+<p><img src="insert_doc.png"></p>
 <p>这里可以看到我们的数据如下：</p>
 <figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span> </span><br><span class="line">    <span class="attr">&quot;_id&quot;</span> <span class="punctuation">:</span> ObjectId(<span class="string">&quot;5c0aa0b51b0eb2e557167a5b&quot;</span>)<span class="punctuation">,</span> </span><br><span class="line">    <span class="attr">&quot;title&quot;</span> <span class="punctuation">:</span> <span class="string">&quot;hello world&quot;</span> </span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
 <p>除了我们插入的title字段外，还有一个_id字段，这是一个索引字段，作为一个文档的唯一标识。我们可以通过_id对某一个文档进行查找。</p>
@@ -214,10 +214,10 @@
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 增</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;添加数据&quot;</span>)</span><br><span class="line">items.insert(&#123;<span class="string">&quot;id&quot;</span>: <span class="number">1</span>, <span class="string">&quot;name&quot;</span>: <span class="string">&quot;test1&quot;</span>&#125;)</span><br><span class="line">items.insert(&#123;<span class="string">&quot;id&quot;</span>: <span class="number">2</span>, <span class="string">&quot;name&quot;</span>: <span class="string">&quot;test2&quot;</span>&#125;)</span><br><span class="line">items.insert(&#123;<span class="string">&quot;id&quot;</span>: <span class="number">3</span>, <span class="string">&quot;name&quot;</span>: <span class="string">&quot;test3&quot;</span>&#125;)</span><br><span class="line">list_items()</span><br></pre></td></tr></table></figure>
 <p>mongodb一个集合中的数据可以不完全一样，比如说可能有的文档有name字段，而有的文档没有name字段。不过我们最好不要这么做，虽然mongodb允许，因为这样可能会让自己容易混乱。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">items.insert(&#123;<span class="string">&quot;id&quot;</span>: <span class="number">4</span>, <span class="string">&quot;no_name&quot;</span>: <span class="string">&quot;test4&quot;</span>&#125;)</span><br><span class="line">list_items()</span><br></pre></td></tr></table></figure>
-<p><img src="/insert_data.png"></p>
+<p><img src="insert_data.png"></p>
 <h3 id="删除数据"><a href="#删除数据" class="headerlink" title="删除数据"></a>删除数据</h3><p>在mongodb中删除数据直接使用<code>remove</code>方法就好了，remove的参数就是要删除元素的条件，比如下面是删除id为1的数据。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">print</span>(<span class="string">&quot;删除id为1&quot;</span>)</span><br><span class="line">items.remove(&#123;<span class="string">&quot;id&quot;</span>: <span class="number">1</span>&#125;)</span><br><span class="line">list_items()</span><br></pre></td></tr></table></figure>
-<p>不过上面演示的id其实是假的id，因为它可以不是唯一的。在mongodb中使用的<code>_id</code>字段作为索引，这个索引是自动创建的，它是一个ObjectId类型。我们可以通过下面的代码操作一个唯一的文档。<br><img src="/remove_data.png"></p>
+<p>不过上面演示的id其实是假的id，因为它可以不是唯一的。在mongodb中使用的<code>_id</code>字段作为索引，这个索引是自动创建的，它是一个ObjectId类型。我们可以通过下面的代码操作一个唯一的文档。<br><img src="remove_data.png"></p>
 <h3 id="更新数据"><a href="#更新数据" class="headerlink" title="更新数据"></a>更新数据</h3><p>更新数据的话是用的<code>update</code>方法，update方法接受多个参数，主要有三个。</p>
 <ul>
 <li>第一个参数：spec，指定要更新的数据。</li>
@@ -228,13 +228,13 @@
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">print</span>(<span class="string">&quot;修改id为2的name&quot;</span>)</span><br><span class="line">items.update(&#123;<span class="string">&quot;id&quot;</span>: <span class="number">2</span>&#125;, &#123;</span><br><span class="line">    <span class="string">&#x27;$set&#x27;</span>: &#123;<span class="string">&#x27;name&#x27;</span>: <span class="string">&quot;test2_modified&quot;</span>&#125;</span><br><span class="line">&#125;)</span><br><span class="line">list_items()</span><br></pre></td></tr></table></figure>
 <p>这里第二个参数如下：</p>
 <figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    &#x27;$set&#x27;<span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        &#x27;field1&#x27;<span class="punctuation">:</span> value1<span class="punctuation">,</span></span><br><span class="line">        &#x27;field2&#x27;<span class="punctuation">:</span> value2<span class="punctuation">,</span></span><br><span class="line">        &#x27;field3&#x27;<span class="punctuation">:</span> value3<span class="punctuation">,</span></span><br><span class="line">        ...</span><br><span class="line">        &#x27;fieldN&#x27;<span class="punctuation">:</span> valueN</span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
-<p>这里可以看到我们修改了id为2的name字段。<br><img src="/update_data.png"></p>
+<p>这里可以看到我们修改了id为2的name字段。<br><img src="update_data.png"></p>
 <p>接下来再来试试更新多条数据。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">print</span>(<span class="string">&quot;修改所有数据,添加一个title字段&quot;</span>)</span><br><span class="line">items.update(&#123;&#125;, &#123;</span><br><span class="line">    <span class="string">&#x27;$set&#x27;</span>: &#123;<span class="string">&#x27;title&#x27;</span>: <span class="string">&quot;update title&quot;</span>&#125;</span><br><span class="line">&#125;, multi=<span class="literal">True</span>)</span><br><span class="line">list_items()</span><br></pre></td></tr></table></figure>
-<p><img src="/update_data2.png"></p>
+<p><img src="update_data2.png"></p>
 <h3 id="查找数据"><a href="#查找数据" class="headerlink" title="查找数据"></a>查找数据</h3><p>最后是查找数据了，这里可以通过<code>find</code>方法找到多条数据，<code>find_one</code>方法找到一条数据。对于<code>find_one</code>方法，如果没有找到的话，会返回None。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">print</span>(<span class="string">&quot;查找id为2&quot;</span>)</span><br><span class="line"><span class="built_in">print</span>(items.find_one(&#123;<span class="string">&quot;id&quot;</span>: <span class="number">2</span>&#125;))</span><br></pre></td></tr></table></figure>
-<p><img src="/find_one.png"></p>
+<p><img src="find_one.png"></p>
 <h2 id="修改我们的爬虫框架"><a href="#修改我们的爬虫框架" class="headerlink" title="修改我们的爬虫框架"></a>修改我们的爬虫框架</h2><p>关于数据库的介绍就到这里了，如果读者对mongodb操作感兴趣可以查阅更多相关资料。</p>
 <p>下面，我们把mongodb数据融入到我们的爬虫框架中，并通过框架把上一节的爬虫爬取的内容存入数据库中。这里其实在框架里面添加一行代码即可。</p>
 <h3 id="进程间锁"><a href="#进程间锁" class="headerlink" title="进程间锁"></a>进程间锁</h3><p>考虑一个场景，我们在爬取数据的时候，肯定不希望有重复的数据添加到数据库里面，所以我们可能需要在插入数据库之前，判断一下这条数据有没有插入过。判断插入再插入的代码如下：</p>
@@ -245,11 +245,11 @@
 <p>在操作插入代码块的时候，进程1和进程2要获取锁，才能执行。比如说这个时候进程1拿到锁了，进程2没有拿到，那么进程2就会等待。进程1把步骤①和步骤②都完成之后，才会释放锁。进程②拿到锁，再进行步骤①和步骤②。</p>
 <p>这样就不会出现上面的那种情况了。</p>
 <p>所以，我们可以在我们的框架中也添加一个这样的锁。我们需要再我们的框架中添加这个锁，然后把这个锁传给worker，worker在需要数据库操作的时候再使用这个锁就好了。</p>
-<p><img src="/framework_update.png"></p>
+<p><img src="framework_update.png"></p>
 <h3 id="爬虫实践"><a href="#爬虫实践" class="headerlink" title="爬虫实践"></a>爬虫实践</h3><p>接下来我们需要对上一节的worker进行稍微修改，首先添加lock参数。然后再把数据插入到数据库中。</p>
-<p><img src="/crawler_update.png"></p>
-<p>之后运行爬虫，使用<code>mongo</code>客户端检验一下爬取的数据是否存入数据库。<br><img src="/data_saved.png"></p>
-<p>在MongoDB自带的客户端中写代码查看有的时候有些麻烦，读者也可以装一个MongoDB的可视化客户端，我这里用的是<a target="_blank" rel="noopener" href="https://robomongo.org/">Robo 3T</a>，也是有免费版本的。<br><img src="/data_saved2.png"></p>
+<p><img src="crawler_update.png"></p>
+<p>之后运行爬虫，使用<code>mongo</code>客户端检验一下爬取的数据是否存入数据库。<br><img src="data_saved.png"></p>
+<p>在MongoDB自带的客户端中写代码查看有的时候有些麻烦，读者也可以装一个MongoDB的可视化客户端，我这里用的是<a target="_blank" rel="noopener" href="https://robomongo.org/">Robo 3T</a>，也是有免费版本的。<br><img src="data_saved2.png"></p>
 <h3 id="补充说明"><a href="#补充说明" class="headerlink" title="补充说明"></a>补充说明</h3><p>我们上面的操作其实相当于同一时间只会操作一条数据，方式比较简单粗暴。实际上，mongodb是可以支持多连接的，也就是说可以并发操作。</p>
 <p>读者感兴趣的话，可以考虑在框架中添加一个pipeline，在pipeline中构建多个mongodb数据库的连接，用于专门操作数据库数据。</p>
 
@@ -267,7 +267,7 @@
           <div class="post-attach">
             <span class="post-pubtime">
               <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
-              2018-12-08 11:44:37
+              2018-12-08 15:14:29
             </span>
             
           </div>
@@ -322,7 +322,7 @@
     <ul>
       
         <li>
-          <a title="github" target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/nladuo">
             <i class="iconfont icon-github"></i>
           </a>
         </li>
@@ -333,7 +333,14 @@
     
     <div class="footer-more">
       
-        <a target="_blank" rel="noopener" href="http://www.beian.miit.gov.cn/">http://www.beian.miit.gov.cn/  京ICP备17062395号</a>
+        <a target="_blank" rel="noopener" href="https://github.com/nladuo">Copyright © 2023 叁叁</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://beian.miit.gov.cn/">京ICP备17062395号</a>
         
     </div>
   

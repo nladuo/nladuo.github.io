@@ -4,7 +4,7 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="keywords" content="" />
+  
   <meta name="author" content="叁公子KCN" />
   <meta name="description" content="" />
   
@@ -68,10 +68,10 @@
     <a href="/">
       <!-- 头像取消懒加载，添加no-lazy -->
       
-        <img src="/images/avatar.png" alt="">
+        <img src="/images/avatar.jpg" alt="">
       
     </a>
-    <div class="nickname"><a href="/"></a></div>
+    <div class="nickname"><a href="/">叁叁的博客</a></div>
   </div>
   <div class="navbar">
     <ul>
@@ -143,28 +143,28 @@
       <div class="post-attach">
         <span class="post-pubtime">
           <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
-          2016-09-20 21:40:56
+          2018-10-21 01:04:48
         </span>
         
       </div>
       <div class="markdown-body">
         <h2 id="代码下载"><a href="#代码下载" class="headerlink" title="代码下载"></a>代码下载</h2><p>本节的代码可以通过<a href="basic.zip">此处</a>进行下载。</p>
-<h2 id="图像直方图"><a href="#图像直方图" class="headerlink" title="图像直方图"></a>图像直方图</h2><p>首先看验证码的样子，<br><br><img src="/%E9%AA%8C%E8%AF%81%E7%A0%81%E7%A0%B4%E8%A7%A3%E6%8A%80%E6%9C%AF%E5%9B%9B%E9%83%A8%E6%9B%B2%E4%B9%8B%E4%BD%BF%E7%94%A8Tesseract/test1.jpg" alt="test1">  <img src="/%E9%AA%8C%E8%AF%81%E7%A0%81%E7%A0%B4%E8%A7%A3%E6%8A%80%E6%9C%AF%E5%9B%9B%E9%83%A8%E6%9B%B2%E4%B9%8B%E4%BD%BF%E7%94%A8Tesseract/test2.jpg" alt="test2"> <img src="/%E9%AA%8C%E8%AF%81%E7%A0%81%E7%A0%B4%E8%A7%A3%E6%8A%80%E6%9C%AF%E5%9B%9B%E9%83%A8%E6%9B%B2%E4%B9%8B%E4%BD%BF%E7%94%A8Tesseract/test3.jpg" alt="test3"> <br><br></p>
+<h2 id="图像直方图"><a href="#图像直方图" class="headerlink" title="图像直方图"></a>图像直方图</h2><p>首先看验证码的样子，<br><br><img src="%E9%AA%8C%E8%AF%81%E7%A0%81%E7%A0%B4%E8%A7%A3%E6%8A%80%E6%9C%AF%E5%9B%9B%E9%83%A8%E6%9B%B2%E4%B9%8B%E4%BD%BF%E7%94%A8Tesseract/test1.jpg" alt="test1">  <img src="%E9%AA%8C%E8%AF%81%E7%A0%81%E7%A0%B4%E8%A7%A3%E6%8A%80%E6%9C%AF%E5%9B%9B%E9%83%A8%E6%9B%B2%E4%B9%8B%E4%BD%BF%E7%94%A8Tesseract/test2.jpg" alt="test2"> <img src="%E9%AA%8C%E8%AF%81%E7%A0%81%E7%A0%B4%E8%A7%A3%E6%8A%80%E6%9C%AF%E5%9B%9B%E9%83%A8%E6%9B%B2%E4%B9%8B%E4%BD%BF%E7%94%A8Tesseract/test3.jpg" alt="test3"> <br><br></p>
 <span id="more"></span>
 
 <p>可以看到这几个验证码最大的特点就是字母比较深，而周围的背景很浅，把图像转换成黑白颜色，可以显示的更加的明显。<br></p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//按黑白读取图像</span></span><br><span class="line">Mat mat = <span class="built_in">imread</span>(<span class="string">&quot;test1.jpg&quot;</span>, <span class="number">0</span>);</span><br><span class="line">cv::<span class="built_in">imshow</span>(<span class="string">&quot;initial_mat&quot;</span>, mat);</span><br><span class="line">cv::<span class="built_in">waitKey</span>(<span class="number">0</span>);</span><br></pre></td></tr></table></figure>
-<p><img src="/%E9%AA%8C%E8%AF%81%E7%A0%81%E7%A0%B4%E8%A7%A3%E6%8A%80%E6%9C%AF%E5%9B%9B%E9%83%A8%E6%9B%B2%E4%B9%8B%E4%BD%BF%E7%94%A8Tesseract/test1_gray.png" alt="test1_gray"><br><br></p>
+<p><img src="%E9%AA%8C%E8%AF%81%E7%A0%81%E7%A0%B4%E8%A7%A3%E6%8A%80%E6%9C%AF%E5%9B%9B%E9%83%A8%E6%9B%B2%E4%B9%8B%E4%BD%BF%E7%94%A8Tesseract/test1_gray.png" alt="test1_gray"><br><br></p>
 <p>可以看到所有背景的灰度值，都会小于字母的灰度值，为了让tesseract更准确的识别，可以把图像进行二值化，也就是把背景都改成纯白色，把字母都搞成纯黑色。那么如何确定分割的阈值呢？比较好的方法是画出图像的直方图。<br></p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//画出直方图</span></span><br><span class="line">Histogram1D histogram1d;</span><br><span class="line">cv::<span class="built_in">imshow</span>(<span class="string">&quot;histogram1d&quot;</span>, histogram1d.<span class="built_in">getHistogramImage</span>(mat));</span><br><span class="line">cv::<span class="built_in">waitKey</span>(<span class="number">0</span>);</span><br></pre></td></tr></table></figure>
-<p><img src="/%E9%AA%8C%E8%AF%81%E7%A0%81%E7%A0%B4%E8%A7%A3%E6%8A%80%E6%9C%AF%E5%9B%9B%E9%83%A8%E6%9B%B2%E4%B9%8B%E4%BD%BF%E7%94%A8Tesseract/histogram1d.png" alt="histogram1d"><br><br></p>
+<p><img src="%E9%AA%8C%E8%AF%81%E7%A0%81%E7%A0%B4%E8%A7%A3%E6%8A%80%E6%9C%AF%E5%9B%9B%E9%83%A8%E6%9B%B2%E4%B9%8B%E4%BD%BF%E7%94%A8Tesseract/histogram1d.png" alt="histogram1d"><br><br></p>
 <p>直方图的横坐标代表灰度值，纵坐标代表指定灰度值的点数。</p>
 <h2 id="图像阈值"><a href="#图像阈值" class="headerlink" title="图像阈值"></a>图像阈值</h2><p>接下来，开始对图像进行阈值，这里选择的灰度值位150，灰度下于150的设置为白色，灰度大于150的设置为黑色。</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//阈值</span></span><br><span class="line">Mat threshold_mat;</span><br><span class="line">cv::<span class="built_in">threshold</span>(mat, threshold_mat, <span class="number">150</span>, <span class="number">255</span>, cv::THRESH_BINARY);</span><br><span class="line">cv::<span class="built_in">imshow</span>(<span class="string">&quot;threshold_mat&quot;</span>, threshold_mat);</span><br><span class="line">cv::<span class="built_in">waitKey</span>(<span class="number">0</span>);</span><br></pre></td></tr></table></figure>
-<p><img src="/%E9%AA%8C%E8%AF%81%E7%A0%81%E7%A0%B4%E8%A7%A3%E6%8A%80%E6%9C%AF%E5%9B%9B%E9%83%A8%E6%9B%B2%E4%B9%8B%E4%BD%BF%E7%94%A8Tesseract/threshold_mat.png" alt="threshold_mat"><br><br></p>
+<p><img src="%E9%AA%8C%E8%AF%81%E7%A0%81%E7%A0%B4%E8%A7%A3%E6%8A%80%E6%9C%AF%E5%9B%9B%E9%83%A8%E6%9B%B2%E4%B9%8B%E4%BD%BF%E7%94%A8Tesseract/threshold_mat.png" alt="threshold_mat"><br><br></p>
 <h2 id="Tesseract识别"><a href="#Tesseract识别" class="headerlink" title="Tesseract识别"></a>Tesseract识别</h2><p>把图片进行阈值后，就可以进行识别了，直接调用tesseract的API就好了。</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//使用tesseract识别</span></span><br><span class="line"><span class="type">char</span> buffer[<span class="number">255</span>];</span><br><span class="line">OCRDecoder decoder;</span><br><span class="line">decoder.<span class="built_in">decodeGrayMat</span>(threshold_mat, buffer);</span><br><span class="line">cout&lt;&lt;<span class="string">&quot;result:&quot;</span>&lt;&lt;buffer&lt;&lt;endl;</span><br></pre></td></tr></table></figure>
-<p>运行程序，可以看到识别出了结果：<br><br><img src="/%E9%AA%8C%E8%AF%81%E7%A0%81%E7%A0%B4%E8%A7%A3%E6%8A%80%E6%9C%AF%E5%9B%9B%E9%83%A8%E6%9B%B2%E4%B9%8B%E4%BD%BF%E7%94%A8Tesseract/result.png" alt="result"><br><br></p>
+<p>运行程序，可以看到识别出了结果：<br><br><img src="%E9%AA%8C%E8%AF%81%E7%A0%81%E7%A0%B4%E8%A7%A3%E6%8A%80%E6%9C%AF%E5%9B%9B%E9%83%A8%E6%9B%B2%E4%B9%8B%E4%BD%BF%E7%94%A8Tesseract/result.png" alt="result"><br><br></p>
 
       </div>
       
@@ -180,7 +180,7 @@
           <div class="post-attach">
             <span class="post-pubtime">
               <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
-              2016-09-20 21:40:56
+              2018-10-21 01:04:48
             </span>
             
           </div>
@@ -235,7 +235,7 @@
     <ul>
       
         <li>
-          <a title="github" target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/nladuo">
             <i class="iconfont icon-github"></i>
           </a>
         </li>
@@ -246,7 +246,14 @@
     
     <div class="footer-more">
       
-        <a target="_blank" rel="noopener" href="http://www.beian.miit.gov.cn/">http://www.beian.miit.gov.cn/  京ICP备17062395号</a>
+        <a target="_blank" rel="noopener" href="https://github.com/nladuo">Copyright © 2023 叁叁</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://beian.miit.gov.cn/">京ICP备17062395号</a>
         
     </div>
   

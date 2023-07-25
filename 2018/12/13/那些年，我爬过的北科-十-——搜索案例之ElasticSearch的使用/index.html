@@ -4,7 +4,7 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="keywords" content="" />
+  
   <meta name="author" content="叁公子KCN" />
   <meta name="description" content="" />
   
@@ -68,10 +68,10 @@
     <a href="/">
       <!-- 头像取消懒加载，添加no-lazy -->
       
-        <img src="/images/avatar.png" alt="">
+        <img src="/images/avatar.jpg" alt="">
       
     </a>
-    <div class="nickname"><a href="/"></a></div>
+    <div class="nickname"><a href="/">叁叁的博客</a></div>
   </div>
   <div class="navbar">
     <ul>
@@ -143,7 +143,7 @@
       <div class="post-attach">
         <span class="post-pubtime">
           <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
-          2018-12-13 10:41:10
+          2018-12-13 15:41:38
         </span>
         
       </div>
@@ -156,17 +156,17 @@
 <span id="more"></span>
 <h2 id="ElasticSearch安装"><a href="#ElasticSearch安装" class="headerlink" title="ElasticSearch安装"></a>ElasticSearch安装</h2><p>“工欲善其事，必先利其器”，我们这里先讲解一些ElasticSearch的安装步骤，下面的操作是在mac系统上进行的。因为ElasticSearch是基于Java开发的，Java本身是跨平台的，所以其他系统上面其实操作都是基本一样的。</p>
 <h3 id="ElasticSearch安装-1"><a href="#ElasticSearch安装-1" class="headerlink" title="ElasticSearch安装"></a>ElasticSearch安装</h3><p>这里首先安装<a target="_blank" rel="noopener" href="http://www.oracle.com/technetwork/java/javase/downloads/index.html">JDK</a>，然后下载安装<a target="_blank" rel="noopener" href="https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-6.0.0.zip">ElasticSearch-6.0.0</a>版本。</p>
-<p>下载解压后，我们可以看到这里有一个<code>bin</code>文件夹。<br><img src="/install_es.png"></p>
+<p>下载解压后，我们可以看到这里有一个<code>bin</code>文件夹。<br><img src="install_es.png"></p>
 <p><code>bin</code>文件夹里都是ElasticSearch相关操作的脚本。我们把ElasticSearch的<code>bin</code>目录添加到<code>PATH</code>中，之后在终端中就不需要输入绝对路径了。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> PATH=<span class="variable">$HOME</span>/ProgramFiles/elasticsearch-6.0.0/bin:<span class="variable">$&#123;PATH&#125;</span></span><br></pre></td></tr></table></figure>
 
 <h3 id="ik分词工具的安装"><a href="#ik分词工具的安装" class="headerlink" title="ik分词工具的安装"></a>ik分词工具的安装</h3><p>因为我们做的是中文搜索，而ElasticSearch自带的中文分词做的不好，所以这里需要使用到ik的一个插件。使用以下命令安装即可。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">elasticsearch-plugin install https://github.com/medcl/elasticsearch-analysis-ik/releases/download/v6.0.0/elasticsearch-analysis-ik-6.0.0.zip</span><br></pre></td></tr></table></figure>
-<p><img src="/install_ik.png"></p>
+<p><img src="install_ik.png"></p>
 <h3 id="Python库的安装"><a href="#Python库的安装" class="headerlink" title="Python库的安装"></a>Python库的安装</h3><p>最后，我们因为要使用python操作ElasticSearch，通过pip命令安装ElasticSearch的API库。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install elasticsearch</span><br></pre></td></tr></table></figure>
 
-<h2 id="服务启动"><a href="#服务启动" class="headerlink" title="服务启动"></a>服务启动</h2><p>在建立索引之前，我们要先打开ElasticSearch服务。在终端输入<code>elasticsearch</code>命令即可。<br><img src="/start_es.png"></p>
+<h2 id="服务启动"><a href="#服务启动" class="headerlink" title="服务启动"></a>服务启动</h2><p>在建立索引之前，我们要先打开ElasticSearch服务。在终端输入<code>elasticsearch</code>命令即可。<br><img src="start_es.png"></p>
 <p>启动后可以看到ElasticSearch服务监听了本地的9300端口。</p>
 <h2 id="索引构建"><a href="#索引构建" class="headerlink" title="索引构建"></a>索引构建</h2><p>接下来，我们来看看如何建立索引。</p>
 <h3 id="创建Mappings"><a href="#创建Mappings" class="headerlink" title="创建Mappings"></a>创建Mappings</h3><p>首先像数据库一样，我们先建立一个索引。这里我们管它叫：<code>tiezi_index</code>。在创建索引的过程中，要配置映射一个<code>Mappings</code>（映射）。</p>
@@ -177,10 +177,10 @@
 <p>可以看到在title字段里面还有东西，这里指定了title是文本类型，并且使用ik分词工具进行分析索引。</p>
 <h3 id="索引数据"><a href="#索引数据" class="headerlink" title="索引数据"></a>索引数据</h3><p>完成映射后，我们开始把所有数据进行索引。这里只需要遍历一遍我们爬的帖子数据，然后索引到ElasticSearch里就好了。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">init_collection</span>():</span><br><span class="line">    client = pymongo.MongoClient(host=<span class="string">&quot;localhost&quot;</span>, port=<span class="number">27017</span>)</span><br><span class="line">    db = client[<span class="string">&#x27;tieba&#x27;</span>]</span><br><span class="line">    <span class="keyword">return</span> db[<span class="string">&quot;beike&quot;</span>]</span><br><span class="line"></span><br><span class="line">coll = init_collection()</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> tiezi <span class="keyword">in</span> coll.find():</span><br><span class="line">    _<span class="built_in">id</span> = <span class="built_in">str</span>(tiezi[<span class="string">&quot;_id&quot;</span>])</span><br><span class="line">    doc = &#123;</span><br><span class="line">        <span class="string">&quot;id&quot;</span>: _<span class="built_in">id</span>,</span><br><span class="line">        <span class="string">&quot;title&quot;</span>: tiezi[<span class="string">&quot;title&quot;</span>]</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">print</span>(doc)</span><br><span class="line">    res = es.index(index=<span class="string">&quot;tieba_index&quot;</span>, doc_type=<span class="string">&quot;tiezi&quot;</span>, <span class="built_in">id</span>=_<span class="built_in">id</span>, body=doc)</span><br><span class="line">    <span class="built_in">print</span>(res)</span><br></pre></td></tr></table></figure>
-<p>这里索引需要花一定的时间，耐心等待即可。<br><img src="/index_data.png"></p>
+<p>这里索引需要花一定的时间，耐心等待即可。<br><img src="index_data.png"></p>
 <h2 id="搜索测试"><a href="#搜索测试" class="headerlink" title="搜索测试"></a>搜索测试</h2><p>最后，我们进行一下搜索测试。搜索直接可以调用<code>search</code>即可。搜索的返回结果是字典类型。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> elasticsearch <span class="keyword">import</span> Elasticsearch</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">search</span>(<span class="params">query</span>):</span><br><span class="line">    query_contains = &#123;</span><br><span class="line">        <span class="string">&#x27;query&#x27;</span>: &#123;</span><br><span class="line">            <span class="string">&#x27;match&#x27;</span>: &#123;</span><br><span class="line">                <span class="string">&#x27;title&#x27;</span>: query,</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    es = Elasticsearch()</span><br><span class="line">    searched = es.search(<span class="string">&quot;tieba_index&quot;</span>, doc_type=<span class="string">&quot;tiezi&quot;</span>, body=query_contains, size=<span class="number">20</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> searched</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> res <span class="keyword">in</span> search(<span class="string">&quot;假期都做什么呢&quot;</span>)[<span class="string">&quot;hits&quot;</span>][<span class="string">&quot;hits&quot;</span>]:</span><br><span class="line">    <span class="built_in">print</span>(res[<span class="string">&quot;_source&quot;</span>][<span class="string">&quot;title&quot;</span>], res[<span class="string">&quot;_score&quot;</span>])</span><br></pre></td></tr></table></figure>
-<p>我们这里可以打印一下，搜索出来的标题和搜索的得分（默认是BM25得分）。<br><img src="/search_result.png"></p>
+<p>我们这里可以打印一下，搜索出来的标题和搜索的得分（默认是BM25得分）。<br><img src="search_result.png"></p>
 <h2 id="结束语"><a href="#结束语" class="headerlink" title="结束语"></a>结束语</h2><p>到这里，本系列教程的所有内容都结束了。网络爬虫是一个非常实践的应用，在真正爬取数据时，可能会遇到各种各样的问题。从数据存储、反反爬虫以及算法上可能都要踩很多坑。</p>
 <p>本系列教程力求能够从浅入深的讲解网络爬虫，尽可能覆盖到爬虫所涉及的内容的方方面。当然有些部分也会比较粗糙，只是大概提了一句。希望通过本系统教程，能让读者能够对爬虫有一个宏观的认识与了解。</p>
 
@@ -198,7 +198,7 @@
           <div class="post-attach">
             <span class="post-pubtime">
               <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
-              2018-12-13 10:41:10
+              2018-12-13 15:41:38
             </span>
             
           </div>
@@ -253,7 +253,7 @@
     <ul>
       
         <li>
-          <a title="github" target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/nladuo">
             <i class="iconfont icon-github"></i>
           </a>
         </li>
@@ -264,7 +264,14 @@
     
     <div class="footer-more">
       
-        <a target="_blank" rel="noopener" href="http://www.beian.miit.gov.cn/">http://www.beian.miit.gov.cn/  京ICP备17062395号</a>
+        <a target="_blank" rel="noopener" href="https://github.com/nladuo">Copyright © 2023 叁叁</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://beian.miit.gov.cn/">京ICP备17062395号</a>
         
     </div>
   

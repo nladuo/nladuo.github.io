@@ -4,7 +4,7 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="keywords" content="" />
+  
   <meta name="author" content="叁公子KCN" />
   <meta name="description" content="" />
   
@@ -68,10 +68,10 @@
     <a href="/">
       <!-- 头像取消懒加载，添加no-lazy -->
       
-        <img src="/images/avatar.png" alt="">
+        <img src="/images/avatar.jpg" alt="">
       
     </a>
-    <div class="nickname"><a href="/"></a></div>
+    <div class="nickname"><a href="/">叁叁的博客</a></div>
   </div>
   <div class="navbar">
     <ul>
@@ -143,7 +143,7 @@
       <div class="post-attach">
         <span class="post-pubtime">
           <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
-          2018-12-13 00:17:53
+          2018-12-13 11:05:35
         </span>
         
       </div>
@@ -153,16 +153,16 @@
 <p>本案例将要爬取北科贴吧的帖子数据，并在此基础上构建一个简单的搜索功能。</p>
 <span id="more"></span>
 <h2 id="百度贴吧分析"><a href="#百度贴吧分析" class="headerlink" title="百度贴吧分析"></a>百度贴吧分析</h2><p>这里我们首先打开<code>北京科技大学</code>的百度贴吧：<a target="_blank" rel="noopener" href="http://tieba.baidu.com/f?kw=%E5%8C%97%E4%BA%AC%E7%A7%91%E6%8A%80%E5%A4%A7%E5%AD%A6">http://tieba.baidu.com/f?kw=北京科技大学</a></p>
-<p><img src="/tieba.png"></p>
+<p><img src="tieba.png"></p>
 <p>我们的目标是关注帖子的标题名称，比如这个：<code>“北邮人下载需要流量吗”</code>，<code>“请问一下学长学姐，全国大学生数学竞赛初赛全国一等奖在咱们学校”</code>。</p>
 <p>还有就是我们肯定不能只爬取一页的信息，这里我们将要爬取前1000页的信息。</p>
 <h3 id="页面分析"><a href="#页面分析" class="headerlink" title="页面分析"></a>页面分析</h3><p>首先我们打开Chrome开发者工具看一下列表如何解析。</p>
-<p><img src="/analysis_page.png"></p>
+<p><img src="analysis_page.png"></p>
 <p>这里我们选中一个标题名称后，可以直接看到一个<code>a</code>标签，它的class为<code>j_th_tit</code>。</p>
 <p>所以使用以下代码就可以打印出所有的标题来。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">soup = BeautifulSoup(resp.content, <span class="string">&quot;html.parser&quot;</span>)</span><br><span class="line">items = soup.find_all(<span class="string">&quot;a&quot;</span>, &#123;<span class="string">&quot;class&quot;</span>, <span class="string">&quot;j_th_tit&quot;</span>&#125;)</span><br><span class="line"><span class="keyword">for</span> a <span class="keyword">in</span> items:</span><br><span class="line">    title = item.get_text()</span><br><span class="line">    <span class="built_in">print</span>(title)</span><br></pre></td></tr></table></figure>
 
-<h3 id="分页分析"><a href="#分页分析" class="headerlink" title="分页分析"></a>分页分析</h3><p>页面分析完了之后就可以分析一下分页了，我们把小箭头晃到底部分页的位置。<br><img src="/analysis_pagination.png"></p>
+<h3 id="分页分析"><a href="#分页分析" class="headerlink" title="分页分析"></a>分页分析</h3><p>页面分析完了之后就可以分析一下分页了，我们把小箭头晃到底部分页的位置。<br><img src="analysis_pagination.png"></p>
 <p>可以发现分页对应的网址主要是pn的值不一样。第2页对应50，第3页对应100，第4页对应150。</p>
 <p>也就是，$$pn&#x3D;(page-1)*50$$这样的关系。</p>
 <h2 id="爬虫编写"><a href="#爬虫编写" class="headerlink" title="爬虫编写"></a>爬虫编写</h2><p>完成以上的分析工作之后，就可以开始实现我们的爬虫了。</p>
@@ -178,7 +178,7 @@
 <p>首先worker肯定要有三个基础部分：下载页面、解析页面、保存数据。除此之外，因为要爬取1000页，所以还要添加新的任务来爬取剩下的990。</p>
 <p>这里可以判断当前页码+10是否大于1000，如果不大于的话把当前页码+10的网页添加到新的任务队列中。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">worker</span>(<span class="params">queue, task, lock</span>):</span><br><span class="line">    offset = (task[<span class="string">&quot;page&quot;</span>] - <span class="number">1</span>) * <span class="number">50</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;downloading: page %d&quot;</span> % task[<span class="string">&quot;page&quot;</span>])</span><br><span class="line">    <span class="comment"># 1. 下载页面</span></span><br><span class="line">    resp = requests.get(<span class="string">&quot;http://tieba.baidu.com/f?kw=&quot;</span></span><br><span class="line">                        <span class="string">&quot;%E5%8C%97%E4%BA%AC%E7%A7%91%E6%8A%80%E5%A4%A7%E5%AD%A6&amp;ie=utf-8&amp;pn=&quot;</span> + <span class="built_in">str</span>(offset))</span><br><span class="line">    soup = BeautifulSoup(resp.content, <span class="string">&quot;html.parser&quot;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 2. 解析页面</span></span><br><span class="line">    items = soup.find_all(<span class="string">&quot;a&quot;</span>, &#123;<span class="string">&quot;class&quot;</span>, <span class="string">&quot;j_th_tit&quot;</span>&#125;)</span><br><span class="line"></span><br><span class="line">    docs = []</span><br><span class="line">    <span class="keyword">for</span> index, item <span class="keyword">in</span> <span class="built_in">enumerate</span>(items):</span><br><span class="line">        docs.append(&#123;</span><br><span class="line">            <span class="string">&quot;page&quot;</span>: task[<span class="string">&quot;page&quot;</span>],</span><br><span class="line">            <span class="string">&quot;index&quot;</span>: index,</span><br><span class="line">            <span class="string">&quot;title&quot;</span>: item.get_text(),</span><br><span class="line">            <span class="string">&quot;href&quot;</span>: <span class="string">&quot;http://tieba.baidu.com&quot;</span> + item.attrs[<span class="string">&quot;href&quot;</span>]</span><br><span class="line">        &#125;)</span><br><span class="line">        <span class="built_in">print</span>(task[<span class="string">&quot;page&quot;</span>], index, item.get_text())</span><br><span class="line">    <span class="comment"># 3. 保存数据</span></span><br><span class="line">    <span class="keyword">with</span> lock:</span><br><span class="line">        save_docs(docs)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 4. 添加新任务</span></span><br><span class="line">    <span class="keyword">if</span> (task[<span class="string">&quot;page&quot;</span>] + <span class="number">10</span>) &gt; <span class="number">1000</span>:</span><br><span class="line">        queue.put(&#123;<span class="string">&quot;id&quot;</span>: <span class="string">&quot;NO&quot;</span>&#125;)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        queue.put(&#123;<span class="string">&quot;id&quot;</span>: <span class="string">&quot;worker&quot;</span>, <span class="string">&quot;page&quot;</span>: task[<span class="string">&quot;page&quot;</span>] + <span class="number">10</span>&#125;)</span><br></pre></td></tr></table></figure>
-<h3 id="运行效果"><a href="#运行效果" class="headerlink" title="运行效果"></a>运行效果</h3><p>以上就是爬虫的全部代码，运行后可以看到类型下面的结果。<br><img src="/result.png"><br>通过以上代码大概爬了4万多条数据，之后的两章我们将把这些标题当做语料库，然后对这些数据进行搜索。</p>
+<h3 id="运行效果"><a href="#运行效果" class="headerlink" title="运行效果"></a>运行效果</h3><p>以上就是爬虫的全部代码，运行后可以看到类型下面的结果。<br><img src="result.png"><br>通过以上代码大概爬了4万多条数据，之后的两章我们将把这些标题当做语料库，然后对这些数据进行搜索。</p>
 <h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><p>网站可能会经常变化，如果上述爬虫不能用的话，可以爬取我保存下来的贴吧网页：<a target="_blank" rel="noopener" href="http://nladuo.cn/beike_tieba/1.html">http://nladuo.cn/beike_tieba&#x2F;1.html</a>。</p>
 <p>分页的格式类似于1.html、2.html、…、1000.html。</p>
 
@@ -196,7 +196,7 @@
           <div class="post-attach">
             <span class="post-pubtime">
               <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
-              2018-12-13 00:17:53
+              2018-12-13 11:05:35
             </span>
             
           </div>
@@ -251,7 +251,7 @@
     <ul>
       
         <li>
-          <a title="github" target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/nladuo">
             <i class="iconfont icon-github"></i>
           </a>
         </li>
@@ -262,7 +262,14 @@
     
     <div class="footer-more">
       
-        <a target="_blank" rel="noopener" href="http://www.beian.miit.gov.cn/">http://www.beian.miit.gov.cn/  京ICP备17062395号</a>
+        <a target="_blank" rel="noopener" href="https://github.com/nladuo">Copyright © 2023 叁叁</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://beian.miit.gov.cn/">京ICP备17062395号</a>
         
     </div>
   

@@ -4,7 +4,7 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="keywords" content="" />
+  
   <meta name="author" content="叁公子KCN" />
   <meta name="description" content="" />
   
@@ -68,10 +68,10 @@
     <a href="/">
       <!-- 头像取消懒加载，添加no-lazy -->
       
-        <img src="/images/avatar.png" alt="">
+        <img src="/images/avatar.jpg" alt="">
       
     </a>
-    <div class="nickname"><a href="/"></a></div>
+    <div class="nickname"><a href="/">叁叁的博客</a></div>
   </div>
   <div class="navbar">
     <ul>
@@ -143,7 +143,7 @@
       <div class="post-attach">
         <span class="post-pubtime">
           <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
-          2019-11-17 20:56:35
+          2019-11-17 22:13:37
         </span>
         
       </div>
@@ -157,17 +157,17 @@
 </ul>
 <p>代码见：<a target="_blank" rel="noopener" href="https://github.com/nladuo/MMFinder">https://github.com/nladuo/MMFinder</a></p>
 <span id="more"></span>
-<h2 id="准备图片"><a href="#准备图片" class="headerlink" title="准备图片"></a>准备图片</h2><p>首先是准备好美女图，这里是我很久以前爬的一些图，一共接近1万张。<br><img src="/meizitu.png"></p>
+<h2 id="准备图片"><a href="#准备图片" class="headerlink" title="准备图片"></a>准备图片</h2><p>首先是准备好美女图，这里是我很久以前爬的一些图，一共接近1万张。<br><img src="meizitu.png"></p>
 <p>如果没有的话，这里提供一下Google Drive下载链接：<a target="_blank" rel="noopener" href="https://drive.google.com/file/d/1shZ3gx9nHPHUgylsZIrvWliwCh9TucAo/view?usp=sharing">https://drive.google.com/file/d/1shZ3gx9nHPHUgylsZIrvWliwCh9TucAo/view?usp=sharing</a>。解压密码：nladuo。</p>
 <h2 id="图片过滤"><a href="#图片过滤" class="headerlink" title="图片过滤"></a>图片过滤</h2><p>然后接下来是对图片做一些预处理，这里我主要打算做的并不是整个的图片搜索，整个图片的搜索会比较麻烦。我这里只做人脸的搜索。</p>
 <p>这里通过<code>face_recognition</code>这个库，把只有一张人脸的图片保存下来，并提取人脸，然后放到mongodb里面。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> MMFinder/data_preprocess</span><br><span class="line">python3 filter_images.py</span><br></pre></td></tr></table></figure>
-<p>这里过滤出来<code>9477</code>张图片<br><img src="/image_count.png"></p>
+<p>这里过滤出来<code>9477</code>张图片<br><img src="image_count.png"></p>
 <h2 id="特征工程"><a href="#特征工程" class="headerlink" title="特征工程"></a>特征工程</h2><p>接下来是要把图片转换成一个向量了，也就是特征工程。因为我本身也不做图像，所以不是很了解具体方法，大概查了一下，传统的方法有<code>SIFT</code>，现在的话就是<code>神经网络</code>了。</p>
 <p>如果是一般的图，就用ImageNet训练好的提取最后一层的vector作为特征就好了。这里我找到了一个专门做人脸识别的一个预训练模型：<a target="_blank" rel="noopener" href="https://sefiks.com/2018/08/06/deep-face-recognition-with-keras/">https://sefiks.com/2018/08/06/deep-face-recognition-with-keras/</a>，准确度应该会更高一些。</p>
 <p>模型的话就是VGG，最后一层是一个维度为2622的向量。通过处理，这里将所有的人脸转换成一个2622长度的vector，然后保存到mongodb中。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> MMFinder/data_preprocess</span><br><span class="line">python3 feature_extraction.py</span><br></pre></td></tr></table></figure>
-<p><img src="/mongo_show_vector.png"></p>
+<p><img src="mongo_show_vector.png"></p>
 <h2 id="建立索引"><a href="#建立索引" class="headerlink" title="建立索引"></a>建立索引</h2><p>接下来是建立最近邻的索引，也叫dense-index，在文本搜索引擎中，我们一般用的是TF-IDF，属于sparse-index，也就是倒排索引。而dense-index一般是图结构的索引。</p>
 <p>为什么要建索引呢？</p>
 <p>其实就是加快搜索速度，如果正常情况下，我们搜索一张图，其实需要和数据库中的9477个向量都算一遍相似度，才能得到精确的相似度排序。这个时间复杂度是O(N)的，看起来不高，但是每次搜索，都是O(N)，假设有1亿张图片，那不知道要等到哪年。</p>
@@ -185,10 +185,10 @@
 
 <h3 id="查询测试"><a href="#查询测试" class="headerlink" title="查询测试"></a>查询测试</h3><p>接下来可以进入查询测试了，如果是mac用户可以安装<code>imgcat</code>工具，在命令行就能查看图片。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 search_test.py</span><br></pre></td></tr></table></figure>
-<p>效果如下，感觉还是可以的<br><img src="/search_test_result.jpg"></p>
+<p>效果如下，感觉还是可以的<br><img src="search_test_result.jpg"></p>
 <h2 id="前端Demo展示"><a href="#前端Demo展示" class="headerlink" title="前端Demo展示"></a>前端Demo展示</h2><p>最后是把各个模块整合一下，编写上传，搜索接口，形成一个完整的应用的Demo。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> web_demo</span><br><span class="line">python3 main.py</span><br></pre></td></tr></table></figure>
-<p>效果如下：<br><img src="/demo_result.png"></p>
+<p>效果如下：<br><img src="demo_result.png"></p>
 
       </div>
       
@@ -204,7 +204,7 @@
           <div class="post-attach">
             <span class="post-pubtime">
               <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
-              2019-11-17 20:56:35
+              2019-11-17 22:13:37
             </span>
             
           </div>
@@ -259,7 +259,7 @@
     <ul>
       
         <li>
-          <a title="github" target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/nladuo">
             <i class="iconfont icon-github"></i>
           </a>
         </li>
@@ -270,7 +270,14 @@
     
     <div class="footer-more">
       
-        <a target="_blank" rel="noopener" href="http://www.beian.miit.gov.cn/">http://www.beian.miit.gov.cn/  京ICP备17062395号</a>
+        <a target="_blank" rel="noopener" href="https://github.com/nladuo">Copyright © 2023 叁叁</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://beian.miit.gov.cn/">京ICP备17062395号</a>
         
     </div>
   

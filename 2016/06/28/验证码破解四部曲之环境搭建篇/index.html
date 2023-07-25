@@ -4,7 +4,7 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="keywords" content="" />
+  
   <meta name="author" content="叁公子KCN" />
   <meta name="description" content="" />
   
@@ -68,10 +68,10 @@
     <a href="/">
       <!-- 头像取消懒加载，添加no-lazy -->
       
-        <img src="/images/avatar.png" alt="">
+        <img src="/images/avatar.jpg" alt="">
       
     </a>
-    <div class="nickname"><a href="/"></a></div>
+    <div class="nickname"><a href="/">叁叁的博客</a></div>
   </div>
   <div class="navbar">
     <ul>
@@ -143,18 +143,18 @@
       <div class="post-attach">
         <span class="post-pubtime">
           <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
-          2016-06-28 13:08:26
+          2018-10-21 01:04:48
         </span>
         
       </div>
       <div class="markdown-body">
         <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>转眼就要变成大四狗了，大学期间做的比较深入的技术是爬虫，但是爬虫也有很多高级的技术没有涉及，比如说验证码的破解便是其中之一，再加上我对其非常感兴趣，于是乎，开始苦学图像处理、学习机器学习，验证码破解也有了些眉头。  </p>
 <p>以下是我破解的几种验证码。</p>
-<h4 id="1、最容易破解的验证码"><a href="#1、最容易破解的验证码" class="headerlink" title="1、最容易破解的验证码"></a>1、最容易破解的验证码</h4><p><img src="/%E9%AA%8C%E8%AF%81%E7%A0%81%E7%A0%B4%E8%A7%A3%E5%9B%9B%E9%83%A8%E6%9B%B2%E4%B9%8B%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA%E7%AF%87/basic.jpg" alt="basic"><br>直接使用tesseract库识别。</p>
+<h4 id="1、最容易破解的验证码"><a href="#1、最容易破解的验证码" class="headerlink" title="1、最容易破解的验证码"></a>1、最容易破解的验证码</h4><p><img src="%E9%AA%8C%E8%AF%81%E7%A0%81%E7%A0%B4%E8%A7%A3%E5%9B%9B%E9%83%A8%E6%9B%B2%E4%B9%8B%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA%E7%AF%87/basic.jpg" alt="basic"><br>直接使用tesseract库识别。</p>
 <span id="more"></span>
 
-<h4 id="2、download-csdn的验证码"><a href="#2、download-csdn的验证码" class="headerlink" title="2、download.csdn的验证码"></a>2、download.csdn的验证码</h4><p><img src="/%E9%AA%8C%E8%AF%81%E7%A0%81%E7%A0%B4%E8%A7%A3%E5%9B%9B%E9%83%A8%E6%9B%B2%E4%B9%8B%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA%E7%AF%87/csdn.png" alt="CSDN"><br>使用K近邻算法识别。</p>
-<h4 id="3、weibo-cn验证码"><a href="#3、weibo-cn验证码" class="headerlink" title="3、weibo.cn验证码"></a>3、weibo.cn验证码</h4><p><img src="/%E9%AA%8C%E8%AF%81%E7%A0%81%E7%A0%B4%E8%A7%A3%E5%9B%9B%E9%83%A8%E6%9B%B2%E4%B9%8B%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA%E7%AF%87/weibo.cn.png" alt="weibo.cn"><br>使用卷积神经网络训练识别。</p>
+<h4 id="2、download-csdn的验证码"><a href="#2、download-csdn的验证码" class="headerlink" title="2、download.csdn的验证码"></a>2、download.csdn的验证码</h4><p><img src="%E9%AA%8C%E8%AF%81%E7%A0%81%E7%A0%B4%E8%A7%A3%E5%9B%9B%E9%83%A8%E6%9B%B2%E4%B9%8B%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA%E7%AF%87/csdn.png" alt="CSDN"><br>使用K近邻算法识别。</p>
+<h4 id="3、weibo-cn验证码"><a href="#3、weibo-cn验证码" class="headerlink" title="3、weibo.cn验证码"></a>3、weibo.cn验证码</h4><p><img src="%E9%AA%8C%E8%AF%81%E7%A0%81%E7%A0%B4%E8%A7%A3%E5%9B%9B%E9%83%A8%E6%9B%B2%E4%B9%8B%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA%E7%AF%87/weibo.cn.png" alt="weibo.cn"><br>使用卷积神经网络训练识别。</p>
 <h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><p>项目源码：<a target="_blank" rel="noopener" href="https://github.com/nladuo/captcha-break">https://github.com/nladuo/captcha-break</a> (可以帮我点个star(<em>^__^</em>) )<br>开发语言：python(编写爬虫),c++(编写图像处理部分以及机器学习算法)<br>开发环境：ubuntu 14.04<br>依赖库：<br>Python：PIL、BeautifulSoup4、requests<br>C++：boost、opencv2、tesseract-ocr</p>
 <h2 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a>环境搭建</h2><h4 id="安装opencv-2-4-12"><a href="#安装opencv-2-4-12" class="headerlink" title="安装opencv 2.4.12"></a>安装opencv 2.4.12</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install build-essential cmake libgtk2.0-dev pkg-config python-dev python-numpy libavcodec-dev libavformat-dev libswscale-dev</span><br><span class="line">wget https://codeload.github.com/Itseez/opencv/zip/2.4.12</span><br><span class="line">unzip opencv-2.4.12.zip</span><br><span class="line">cd opencv-2.4.12 ; mkdir release  ; cd release  </span><br><span class="line">cmake -D CMAKE_BUILD_TYPE=RELEASE -D CMAKE_INSTALL_PREFIX=/usr/local ..  </span><br><span class="line">make -j8</span><br><span class="line">sudo make install</span><br></pre></td></tr></table></figure>
 <h4 id="安装tesseract-ocr"><a href="#安装tesseract-ocr" class="headerlink" title="安装tesseract-ocr"></a>安装tesseract-ocr</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install tesseract-ocr tesseract-ocr-dev</span><br></pre></td></tr></table></figure>
@@ -177,7 +177,7 @@
           <div class="post-attach">
             <span class="post-pubtime">
               <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
-              2016-06-28 13:08:26
+              2018-10-21 01:04:48
             </span>
             
           </div>
@@ -232,7 +232,7 @@
     <ul>
       
         <li>
-          <a title="github" target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/nladuo">
             <i class="iconfont icon-github"></i>
           </a>
         </li>
@@ -243,7 +243,14 @@
     
     <div class="footer-more">
       
-        <a target="_blank" rel="noopener" href="http://www.beian.miit.gov.cn/">http://www.beian.miit.gov.cn/  京ICP备17062395号</a>
+        <a target="_blank" rel="noopener" href="https://github.com/nladuo">Copyright © 2023 叁叁</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://beian.miit.gov.cn/">京ICP备17062395号</a>
         
     </div>
   

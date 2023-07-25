@@ -4,7 +4,7 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="keywords" content="" />
+  
   <meta name="author" content="叁公子KCN" />
   <meta name="description" content="" />
   
@@ -68,10 +68,10 @@
     <a href="/">
       <!-- 头像取消懒加载，添加no-lazy -->
       
-        <img src="/images/avatar.png" alt="">
+        <img src="/images/avatar.jpg" alt="">
       
     </a>
-    <div class="nickname"><a href="/"></a></div>
+    <div class="nickname"><a href="/">叁叁的博客</a></div>
   </div>
   <div class="navbar">
     <ul>
@@ -143,50 +143,50 @@
       <div class="post-attach">
         <span class="post-pubtime">
           <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
-          2018-12-08 21:53:36
+          2018-12-08 23:06:57
         </span>
         
       </div>
       <div class="markdown-body">
         <h2 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h2><p>本章将要介绍一下如何识别简单的验证码。会涉及到一些图像的概念以及机器学习的知识。</p>
-<p>我们本次识别的验证码来自csdn，长相如下：<br><img src="/csdn.png"></p>
+<p>我们本次识别的验证码来自csdn，长相如下：<br><img src="csdn.png"></p>
 <p>在学习之前，我们先安装本章需要的三个库：图像库Pillow、机器学习库Scikit-Learn、科学计算库Numpy。通过pip命令就可以进行安装。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install pillow scikit-learn numpy</span><br></pre></td></tr></table></figure>
 <span id="more"></span>
 <h2 id="源码介绍"><a href="#源码介绍" class="headerlink" title="源码介绍"></a>源码介绍</h2><p>本章节的案例稍微复杂，见：<a target="_blank" rel="noopener" href="https://github.com/nladuo/USTBCrawlers/tree/master/lesson8">USTBCrawlers&#x2F;lesson8</a></p>
-<p><img src="/code_lesson8.png"></p>
+<p><img src="code_lesson8.png"></p>
 <p>这里主要有三个部分：下载器、分割器、与识别器。我们可以先把代码clone下来，然后进入到lesson8这个目录下。</p>
 <h2 id="图像基本概念"><a href="#图像基本概念" class="headerlink" title="图像基本概念"></a>图像基本概念</h2><p>下面我们先来对图像有个基本的介绍。图像是由一个一个像素点构成的，其内部结构是一个二维的矩阵，或者理解成一个二维数组。</p>
-<p>例如，一个 M x N 的图像，可以表示成以下的格式:<br><img src="/image_matrix.png"><br>图像的坐标和我们平时学的直角坐标并不相同，直角坐标的原点是在左下角；而图像的坐标 起点是在左上角，如下图所示。</p>
-<p><img src="/image_coordinate.png"></p>
+<p>例如，一个 M x N 的图像，可以表示成以下的格式:<br><img src="image_matrix.png"><br>图像的坐标和我们平时学的直角坐标并不相同，直角坐标的原点是在左下角；而图像的坐标 起点是在左上角，如下图所示。</p>
+<p><img src="image_coordinate.png"></p>
 <p>在python中，我们可以使用PIL（Pillow）对图像进行操作。如下，我们打开了我们的验证码，并调用<code>convert(&quot;L&quot;)</code>方法把图片转为灰度图像。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> PIL <span class="keyword">import</span> Image</span><br><span class="line"></span><br><span class="line">im = Image.<span class="built_in">open</span>(<span class="string">&quot;csdn.png&quot;</span>).convert(<span class="string">&quot;L&quot;</span>)</span><br><span class="line">im.show()  <span class="comment"># 显示图像</span></span><br></pre></td></tr></table></figure>
-<p><img src="/read_img.png"></p>
-<p>然而我们真正操作并不是图像对象，而是一个矩阵，或者说是二维数组，我们可以把图像转成numpy数组。<br><img src="/pil_numpy.png"></p>
+<p><img src="read_img.png"></p>
+<p>然而我们真正操作并不是图像对象，而是一个矩阵，或者说是二维数组，我们可以把图像转成numpy数组。<br><img src="pil_numpy.png"></p>
 <p>可以看到我们的验证码是20*48的。</p>
 <h2 id="图像直方图"><a href="#图像直方图" class="headerlink" title="图像直方图"></a>图像直方图</h2><p>图像是由一个个的像素构成的，像素有灰度值，从0-255，一共256个灰度级。直方图的作用是观察每个灰度级所占像素的多少。</p>
-<p>可以调用<code>Image.histogram()</code>获取Image对象的直方图。<br><img src="/img_histogram.png"></p>
+<p>可以调用<code>Image.histogram()</code>获取Image对象的直方图。<br><img src="img_histogram.png"></p>
 <p>比如说对于我们的验证码图片，一共有20*48&#x3D;960个像素点，其中灰度级为94的像素有754个，而灰度级为255的有129个。</p>
-<p>再次观察一下我们灰度化的验证码，可以看到验证码的字母是白色的，也就是灰度级为255。周围的背景是灰色的，灰度级为94。<br><img src="/vcode1.png"></p>
+<p>再次观察一下我们灰度化的验证码，可以看到验证码的字母是白色的，也就是灰度级为255。周围的背景是灰色的，灰度级为94。<br><img src="vcode1.png"></p>
 <h2 id="图像二值化"><a href="#图像二值化" class="headerlink" title="图像二值化"></a>图像二值化</h2><p>在处理验证码的时候，背景很多时候并不是同一个灰度级的，为了减少背景对数据的影响。一般都会讲验证码进行二值化。</p>
 <p>所谓二值化，其实就是把灰度图像变成只由纯黑、或纯白两种像素组成的图像。</p>
-<p>方法很简单，我们可以设定一个阈值，灰度大于100的像素都变成纯白(255)，而灰度小于100的像素都变成纯黑(0)。<br><img src="/image_binary.png"></p>
+<p>方法很简单，我们可以设定一个阈值，灰度大于100的像素都变成纯白(255)，而灰度小于100的像素都变成纯黑(0)。<br><img src="image_binary.png"></p>
 <h2 id="验证码字符分割"><a href="#验证码字符分割" class="headerlink" title="验证码字符分割"></a>验证码字符分割</h2><p>因为验证码包含四个数字，所以需要把每个字母分割开。笔者为读者准备的验证码是很好分割的类型，只需要对指定区域进行筛选即可。</p>
 <p>这里的图片数字的宽度都是8，起点分别位于5、14、23、32。分割代码如下：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">split_and_save</span>(<span class="params">path</span>):</span><br><span class="line">    path = <span class="string">&quot;../downloader/captchas/&quot;</span> + path</span><br><span class="line">    pix = np.array(Image.<span class="built_in">open</span>(path).convert(<span class="string">&quot;L&quot;</span>))</span><br><span class="line">    <span class="comment"># threshold image</span></span><br><span class="line">    pix = (pix &gt; <span class="number">100</span>) * <span class="number">255</span></span><br><span class="line"></span><br><span class="line">    col_ranges = [</span><br><span class="line">        [<span class="number">5</span>, <span class="number">5</span> + <span class="number">8</span>],</span><br><span class="line">        [<span class="number">14</span>, <span class="number">14</span> + <span class="number">8</span>],</span><br><span class="line">        [<span class="number">23</span>, <span class="number">23</span> + <span class="number">8</span>],</span><br><span class="line">        [<span class="number">32</span>, <span class="number">32</span> + <span class="number">8</span>]</span><br><span class="line">    ]</span><br><span class="line">    <span class="comment"># split and save</span></span><br><span class="line">    <span class="keyword">for</span> col_range <span class="keyword">in</span> col_ranges:</span><br><span class="line">        letter = pix[:, col_range[<span class="number">0</span>]: col_range[<span class="number">1</span>]]</span><br><span class="line">        im = Image.fromarray(np.uint8(letter))</span><br><span class="line">        save_path = <span class="string">&quot;./letters/&quot;</span> + <span class="built_in">str</span>(uuid.uuid4()) + <span class="string">&quot;.png&quot;</span></span><br><span class="line">        im.save(save_path)</span><br></pre></td></tr></table></figure>
 <p>我们每个验证码字符的大小为：20*8。</p>
-<h3 id="创建数据集"><a href="#创建数据集" class="headerlink" title="创建数据集"></a>创建数据集</h3><p>对验证码分割后，我们就会得到一堆字母的图片了。<br><img src="/split_letters.png"></p>
-<p>但是这些图片都没有标注，下面我们使用的机器学习算法是数据驱动的，所以需要一些已经标注好的验证码数据。我这里标注的方法比较简单，因为毕竟只有0-9十种字母，我就每种数据标注6个。直接通过文件名称进行标识。<br><img src="/dataset.png"></p>
+<h3 id="创建数据集"><a href="#创建数据集" class="headerlink" title="创建数据集"></a>创建数据集</h3><p>对验证码分割后，我们就会得到一堆字母的图片了。<br><img src="split_letters.png"></p>
+<p>但是这些图片都没有标注，下面我们使用的机器学习算法是数据驱动的，所以需要一些已经标注好的验证码数据。我这里标注的方法比较简单，因为毕竟只有0-9十种字母，我就每种数据标注6个。直接通过文件名称进行标识。<br><img src="dataset.png"></p>
 <h2 id="机器学习之KNN算法"><a href="#机器学习之KNN算法" class="headerlink" title="机器学习之KNN算法"></a>机器学习之KNN算法</h2><h3 id="算法描述"><a href="#算法描述" class="headerlink" title="算法描述"></a>算法描述</h3><p>K近邻算法的定义十分简单，在百度百科上有这样的解释：如果一个样本在特征空间中的k个最相似(即特征空间中最邻近)的样本中的大多数属于某一个类别，则该样本也属于这个类别。</p>
 <p>也就是说，需要找到要识别的字母在训练样本中K个最近的字母，然后找出这K个字母中最多的是某个类的？要识别的图片也就是该类的。</p>
 <h3 id="算法举例"><a href="#算法举例" class="headerlink" title="算法举例"></a>算法举例</h3><p>上面那么描述可能稍微有点儿晦涩，那我们举个例子。</p>
 <p>这里以电影分类作为例子，电影题材可分为爱情片，动作片等。这里假定将电影分为爱情片和动作片两类，直观感受的话，如果一部电影中接吻镜头很多，打斗镜头较少，显然是属于爱情片，反之为动作片。</p>
-<p>这里我们的数据有两个特征：一个是接吻镜头的数目，一个是打斗镜头的数目。下面我们有一组已知的数据。<br><img src="/knn.png"></p>
+<p>这里我们的数据有两个特征：一个是接吻镜头的数目，一个是打斗镜头的数目。下面我们有一组已知的数据。<br><img src="knn.png"></p>
 <p>我们这里的目标是利用已知的四个电影数据，预测未知电影的类型。</p>
-<p>我们把爱情电影定义为红色的叉子，动作电影定义为绿色的圆圈，未知电影为问号。这里可以画个图直观感受一下。<br><img src="/knn2.png"></p>
+<p>我们把爱情电影定义为红色的叉子，动作电影定义为绿色的圆圈，未知电影为问号。这里可以画个图直观感受一下。<br><img src="knn2.png"></p>
 <p>假设我们K取3的话，那么从图中可以很清晰的看到，离未知电影最近的三个电影分别是：爱情电影、爱情电影、动作电影。爱情电影占比大，所以我们未知的电影是爱情片。</p>
 <h3 id="scikit-learn中使用KNN"><a href="#scikit-learn中使用KNN" class="headerlink" title="scikit-learn中使用KNN"></a>scikit-learn中使用KNN</h3><p>我们将使用scikit-learn来实现KNN，所以不需要关注算法的实现（虽然实现也很简单），只要有数据和标签就好了。我们来看看怎么实现上面的预测电影类型的功能。</p>
-<p><img src="/knn3.png"></p>
+<p><img src="knn3.png"></p>
 <p>这里X是我们已知类型的四部电影，y是四部电影的标签。0代表爱情电影，1代表动作电影。然后调用scikit-learn中的<code>KNeighborsClassifier</code>先通过<code>fit</code>拟合数据，再调用<code>predict</code>预测就好了。</p>
 <p>可以看到我们最后预测出未知电影的标签为0，也就是爱情电影，和想法一致。</p>
 <h2 id="验证码识别"><a href="#验证码识别" class="headerlink" title="验证码识别"></a>验证码识别</h2><p>了解了以上知识后，我们可以编写验证码识别脚本了。</p>
@@ -198,7 +198,7 @@
 
 <p>最后先分割图片，再使用拟合好数据的knn进行预测。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">split_letters</span>(<span class="params">path</span>):</span><br><span class="line">    pix = np.array(Image.<span class="built_in">open</span>(path).convert(<span class="string">&quot;L&quot;</span>))</span><br><span class="line">    <span class="comment"># threshold image</span></span><br><span class="line">    pix = (pix &gt; <span class="number">100</span>) * <span class="number">255</span></span><br><span class="line"></span><br><span class="line">    col_ranges = [</span><br><span class="line">        [<span class="number">5</span>, <span class="number">5</span> + <span class="number">8</span>],</span><br><span class="line">        [<span class="number">14</span>, <span class="number">14</span> + <span class="number">8</span>],</span><br><span class="line">        [<span class="number">23</span>, <span class="number">23</span> + <span class="number">8</span>],</span><br><span class="line">        [<span class="number">32</span>, <span class="number">32</span> + <span class="number">8</span>]</span><br><span class="line">    ]</span><br><span class="line">    letters = []</span><br><span class="line">    <span class="keyword">for</span> col_range <span class="keyword">in</span> col_ranges:</span><br><span class="line">        letter = pix[:, col_range[<span class="number">0</span>]: col_range[<span class="number">1</span>]]</span><br><span class="line">        letters.append(letter.reshape(<span class="number">8</span>*<span class="number">20</span>))</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> letters</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">len</span>(sys.argv) != <span class="number">2</span>:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;Usage: python recognizer.py &lt;image_filename&gt;&quot;</span>)</span><br><span class="line"></span><br><span class="line">    letters = split_letters(sys.argv[<span class="number">1</span>])</span><br><span class="line">    <span class="built_in">print</span>(knn.predict(letters))</span><br></pre></td></tr></table></figure>
-<p>我们运行一下，可以看到以下识别的结果，都识别出来了。<br><img src="/result.png"></p>
+<p>我们运行一下，可以看到以下识别的结果，都识别出来了。<br><img src="result.png"></p>
 <h2 id="内容补充"><a href="#内容补充" class="headerlink" title="内容补充"></a>内容补充</h2><p>以上的验证码识别只是一个基本的操作流程。现在只要有足够多的数据，利用深度学习基本上所有的验证码都能识别出来。</p>
 <p>深度学习由于需要读者有数学基础以及相关的背景知识，这里笔者就提供一些我自己写过的验证码相关的资料，如果感兴趣可以自己去学习。</p>
 <p>如果读者感兴趣可以进行深入学习。<br><strong>笔者的验证码相关的一个项目：</strong></p>
@@ -226,7 +226,7 @@
           <div class="post-attach">
             <span class="post-pubtime">
               <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
-              2018-12-08 21:53:36
+              2018-12-08 23:06:57
             </span>
             
           </div>
@@ -281,7 +281,7 @@
     <ul>
       
         <li>
-          <a title="github" target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/nladuo">
             <i class="iconfont icon-github"></i>
           </a>
         </li>
@@ -292,7 +292,14 @@
     
     <div class="footer-more">
       
-        <a target="_blank" rel="noopener" href="http://www.beian.miit.gov.cn/">http://www.beian.miit.gov.cn/  京ICP备17062395号</a>
+        <a target="_blank" rel="noopener" href="https://github.com/nladuo">Copyright © 2023 叁叁</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://beian.miit.gov.cn/">京ICP备17062395号</a>
         
     </div>
   

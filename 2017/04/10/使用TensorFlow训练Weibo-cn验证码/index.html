@@ -4,7 +4,7 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="keywords" content="" />
+  
   <meta name="author" content="叁公子KCN" />
   <meta name="description" content="" />
   
@@ -68,10 +68,10 @@
     <a href="/">
       <!-- 头像取消懒加载，添加no-lazy -->
       
-        <img src="/images/avatar.png" alt="">
+        <img src="/images/avatar.jpg" alt="">
       
     </a>
-    <div class="nickname"><a href="/"></a></div>
+    <div class="nickname"><a href="/">叁叁的博客</a></div>
   </div>
   <div class="navbar">
     <ul>
@@ -143,7 +143,7 @@
       <div class="post-attach">
         <span class="post-pubtime">
           <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
-          2017-04-10 12:34:41
+          2018-10-21 01:04:48
         </span>
         
       </div>
@@ -158,8 +158,8 @@
 <h2 id="加载数据集"><a href="#加载数据集" class="headerlink" title="加载数据集"></a>加载数据集</h2><p>数据集下载地址：<a target="_blank" rel="noopener" href="https://github.com/nladuo/captcha-break/raw/master/weibo.cn/trainer/training_set.zip">training_set.zip</a>  </p>
 <span id="more"></span>
 
-<p>解压过后如下图：<br><img src="/%E4%BD%BF%E7%94%A8TensorFlow%E8%AE%AD%E7%BB%83Weibo-cn%E9%AA%8C%E8%AF%81%E7%A0%81/dataset.png" alt="dataset"></p>
-<p>我把同一类的图片放到了一个文件夹里，文件夹的名字也就是图片的label，打开文件夹后可以看到字符的图片信息。<br><img src="/%E4%BD%BF%E7%94%A8TensorFlow%E8%AE%AD%E7%BB%83Weibo-cn%E9%AA%8C%E8%AF%81%E7%A0%81/dataset_detail.png" alt="dataset_detail"></p>
+<p>解压过后如下图：<br><img src="%E4%BD%BF%E7%94%A8TensorFlow%E8%AE%AD%E7%BB%83Weibo-cn%E9%AA%8C%E8%AF%81%E7%A0%81/dataset.png" alt="dataset"></p>
+<p>我把同一类的图片放到了一个文件夹里，文件夹的名字也就是图片的label，打开文件夹后可以看到字符的图片信息。<br><img src="%E4%BD%BF%E7%94%A8TensorFlow%E8%AE%AD%E7%BB%83Weibo-cn%E9%AA%8C%E8%AF%81%E7%A0%81/dataset_detail.png" alt="dataset_detail"></p>
 <p>下面，我们把数据加载到一个pickle文件里面，它需要有train_dataset、train_labels、test_dataset、test_labels四个变量代表训练集和测试集的数据和标签。</p>
 <p>此外，还需要有个label_map，用来把训练的标签和实际的标签对应，比如说3对应字母M，4对应字母N。</p>
 <p>此部分的代码见：<a target="_blank" rel="noopener" href="https://github.com/nladuo/captcha-break/blob/master/weibo.cn/tensorflow-impl/load_models.py">load_models.py</a>。注：很多的代码参考自udacity的deeplearning课程。</p>
@@ -172,15 +172,15 @@
 <p>然后使用scikit-learn的函数，把训练集和测试集分开。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> train_test_split</span><br><span class="line">train_dataset, test_dataset, train_labels, test_labels = train_test_split(dataset, labelset)</span><br></pre></td></tr></table></figure>
 
-<p>在TensorFlow官网给的例子中，会把label进行<code>One-Hot Encoding</code>，并把28*28的图片转换成了一维向量(784)。如下图，查看官网例子的模型。<br><img src="/%E4%BD%BF%E7%94%A8TensorFlow%E8%AE%AD%E7%BB%83Weibo-cn%E9%AA%8C%E8%AF%81%E7%A0%81/minist_data.png" alt="minist_data"></p>
+<p>在TensorFlow官网给的例子中，会把label进行<code>One-Hot Encoding</code>，并把28*28的图片转换成了一维向量(784)。如下图，查看官网例子的模型。<br><img src="%E4%BD%BF%E7%94%A8TensorFlow%E8%AE%AD%E7%BB%83Weibo-cn%E9%AA%8C%E8%AF%81%E7%A0%81/minist_data.png" alt="minist_data"></p>
 <p>我也把数据转换了一下，把32*32的图片转换成一维向量(1024)，并对标签进行One-Hot Encoding。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">reformat</span>(<span class="params">dataset, labels, image_size, num_labels</span>):</span><br><span class="line">    dataset = dataset.reshape((-<span class="number">1</span>, image_size * image_size)).astype(np.float32)</span><br><span class="line">    <span class="comment"># Map 1 to [0.0, 1.0, 0.0 ...], 2 to [0.0, 0.0, 1.0 ...]</span></span><br><span class="line">    labels = (np.arange(num_labels) == labels[:, <span class="literal">None</span>]).astype(np.float32)</span><br><span class="line">    <span class="keyword">return</span> dataset, labels</span><br><span class="line"></span><br><span class="line">train_dataset, train_labels = reformat(train_dataset, train_labels, <span class="number">32</span>, <span class="built_in">len</span>(label_map))</span><br><span class="line">test_dataset, test_labels = reformat(test_dataset, test_labels, <span class="number">32</span>, <span class="built_in">len</span>(label_map))</span><br><span class="line"><span class="built_in">print</span> <span class="string">&quot;train_dataset:&quot;</span>, train_dataset.shape</span><br><span class="line"><span class="built_in">print</span> <span class="string">&quot;train_labels:&quot;</span>, train_labels.shape</span><br><span class="line"><span class="built_in">print</span> <span class="string">&quot;test_dataset:&quot;</span>, test_dataset.shape</span><br><span class="line"><span class="built_in">print</span> <span class="string">&quot;test_labels:&quot;</span>, test_labels.shape</span><br></pre></td></tr></table></figure>
-<p>转换后，格式就和minist一样了。<br><img src="/%E4%BD%BF%E7%94%A8TensorFlow%E8%AE%AD%E7%BB%83Weibo-cn%E9%AA%8C%E8%AF%81%E7%A0%81/reformat.png" alt="reformat"></p>
+<p>转换后，格式就和minist一样了。<br><img src="%E4%BD%BF%E7%94%A8TensorFlow%E8%AE%AD%E7%BB%83Weibo-cn%E9%AA%8C%E8%AF%81%E7%A0%81/reformat.png" alt="reformat"></p>
 <p>最后，把数据保存到save.pickle里面。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">save = &#123;</span><br><span class="line">    <span class="string">&#x27;train_dataset&#x27;</span>: train_dataset,</span><br><span class="line">    <span class="string">&#x27;train_labels&#x27;</span>: train_labels,</span><br><span class="line">    <span class="string">&#x27;test_dataset&#x27;</span>: test_dataset,</span><br><span class="line">    <span class="string">&#x27;test_labels&#x27;</span>: test_labels,</span><br><span class="line">    <span class="string">&#x27;label_map&#x27;</span>: label_map</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&quot;save.pickle&quot;</span>, <span class="string">&#x27;wb&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">    pickle.dump(save, f)</span><br></pre></td></tr></table></figure>
 <h2 id="验证数据集加载是否正确"><a href="#验证数据集加载是否正确" class="headerlink" title="验证数据集加载是否正确"></a>验证数据集加载是否正确</h2><p>加载完数据后，需要验证一下数据是否正确。我选择的方法很简单，就是把trainset的第1个(或者第2个、第n个)图片打开，看看它的标签和看到的能不能对上。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> cPickle <span class="keyword">as</span> pickle</span><br><span class="line"><span class="keyword">from</span> PIL <span class="keyword">import</span> Image</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">check_dataset</span>(<span class="params">dataset, labels, label_map, index</span>):</span><br><span class="line">    data = np.uint8(dataset[index]).reshape((<span class="number">32</span>, <span class="number">32</span>))</span><br><span class="line">    i = np.argwhere(labels[index] == <span class="number">1</span>)[<span class="number">0</span>][<span class="number">0</span>]</span><br><span class="line">    im = Image.fromarray(data)</span><br><span class="line">    im.show()</span><br><span class="line">    <span class="built_in">print</span> <span class="string">&quot;label:&quot;</span>, label_map[i]</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    <span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&quot;save.pickle&quot;</span>, <span class="string">&#x27;rb&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">        save = pickle.load(f)</span><br><span class="line">        train_dataset = save[<span class="string">&#x27;train_dataset&#x27;</span>]</span><br><span class="line">        train_labels = save[<span class="string">&#x27;train_labels&#x27;</span>]</span><br><span class="line">        test_dataset = save[<span class="string">&#x27;test_dataset&#x27;</span>]</span><br><span class="line">        test_labels = save[<span class="string">&#x27;test_labels&#x27;</span>]</span><br><span class="line">        label_map = save[<span class="string">&#x27;label_map&#x27;</span>]</span><br><span class="line"></span><br><span class="line">	<span class="comment"># check if the image is corresponding to it&#x27;s label</span></span><br><span class="line">	check_dataset(train_dataset, train_labels, label_map, <span class="number">0</span>)</span><br></pre></td></tr></table></figure>
-<p>运行后，可以看到第一张图片是Y，标签也是正确的。<br><img src="/%E4%BD%BF%E7%94%A8TensorFlow%E8%AE%AD%E7%BB%83Weibo-cn%E9%AA%8C%E8%AF%81%E7%A0%81/check_dataset.png" alt="check_dataset"></p>
+<p>运行后，可以看到第一张图片是Y，标签也是正确的。<br><img src="%E4%BD%BF%E7%94%A8TensorFlow%E8%AE%AD%E7%BB%83Weibo-cn%E9%AA%8C%E8%AF%81%E7%A0%81/check_dataset.png" alt="check_dataset"></p>
 <h2 id="训练"><a href="#训练" class="headerlink" title="训练"></a>训练</h2><p>数据加载好了之后，就可以开始训练了，训练的网络就使用TensorFlow官网在<a target="_blank" rel="noopener" href="https://www.tensorflow.org/get_started/mnist/pros">Deep MNIST for Experts</a>里提供的就好了。</p>
 <p>此部分的代码见：<a target="_blank" rel="noopener" href="https://github.com/nladuo/captcha-break/blob/master/weibo.cn/tensorflow-impl/train.py">train.py</a>。</p>
 <p>先加载一下模型:</p>
@@ -191,8 +191,8 @@
 <p>主要改动就是输入层把28*28改成了image_size*image_size（32*32），然后第三层的全连接网络把7*7改成了image_size&#x2F;4*image_size&#x2F;4（8*8），以及把10（手写字符一共10类）改成了num_labels。</p>
 <p>然后训练，我这里把batch_size改成了128，训练批次改少了。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">batch_size = <span class="number">128</span></span><br><span class="line"><span class="keyword">with</span> tf.Session(graph=graph) <span class="keyword">as</span> session:</span><br><span class="line">    tf.global_variables_initializer().run()</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;Initialized&quot;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> step <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">2001</span>):</span><br><span class="line">        offset = (step * batch_size) % (train_labels.shape[<span class="number">0</span>] - batch_size)</span><br><span class="line">        <span class="comment"># Generate a minibatch.</span></span><br><span class="line">        batch_data = train_dataset[offset:(offset + batch_size), :]</span><br><span class="line">        batch_labels = train_labels[offset:(offset + batch_size), :]</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> step % <span class="number">50</span> == <span class="number">0</span>:</span><br><span class="line">            train_accuracy = accuracy.<span class="built_in">eval</span>(feed_dict=&#123;</span><br><span class="line">                x: batch_data, y_: batch_labels, keep_prob: <span class="number">1.0</span>&#125;)</span><br><span class="line">            test_accuracy = accuracy.<span class="built_in">eval</span>(feed_dict=&#123;</span><br><span class="line">                x: test_dataset, y_: test_labels, keep_prob: <span class="number">1.0</span>&#125;)</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&quot;Step %d, Training accuracy: %g, Test accuracy: %g&quot;</span> % (step, train_accuracy, test_accuracy))</span><br><span class="line"></span><br><span class="line">        train_step.run(feed_dict=&#123;x: batch_data, y_: batch_labels, keep_prob: <span class="number">0.5</span>&#125;)</span><br><span class="line"></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;Test accuracy: %g&quot;</span> % accuracy.<span class="built_in">eval</span>(feed_dict=&#123;</span><br><span class="line">        x: test_dataset, y_: test_labels, keep_prob: <span class="number">1.0</span>&#125;))</span><br></pre></td></tr></table></figure>
-<p>运行，可以看到识别率在不断的上升。<br><img src="/%E4%BD%BF%E7%94%A8TensorFlow%E8%AE%AD%E7%BB%83Weibo-cn%E9%AA%8C%E8%AF%81%E7%A0%81/train.png" alt="train"></p>
-<p>最后，有了接近98%的识别率，只有4000个训练数据，感觉不错了。<br><img src="/%E4%BD%BF%E7%94%A8TensorFlow%E8%AE%AD%E7%BB%83Weibo-cn%E9%AA%8C%E8%AF%81%E7%A0%81/train_last.png" alt="train_last"></p>
+<p>运行，可以看到识别率在不断的上升。<br><img src="%E4%BD%BF%E7%94%A8TensorFlow%E8%AE%AD%E7%BB%83Weibo-cn%E9%AA%8C%E8%AF%81%E7%A0%81/train.png" alt="train"></p>
+<p>最后，有了接近98%的识别率，只有4000个训练数据，感觉不错了。<br><img src="%E4%BD%BF%E7%94%A8TensorFlow%E8%AE%AD%E7%BB%83Weibo-cn%E9%AA%8C%E8%AF%81%E7%A0%81/train_last.png" alt="train_last"></p>
 
       </div>
       
@@ -208,7 +208,7 @@
           <div class="post-attach">
             <span class="post-pubtime">
               <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
-              2017-04-10 12:34:41
+              2018-10-21 01:04:48
             </span>
             
           </div>
@@ -263,7 +263,7 @@
     <ul>
       
         <li>
-          <a title="github" target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/nladuo">
             <i class="iconfont icon-github"></i>
           </a>
         </li>
@@ -274,7 +274,14 @@
     
     <div class="footer-more">
       
-        <a target="_blank" rel="noopener" href="http://www.beian.miit.gov.cn/">http://www.beian.miit.gov.cn/  京ICP备17062395号</a>
+        <a target="_blank" rel="noopener" href="https://github.com/nladuo">Copyright © 2023 叁叁</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://beian.miit.gov.cn/">京ICP备17062395号</a>
         
     </div>
   

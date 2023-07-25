@@ -4,7 +4,7 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="keywords" content="" />
+  
   <meta name="author" content="叁公子KCN" />
   <meta name="description" content="" />
   
@@ -68,10 +68,10 @@
     <a href="/">
       <!-- 头像取消懒加载，添加no-lazy -->
       
-        <img src="/images/avatar.png" alt="">
+        <img src="/images/avatar.jpg" alt="">
       
     </a>
-    <div class="nickname"><a href="/"></a></div>
+    <div class="nickname"><a href="/">叁叁的博客</a></div>
   </div>
   <div class="navbar">
     <ul>
@@ -143,17 +143,17 @@
       <div class="post-attach">
         <span class="post-pubtime">
           <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
-          2018-01-05 11:10:20
+          2018-10-21 01:04:48
         </span>
         
       </div>
       <div class="markdown-body">
-        <h2 id="任务需求"><a href="#任务需求" class="headerlink" title="任务需求"></a>任务需求</h2><p>信息检索导论课的大作业要求完成一个搜索引擎，以下是搜索引擎的需求。<br><img src="/command.png"></p>
+        <h2 id="任务需求"><a href="#任务需求" class="headerlink" title="任务需求"></a>任务需求</h2><p>信息检索导论课的大作业要求完成一个搜索引擎，以下是搜索引擎的需求。<br><img src="command.png"></p>
 <span id="more"></span>
-<h2 id="爬虫系统"><a href="#爬虫系统" class="headerlink" title="爬虫系统"></a>爬虫系统</h2><h4 id="表"><a href="#表" class="headerlink" title="表"></a>表</h4><p>我主要是爬了网易和新浪两大网站，建了两张表：新闻和新闻评论。<br><img src="/table.png"></p>
-<h4 id="news表"><a href="#news表" class="headerlink" title="news表"></a>news表</h4><p>主要是news的url、title(标题)、content(文章内容)、时间<br><img src="/news.png"></p>
-<h4 id="comments表"><a href="#comments表" class="headerlink" title="comments表"></a>comments表</h4><p>新闻和新闻评论是一对多的关系，新闻评论通过新闻的url和新闻表关联。<br><img src="/comments.png"></p>
-<h2 id="索引以外的功能点"><a href="#索引以外的功能点" class="headerlink" title="索引以外的功能点"></a>索引以外的功能点</h2><h4 id="查询自动补齐"><a href="#查询自动补齐" class="headerlink" title="查询自动补齐"></a>查询自动补齐</h4><p>主要是根据历史搜索先定义好，这里使用了百度的API。<br><img src="/query_append.png"></p>
+<h2 id="爬虫系统"><a href="#爬虫系统" class="headerlink" title="爬虫系统"></a>爬虫系统</h2><h4 id="表"><a href="#表" class="headerlink" title="表"></a>表</h4><p>我主要是爬了网易和新浪两大网站，建了两张表：新闻和新闻评论。<br><img src="table.png"></p>
+<h4 id="news表"><a href="#news表" class="headerlink" title="news表"></a>news表</h4><p>主要是news的url、title(标题)、content(文章内容)、时间<br><img src="news.png"></p>
+<h4 id="comments表"><a href="#comments表" class="headerlink" title="comments表"></a>comments表</h4><p>新闻和新闻评论是一对多的关系，新闻评论通过新闻的url和新闻表关联。<br><img src="comments.png"></p>
+<h2 id="索引以外的功能点"><a href="#索引以外的功能点" class="headerlink" title="索引以外的功能点"></a>索引以外的功能点</h2><h4 id="查询自动补齐"><a href="#查询自动补齐" class="headerlink" title="查询自动补齐"></a>查询自动补齐</h4><p>主要是根据历史搜索先定义好，这里使用了百度的API。<br><img src="query_append.png"></p>
 <h4 id="评论褒贬分析"><a href="#评论褒贬分析" class="headerlink" title="评论褒贬分析"></a>评论褒贬分析</h4><ul>
 <li>方案1：使用朴素贝叶斯分类器。</li>
 <li>方案2：使用一个三层的神经网络，①Embedding层②LSTM③全连接的sigmoid层。</li>
@@ -175,7 +175,7 @@
 
 <h4 id="使用elasticsearch-analysis-ik"><a href="#使用elasticsearch-analysis-ik" class="headerlink" title="使用elasticsearch-analysis-ik"></a>使用elasticsearch-analysis-ik</h4><p>ElasticSearch自带的中文分词做的不好，所以使用到ik的一个插件。使用以下命令安装即可。</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">elasticsearch-plugin install https://github.com/medcl/elasticsearch-analysis-ik/releases/download/v6.0.0/elasticsearch-analysis-ik-6.0.0.zip</span><br></pre></td></tr></table></figure>
-<h4 id="开启ElasticSearch服务"><a href="#开启ElasticSearch服务" class="headerlink" title="开启ElasticSearch服务"></a>开启ElasticSearch服务</h4><p>在命令行中输入<code>elasticsearch</code>即可开启服务。<br><img src="/elastic_cli.png"></p>
+<h4 id="开启ElasticSearch服务"><a href="#开启ElasticSearch服务" class="headerlink" title="开启ElasticSearch服务"></a>开启ElasticSearch服务</h4><p>在命令行中输入<code>elasticsearch</code>即可开启服务。<br><img src="elastic_cli.png"></p>
 <h2 id="索引"><a href="#索引" class="headerlink" title="索引"></a>索引</h2><h4 id="索引建立"><a href="#索引建立" class="headerlink" title="索引建立"></a>索引建立</h4><p>对title和content字段建立分词索引。</p>
 <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> elasticsearch <span class="keyword">import</span> Elasticsearch</span><br><span class="line"><span class="keyword">from</span> db_model <span class="keyword">import</span> DBSession, News, Comment</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"></span><br><span class="line">es = Elasticsearch()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 初始化索引的Mappings设置，三个字段，新闻标题，新闻内容，创建时间。</span></span><br><span class="line">index_mappings = &#123;</span><br><span class="line">  <span class="string">&quot;mappings&quot;</span>: &#123;</span><br><span class="line">    <span class="string">&quot;news&quot;</span>: &#123;</span><br><span class="line">      <span class="string">&quot;properties&quot;</span>: &#123;</span><br><span class="line">        <span class="string">&quot;title&quot;</span>:    &#123;</span><br><span class="line">            <span class="string">&quot;type&quot;</span>: <span class="string">&quot;text&quot;</span>,</span><br><span class="line">            <span class="string">&quot;analyzer&quot;</span>: <span class="string">&quot;ik_max_word&quot;</span>,</span><br><span class="line">            <span class="string">&quot;search_analyzer&quot;</span>: <span class="string">&quot;ik_max_word&quot;</span></span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="string">&quot;content&quot;</span>:     &#123;</span><br><span class="line">            <span class="string">&quot;type&quot;</span>: <span class="string">&quot;text&quot;</span>,</span><br><span class="line">            <span class="string">&quot;analyzer&quot;</span>: <span class="string">&quot;ik_max_word&quot;</span>,</span><br><span class="line">            <span class="string">&quot;search_analyzer&quot;</span>: <span class="string">&quot;ik_max_word&quot;</span></span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="string">&quot;timestamp&quot;</span>: &#123;</span><br><span class="line">            <span class="string">&quot;type&quot;</span>: <span class="string">&quot;integer&quot;</span></span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> es.indices.exists(index=<span class="string">&#x27;news_index&#x27;</span>) <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">True</span>:</span><br><span class="line">    <span class="built_in">print</span> <span class="string">&quot;create news_index&quot;</span></span><br><span class="line">    es.indices.create(index=<span class="string">&#x27;news_index&#x27;</span>, body=index_mappings)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">get_news</span>():  <span class="comment"># 获取新闻</span></span><br><span class="line">    session = DBSession()</span><br><span class="line">    newses = session.query(News).<span class="built_in">filter</span>(News.source == source).<span class="built_in">all</span>()</span><br><span class="line">    <span class="keyword">for</span> news <span class="keyword">in</span> newses:</span><br><span class="line">        <span class="keyword">yield</span> news</span><br><span class="line">    session.close()</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i, news <span class="keyword">in</span> <span class="built_in">enumerate</span>(get_news()):</span><br><span class="line">    doc = &#123;</span><br><span class="line">        <span class="string">&quot;id&quot;</span>: news.<span class="built_in">id</span>,</span><br><span class="line">        <span class="string">&quot;title&quot;</span>: news.title,</span><br><span class="line">        <span class="string">&quot;timestamp&quot;</span>: time.mktime(time.strptime(news.time, <span class="string">&#x27;%m/%d/%Y %H:%M:%S&#x27;</span>)),</span><br><span class="line">        <span class="string">&quot;content&quot;</span>: news.content,</span><br><span class="line">    &#125;</span><br><span class="line">    res = es.index(index=<span class="string">&quot;news_index&quot;</span>, doc_type=<span class="string">&quot;news&quot;</span>, <span class="built_in">id</span>=news.<span class="built_in">id</span>, body=doc)</span><br><span class="line">    <span class="built_in">print</span> res</span><br></pre></td></tr></table></figure>
 
@@ -189,7 +189,7 @@
 <h4 id="索引排序"><a href="#索引排序" class="headerlink" title="索引排序"></a>索引排序</h4><p>添加sort字段。</p>
 <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">sort_list = &#123;</span><br><span class="line">    <span class="string">&quot;0&quot;</span>: [],</span><br><span class="line">    <span class="string">&quot;1&quot;</span>: [<span class="string">&quot;timestamp:desc&quot;</span>],</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">search</span>(<span class="params">query, page=<span class="number">1</span>, sort=[]</span>):</span><br><span class="line">    offset = (page - <span class="number">1</span>) * <span class="number">10</span></span><br><span class="line">    query_contains = &#123;</span><br><span class="line">        <span class="string">&#x27;query&#x27;</span>: &#123;</span><br><span class="line">            <span class="string">&#x27;multi_match&#x27;</span>: &#123;</span><br><span class="line">                <span class="string">&#x27;query&#x27;</span>: query,</span><br><span class="line">                <span class="string">&quot;fields&quot;</span>: [<span class="string">&quot;title&quot;</span>, <span class="string">&quot;content&quot;</span>]</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="string">&quot;highlight&quot;</span>: &#123;</span><br><span class="line">            <span class="string">&quot;fields&quot;</span>: &#123;</span><br><span class="line">                <span class="string">&quot;content&quot;</span>: &#123;&#125;,</span><br><span class="line">                <span class="string">&quot;title&quot;</span>: &#123;&#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    es = Elasticsearch()</span><br><span class="line">    searched = es.search(<span class="string">&quot;news_index&quot;</span>, doc_type=<span class="string">&quot;news&quot;</span>, body=query_contains, size=<span class="number">10</span>, from_=offset,</span><br><span class="line">                         sort=sort)</span><br><span class="line">    <span class="keyword">return</span> json.dumps(searched)</span><br><span class="line"></span><br><span class="line">search(<span class="string">&quot;詹姆斯&quot;</span>, <span class="number">1</span>, sort_list[<span class="number">1</span>])  <span class="comment"># 按照时间排序</span></span><br></pre></td></tr></table></figure>
 
-<h2 id="效果"><a href="#效果" class="headerlink" title="效果"></a>效果</h2><p><img src="/screenshot.png"></p>
+<h2 id="效果"><a href="#效果" class="headerlink" title="效果"></a>效果</h2><p><img src="screenshot.png"></p>
 
       </div>
       
@@ -205,7 +205,7 @@
           <div class="post-attach">
             <span class="post-pubtime">
               <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
-              2018-01-05 11:10:20
+              2018-10-21 01:04:48
             </span>
             
           </div>
@@ -260,7 +260,7 @@
     <ul>
       
         <li>
-          <a title="github" target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/nladuo">
             <i class="iconfont icon-github"></i>
           </a>
         </li>
@@ -271,7 +271,14 @@
     
     <div class="footer-more">
       
-        <a target="_blank" rel="noopener" href="http://www.beian.miit.gov.cn/">http://www.beian.miit.gov.cn/  京ICP备17062395号</a>
+        <a target="_blank" rel="noopener" href="https://github.com/nladuo">Copyright © 2023 叁叁</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://beian.miit.gov.cn/">京ICP备17062395号</a>
         
     </div>
   

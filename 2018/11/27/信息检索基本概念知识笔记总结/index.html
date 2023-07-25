@@ -4,7 +4,7 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="keywords" content="" />
+  
   <meta name="author" content="叁公子KCN" />
   <meta name="description" content="" />
   
@@ -68,10 +68,10 @@
     <a href="/">
       <!-- 头像取消懒加载，添加no-lazy -->
       
-        <img src="/images/avatar.png" alt="">
+        <img src="/images/avatar.jpg" alt="">
       
     </a>
-    <div class="nickname"><a href="/"></a></div>
+    <div class="nickname"><a href="/">叁叁的博客</a></div>
   </div>
   <div class="navbar">
     <ul>
@@ -143,7 +143,7 @@
       <div class="post-attach">
         <span class="post-pubtime">
           <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
-          2018-11-27 18:24:51
+          2019-03-19 16:29:38
         </span>
         
       </div>
@@ -160,7 +160,7 @@
 <span id="more"></span>
 <h2 id="布尔检索"><a href="#布尔检索" class="headerlink" title="布尔检索"></a>布尔检索</h2><p>布尔检索的查询，是指利用 AND, OR 或者 NOT操作符将词项连接起来的查询。</p>
 <p>比如说我们的目标是：在《莎士比亚全集》找出包含Brutus AND Caesar ，同时又不包含Calpurnia的章节（文档）来。</p>
-<h3 id="词项-文档关联矩阵"><a href="#词项-文档关联矩阵" class="headerlink" title="词项-文档关联矩阵"></a>词项-文档关联矩阵</h3><p>这里肯定不能将文档扫描一遍，而是可以通过一个一个词项文档关联矩阵来进行检索。<br><img src="/term-doc-matrix.png"></p>
+<h3 id="词项-文档关联矩阵"><a href="#词项-文档关联矩阵" class="headerlink" title="词项-文档关联矩阵"></a>词项-文档关联矩阵</h3><p>这里肯定不能将文档扫描一遍，而是可以通过一个一个词项文档关联矩阵来进行检索。<br><img src="term-doc-matrix.png"></p>
 <p>给定查询Brutus AND Caesar AND NOT Calpurnia, 求解方法如下：</p>
 <ul>
 <li>取出三个词项对应的行向量 ，并对Calpurnia 的行向量求反，最后按位进行与操作</li>
@@ -169,7 +169,7 @@
 <p>第一篇文档和第四篇文档是我们的查询结果。</p>
 <h3 id="倒排索引"><a href="#倒排索引" class="headerlink" title="倒排索引"></a>倒排索引</h3><p>随着词项的增多，会导致关联矩阵会变得非常稀疏。一般来说词表大小会有好几万甚至几十万，而一篇文章中一般也就几百几千个词，所以会有数据很多为0。</p>
 <p>倒排索引(inverted index)其实也就是词项-文档关联矩阵，但是进行了压缩，使用更少的空间进行存储。其形式如下：</p>
-<p><img src="/inverted-index.png"></p>
+<p><img src="inverted-index.png"></p>
 <p>相当于原先的存储空间是：词项个数<em>文档个数。现在是：词项个数</em>文档平均长度。</p>
 <h2 id="向量空间模型"><a href="#向量空间模型" class="headerlink" title="向量空间模型"></a>向量空间模型</h2><p>在布尔模型中，只讨论了词是不是出现的问题，这里的假设是每个词都是同等重要的。但其实并不是每个词重要程度。所以这里需要对不同的词引入权重的概念。</p>
 <h3 id="TF-IDF"><a href="#TF-IDF" class="headerlink" title="TF-IDF"></a>TF-IDF</h3><p>TF：term frequency，词项t在文档中出现的次数。出现的越多就越重要。</p>
@@ -185,7 +185,7 @@
 <li>单词和query之间的相关性</li>
 <li>每个单词的权重<br>最后对于每个单词的分数我们做一个求和，就得到了query和文档之间的分数。</li>
 </ul>
-<p><img src="/bm25.png"></p>
+<p><img src="bm25.png"></p>
 <h2 id="信息检索的评价"><a href="#信息检索的评价" class="headerlink" title="信息检索的评价"></a>信息检索的评价</h2><h3 id="MAP"><a href="#MAP" class="headerlink" title="MAP"></a>MAP</h3><ul>
 <li>平均正确率(Average Precision, AP)：对不同召回率点上的正确率进行平均</li>
 <li>Mean Average Precision：对所有查询的AP求宏平均。（宏平均：对每个查询求出某个指标，然后对这些指标进行算术平均）<br>系统检索出来的相关文档越靠前(rank 越高)，MAP就可能越高。</li>
@@ -195,7 +195,7 @@
 <li>相关度级别越高的结果越多越好</li>
 <li>相关度级别越高的结果越靠前越好</li>
 </ul>
-<p>Normalized Discounted Cumulative Gain：<br><img src="/ndcg.png"></p>
+<p>Normalized Discounted Cumulative Gain：<br><img src="ndcg.png"></p>
 <h2 id="排序学习（Learning-to-Rank）"><a href="#排序学习（Learning-to-Rank）" class="headerlink" title="排序学习（Learning to Rank）"></a>排序学习（Learning to Rank）</h2><p>排序问题就是使用一个模型 $$f(q,d)$$来对该query下的documents进行排序。传统的Learning to Rank（LTR）模型有三种方法：</p>
 <h3 id="Pointwise-approach"><a href="#Pointwise-approach" class="headerlink" title="Pointwise approach"></a>Pointwise approach</h3><p>通过ML的方法来学习查询-文档对的得分：f(query,document)。比如说不相关的document打1-10分，相关的document打10-50分。然后根据得分来排序。</p>
 <h3 id="Pairwise-approach"><a href="#Pairwise-approach" class="headerlink" title="Pairwise approach"></a>Pairwise approach</h3><p>在检索中，其实并不需要计算得分。我们只要知道两个文档的序就好了。所以只要知道f(query,doc1)和f(query, doc2)哪个排在哪个前面就好了。我们知道两两的排序关系，也可以得到最终的排序结果。</p>
@@ -220,7 +220,7 @@
           <div class="post-attach">
             <span class="post-pubtime">
               <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
-              2018-11-27 18:24:51
+              2019-03-19 16:29:38
             </span>
             
           </div>
@@ -275,7 +275,7 @@
     <ul>
       
         <li>
-          <a title="github" target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/nladuo">
             <i class="iconfont icon-github"></i>
           </a>
         </li>
@@ -286,7 +286,14 @@
     
     <div class="footer-more">
       
-        <a target="_blank" rel="noopener" href="http://www.beian.miit.gov.cn/">http://www.beian.miit.gov.cn/  京ICP备17062395号</a>
+        <a target="_blank" rel="noopener" href="https://github.com/nladuo">Copyright © 2023 叁叁</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://beian.miit.gov.cn/">京ICP备17062395号</a>
         
     </div>
   

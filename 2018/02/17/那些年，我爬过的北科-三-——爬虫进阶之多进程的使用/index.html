@@ -4,7 +4,7 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="keywords" content="" />
+  
   <meta name="author" content="叁公子KCN" />
   <meta name="description" content="" />
   
@@ -68,10 +68,10 @@
     <a href="/">
       <!-- 头像取消懒加载，添加no-lazy -->
       
-        <img src="/images/avatar.png" alt="">
+        <img src="/images/avatar.jpg" alt="">
       
     </a>
-    <div class="nickname"><a href="/"></a></div>
+    <div class="nickname"><a href="/">叁叁的博客</a></div>
   </div>
   <div class="navbar">
     <ul>
@@ -143,14 +143,14 @@
       <div class="post-attach">
         <span class="post-pubtime">
           <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
-          2018-02-17 10:21:55
+          2018-12-13 10:31:30
         </span>
         
       </div>
       <div class="markdown-body">
         <h2 id="爬取多个页面"><a href="#爬取多个页面" class="headerlink" title="爬取多个页面"></a>爬取多个页面</h2><p>在爬虫基础之环境搭建与入门中，介绍了如何用Requests下载(爬取)了一个页面，并用BeautifulSoup这个HTML解析库来解析页面里面我们想要的内容。</p>
 <p>显然，爬虫肯定不是只让我们爬取一个网页的，这样的工作，人也可以做。下面我们来看：<a target="_blank" rel="noopener" href="http://nladuo.cn/scce_site/">http://nladuo.cn/scce_site&#x2F;</a>这个页面。这个页面一共有10页，点击下一页之后可以看到在网页的url中多了个字段“2.html”，也就是当前页面时第二页的意思。</p>
-<p><img src="/web1.png"></p>
+<p><img src="web1.png"></p>
 <p>也就是我们如果要爬取下所有的新闻，只要爬取形如”<a href="">http://nladuo.cn/scce_site&#x2F;{page}.html</a>“的页面就好了。</p>
 <span id="more"></span>
 <p>这里使用一个for循环就可以完成全部页面的爬取。</p>
@@ -183,7 +183,7 @@
 <p>既然叫做进程池，那就是有个池子，里面有一堆公用的进程；当有任务来了，拿一个进程出来；当任务完成了，把进程还回池子里，给别的任务用；当池子里面没有可用进程的时候，那就要等待，等别人把进程归还了再拿去用。</p>
 <p>下面我们来看一下代码，让每个进程每秒打印一下pid，一共打印两遍。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> multiprocessing <span class="keyword">import</span> Pool</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">do_something</span>(<span class="params">num</span>):</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">2</span>):</span><br><span class="line">        time.sleep(<span class="number">1</span>)</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;doing %d, pid: %d&quot;</span> % (num, os.getpid()))</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    p = Pool(<span class="number">3</span>)</span><br><span class="line">    <span class="keyword">for</span> page <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, <span class="number">11</span>):  <span class="comment"># 10个任务</span></span><br><span class="line">        p.apply_async(do_something, args=(page,))</span><br><span class="line"></span><br><span class="line">    p.close()   <span class="comment"># 关闭进程池, 不再接受任务</span></span><br><span class="line">    p.join()    <span class="comment"># 等待子进程结束</span></span><br></pre></td></tr></table></figure>
-<p>运行代码后可以看到，我们可以看到这里是三个三个的打印的，我们成功完成了三并发。同时，进程池一共产生了三个进程：59650、59651、59652，说明后面的所有任务都是使用这三个进程完成的。<br><img src="/multiprocess.png"></p>
+<p>运行代码后可以看到，我们可以看到这里是三个三个的打印的，我们成功完成了三并发。同时，进程池一共产生了三个进程：59650、59651、59652，说明后面的所有任务都是使用这三个进程完成的。<br><img src="multiprocess.png"></p>
 <p>下面，修改爬虫代码，用进程池实现并发爬取。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">from</span> bs4 <span class="keyword">import</span> BeautifulSoup</span><br><span class="line"><span class="keyword">from</span> multiprocessing <span class="keyword">import</span> Pool</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">crawl_one_page</span>(<span class="params">page_num</span>):</span><br><span class="line">    resp = requests.get(<span class="string">&quot;http://nladuo.cn/scce_site/&#123;page&#125;.html&quot;</span>.</span><br><span class="line">                        <span class="built_in">format</span>(page=page_num))</span><br><span class="line">    soup = BeautifulSoup(resp.content, <span class="string">&quot;html.parser&quot;</span>)</span><br><span class="line">    items = soup.find_all(<span class="string">&quot;div&quot;</span>, &#123;<span class="string">&quot;class&quot;</span>: <span class="string">&quot;every_list&quot;</span>&#125;)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> item <span class="keyword">in</span> items:</span><br><span class="line">        title_div = item.find(<span class="string">&quot;div&quot;</span>, &#123;<span class="string">&quot;class&quot;</span>: <span class="string">&quot;list_title&quot;</span>&#125;)</span><br><span class="line">        title = title_div.a.get_text()</span><br><span class="line">        url = title_div.a[<span class="string">&quot;href&quot;</span>]</span><br><span class="line">        date = item.find(<span class="string">&quot;div&quot;</span>, &#123;<span class="string">&quot;class&quot;</span>: <span class="string">&quot;list_time&quot;</span>&#125;).get_text()</span><br><span class="line">        <span class="built_in">print</span>(date, title, url)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    t0 = time.time()</span><br><span class="line">    p = Pool(<span class="number">5</span>)</span><br><span class="line">    <span class="keyword">for</span> page <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, <span class="number">11</span>):  <span class="comment"># 1-10页</span></span><br><span class="line">        p.apply_async(crawl_one_page, args=(page,))</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 关闭进程池, 等待子进程结束</span></span><br><span class="line">    p.close()</span><br><span class="line">    p.join()</span><br><span class="line"></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;used:&quot;</span>, (time.time() - t0))</span><br></pre></td></tr></table></figure>
 
@@ -203,7 +203,7 @@
           <div class="post-attach">
             <span class="post-pubtime">
               <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
-              2018-02-17 10:21:55
+              2018-12-13 10:31:30
             </span>
             
           </div>
@@ -258,7 +258,7 @@
     <ul>
       
         <li>
-          <a title="github" target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/nladuo">
             <i class="iconfont icon-github"></i>
           </a>
         </li>
@@ -269,7 +269,14 @@
     
     <div class="footer-more">
       
-        <a target="_blank" rel="noopener" href="http://www.beian.miit.gov.cn/">http://www.beian.miit.gov.cn/  京ICP备17062395号</a>
+        <a target="_blank" rel="noopener" href="https://github.com/nladuo">Copyright © 2023 叁叁</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://beian.miit.gov.cn/">京ICP备17062395号</a>
         
     </div>
   

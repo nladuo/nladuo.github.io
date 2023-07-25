@@ -4,7 +4,7 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="keywords" content="" />
+  
   <meta name="author" content="叁公子KCN" />
   <meta name="description" content="" />
   
@@ -68,10 +68,10 @@
     <a href="/">
       <!-- 头像取消懒加载，添加no-lazy -->
       
-        <img src="/images/avatar.png" alt="">
+        <img src="/images/avatar.jpg" alt="">
       
     </a>
-    <div class="nickname"><a href="/"></a></div>
+    <div class="nickname"><a href="/">叁叁的博客</a></div>
   </div>
   <div class="navbar">
     <ul>
@@ -143,7 +143,7 @@
       <div class="post-attach">
         <span class="post-pubtime">
           <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
-          2018-10-20 11:11:10
+          2019-10-23 12:05:15
         </span>
         
       </div>
@@ -151,7 +151,7 @@
         <h2 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h2><p>本篇博客将简要的总结**”Multi-digit Number Recognition from Street View Imagery using Deep Convolutional Neural Networks”** 这篇论文，并使用该作者的模型利用Keras训练SVHN数据集。</p>
 <p>这篇文章的方法主要作为训练SVHN数据集的一个baseline。作者说他的方法能达到百分之96以上的准确率。</p>
 <h2 id="任务要求"><a href="#任务要求" class="headerlink" title="任务要求"></a>任务要求</h2><p>这里先看一下数据集的样子，其实也就是Number from Street View(街景数字)。</p>
-<p><img src="/example.png"></p>
+<p><img src="example.png"></p>
 <span id="more"></span>
 
 <h2 id="过去的做法"><a href="#过去的做法" class="headerlink" title="过去的做法"></a>过去的做法</h2><p>Traditional approaches to solve this problem typically separate out the localization, segmentation, and recognition steps.（过去的做法要经历三步：定位，分割，然后识别）</p>
@@ -175,7 +175,7 @@
 <p>$$ P(S&#x3D;s|X)&#x3D;P(L&#x3D;n|X)\prod_{i&#x3D;1}^nP(S_i &#x3D;s_i |X) $$</p>
 <p>上面的变量都是离散的，\(L\)的取值有七种：0,1,2,….,5,比5大；\(S_i\)有10种：10个数字。</p>
 <p>训练这个模型，就是在训练集上最大化\(log P (S | X )\)，作者这里每个参数都使用一个Softmax层。<br>$$s &#x3D; (l,s_1,…,s_l) &#x3D; \arg\max_{L,S_1,…,S_L}logP(S | X).$$</p>
-<h2 id="模型结构"><a href="#模型结构" class="headerlink" title="模型结构"></a>模型结构</h2><p>下面，看下作者在论文里面发表的模型。<br><img src="/model.png"></p>
+<h2 id="模型结构"><a href="#模型结构" class="headerlink" title="模型结构"></a>模型结构</h2><p>下面，看下作者在论文里面发表的模型。<br><img src="model.png"></p>
 <ul>
 <li>输入图片\(X\)是一个128x128x3的图片。</li>
 <li>然后经过一系列的CNN层进行特征提取，变成了一个含有4096个特征的向量。</li>
@@ -194,12 +194,12 @@
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">wget http://ufldl.stanford.edu/housenumbers/test.tar.gz</span><br><span class="line">wget http://ufldl.stanford.edu/housenumbers/train.tar.gz</span><br></pre></td></tr></table></figure>
 <p>然后对数据进行解压，解压后发现会多两个文件夹：test和train。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">tar zvxf test.tar.gz</span><br><span class="line">tar zvxf train.tar.gz</span><br></pre></td></tr></table></figure>
-<h3 id="构建数据集"><a href="#构建数据集" class="headerlink" title="构建数据集"></a>构建数据集</h3><p>这个数据集可以使用h5py读取。<br><img src="/dataset1.png"><br>其中bbox存了图片数字的框，而name则是图片的文件名。比如说读取出来是下面这样的图片：<br><img src="/dataset2.png"><br>然后通过框框把图片裁剪一下。<br><img src="/dataset3.png"></p>
-<h3 id="网络模型"><a href="#网络模型" class="headerlink" title="网络模型"></a>网络模型</h3><p>网络模型这里分为卷积层+全连接层部分，代码如下。<br><img src="/nn.png"></p>
+<h3 id="构建数据集"><a href="#构建数据集" class="headerlink" title="构建数据集"></a>构建数据集</h3><p>这个数据集可以使用h5py读取。<br><img src="dataset1.png"><br>其中bbox存了图片数字的框，而name则是图片的文件名。比如说读取出来是下面这样的图片：<br><img src="dataset2.png"><br>然后通过框框把图片裁剪一下。<br><img src="dataset3.png"></p>
+<h3 id="网络模型"><a href="#网络模型" class="headerlink" title="网络模型"></a>网络模型</h3><p>网络模型这里分为卷积层+全连接层部分，代码如下。<br><img src="nn.png"></p>
 <h4 id="卷积层"><a href="#卷积层" class="headerlink" title="卷积层"></a>卷积层</h4><p>这里就是三个卷积层。为了让神经网络接受了参数符合同一分布，这里使用了Batch Normalization层，对ConvNet的输入进行<strong>批归一化</strong>。</p>
 <h4 id="全连接层"><a href="#全连接层" class="headerlink" title="全连接层"></a>全连接层</h4><p>卷积层最后经过Flatten之后，进入了全连接层。全连接层最后，输出了到6个softmax层中，分别代表：字符的长度、第一个字符、第二个字符、第三个字符、第四个字符、第四个字符。</p>
 <p>注意：这里字符的类别是0-10，一共11种，10代表不存在。</p>
-<h3 id="训练与测试"><a href="#训练与测试" class="headerlink" title="训练与测试"></a>训练与测试</h3><p>接下来调用fit方法训练就好了，这里一共有7个loss和6个accuracy。loss的话是每个softmax输出层都有一个，还有个总的。accuracy就是6个softmax层的accuracy了。<br><img src="/fit.png"><br>最后我们evaluate一下，可以6个accuracy都达到了85%以上的准确率了。如果想提高的话，可以使用VGG16等结构，网上说可以提升到百分之97，不过训练的话估计就要很慢了。<br><img src="/evaluate.png"></p>
+<h3 id="训练与测试"><a href="#训练与测试" class="headerlink" title="训练与测试"></a>训练与测试</h3><p>接下来调用fit方法训练就好了，这里一共有7个loss和6个accuracy。loss的话是每个softmax输出层都有一个，还有个总的。accuracy就是6个softmax层的accuracy了。<br><img src="fit.png"><br>最后我们evaluate一下，可以6个accuracy都达到了85%以上的准确率了。如果想提高的话，可以使用VGG16等结构，网上说可以提升到百分之97，不过训练的话估计就要很慢了。<br><img src="evaluate.png"></p>
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
 <li><a target="_blank" rel="noopener" href="https://github.com/potterhsu/SVHNClassifier">https://github.com/potterhsu/SVHNClassifier</a></li>
 <li><a target="_blank" rel="noopener" href="https://github.com/RyannnG/Capstone-Google-SVHN-Digits-Recognition">https://github.com/RyannnG/Capstone-Google-SVHN-Digits-Recognition</a></li>
@@ -219,7 +219,7 @@
           <div class="post-attach">
             <span class="post-pubtime">
               <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
-              2018-10-20 11:11:10
+              2019-10-23 12:05:15
             </span>
             
           </div>
@@ -274,7 +274,7 @@
     <ul>
       
         <li>
-          <a title="github" target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/nladuo">
             <i class="iconfont icon-github"></i>
           </a>
         </li>
@@ -285,7 +285,14 @@
     
     <div class="footer-more">
       
-        <a target="_blank" rel="noopener" href="http://www.beian.miit.gov.cn/">http://www.beian.miit.gov.cn/  京ICP备17062395号</a>
+        <a target="_blank" rel="noopener" href="https://github.com/nladuo">Copyright © 2023 叁叁</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://beian.miit.gov.cn/">京ICP备17062395号</a>
         
     </div>
   
